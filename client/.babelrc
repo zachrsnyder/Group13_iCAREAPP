@@ -1,0 +1,5 @@
+{
+    "presets": ["@babel/preset-env", "@babel/preset-react"]
+}
+//elicits how babel will transpile code. (translating to raw js in the bundle)
+  
