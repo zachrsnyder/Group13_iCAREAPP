@@ -1,4 +1,6 @@
+const { template } = require( '@babel/core' );
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   // Entry point for your React app or JavaScript code
@@ -19,6 +21,12 @@ module.exports = {
     hot: true, // Enable hot module reloading
     historyApiFallback: true, // Fallback to index.html for SPA routing
   },
+  plugins: [
+      // Automatically inject the bundle.js into index.html for both dev and prod
+    new HtmlWebpackPlugin({
+      template: './public/index.html', // Path to your index.html
+    }),
+  ],
   module: {
     rules: [
       {
