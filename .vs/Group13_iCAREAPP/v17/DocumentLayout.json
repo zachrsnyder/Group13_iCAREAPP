@@ -3,12 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\jptho\\source\\repos\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\clientapp\\src\\components\\login\\loginform.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\clientapp\\src\\components\\login\\loginform.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\viewmodels\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\viewmodels\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\clientapp\\src\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\clientapp\\src\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\clientapp\\src\\tailwind.config.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\clientapp\\src\\tailwind.config.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\clientapp\\src\\index.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\clientapp\\src\\index.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\clientapp\\src\\index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\clientapp\\src\\index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\clientapp\\webpack.config.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\clientapp\\webpack.config.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -19,12 +43,16 @@
       "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\models\\model1.edmx||{C99AEA30-8E36-4515-B76F-496F5A48A6AA}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\viewmodels\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\viewmodels\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\jptho\\source\\repos\\group13_icareapp\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,7 +66,98 @@
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "tailwind.config.js",
+              "DocumentMoniker": "C:\\Users\\jptho\\Source\\Repos\\Group13_iCAREAPP\\clientapp\\src\\tailwind.config.js",
+              "RelativeDocumentMoniker": "Group13_iCAREAPP\\clientapp\\src\\tailwind.config.js",
+              "ToolTip": "C:\\Users\\jptho\\Source\\Repos\\Group13_iCAREAPP\\clientapp\\src\\tailwind.config.js",
+              "RelativeToolTip": "Group13_iCAREAPP\\clientapp\\src\\tailwind.config.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-10-24T06:44:12.133Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "index.css",
+              "DocumentMoniker": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\clientapp\\src\\index.css",
+              "RelativeDocumentMoniker": "Group13_iCAREAPP\\clientapp\\src\\index.css",
+              "ToolTip": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\clientapp\\src\\index.css",
+              "RelativeToolTip": "Group13_iCAREAPP\\clientapp\\src\\index.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2024-10-24T06:43:58.68Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Group13_iCAREAPP\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Group13_iCAREAPP\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-24T06:43:20.762Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "index.js",
+              "DocumentMoniker": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\clientapp\\src\\index.js",
+              "RelativeDocumentMoniker": "Group13_iCAREAPP\\clientapp\\src\\index.js",
+              "ToolTip": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\clientapp\\src\\index.js",
+              "RelativeToolTip": "Group13_iCAREAPP\\clientapp\\src\\index.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-10-24T06:42:35.234Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "App.js",
+              "DocumentMoniker": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\clientapp\\src\\App.js",
+              "RelativeDocumentMoniker": "Group13_iCAREAPP\\clientapp\\src\\App.js",
+              "ToolTip": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\clientapp\\src\\App.js",
+              "RelativeToolTip": "Group13_iCAREAPP\\clientapp\\src\\App.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-10-24T06:40:36.128Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "LoginForm.js",
+              "DocumentMoniker": "C:\\Users\\jptho\\Source\\Repos\\Group13_iCAREAPP\\clientapp\\src\\components\\Login\\LoginForm.js",
+              "RelativeDocumentMoniker": "Group13_iCAREAPP\\clientapp\\src\\components\\Login\\LoginForm.js",
+              "ToolTip": "C:\\Users\\jptho\\Source\\Repos\\Group13_iCAREAPP\\clientapp\\src\\components\\Login\\LoginForm.js",
+              "RelativeToolTip": "Group13_iCAREAPP\\clientapp\\src\\components\\Login\\LoginForm.js",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAAAFwAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-10-24T06:39:55.054Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "webpack.config.js",
+              "DocumentMoniker": "C:\\Users\\jptho\\Source\\Repos\\Group13_iCAREAPP\\clientapp\\webpack.config.js",
+              "RelativeDocumentMoniker": "Group13_iCAREAPP\\clientapp\\webpack.config.js",
+              "ToolTip": "C:\\Users\\jptho\\Source\\Repos\\Group13_iCAREAPP\\clientapp\\webpack.config.js",
+              "RelativeToolTip": "Group13_iCAREAPP\\clientapp\\webpack.config.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-10-24T06:39:02.845Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "Model1.edmx [Diagram1]",
               "DocumentMoniker": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\Models\\Model1.edmx",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\Models\\Model1.edmx",
@@ -50,20 +169,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "Login.cshtml",
               "DocumentMoniker": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\Views\\Account\\Login.cshtml",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\Views\\Account\\Login.cshtml",
               "ToolTip": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\Views\\Account\\Login.cshtml",
               "RelativeToolTip": "Group13_iCAREAPP\\Views\\Account\\Login.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAABfAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAABWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-10-24T05:39:40.705Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 12,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\Views\\Home\\Index.cshtml",
@@ -80,16 +199,16 @@
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "Group13_iCAREAPP\\Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAAADsAAAAHAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\Views\\Shared\\_Layout.cshtml*",
+              "RelativeToolTip": "Group13_iCAREAPP\\Views\\Shared\\_Layout.cshtml*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-10-24T05:38:28.745Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 11,
               "Title": "LoginViewModel.cs",
               "DocumentMoniker": "C:\\Users\\jptho\\Source\\Repos\\Group13_iCAREAPP\\ViewModels\\LoginViewModel.cs",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\ViewModels\\LoginViewModel.cs",
@@ -102,13 +221,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 10,
               "Title": "AccountController.cs",
               "DocumentMoniker": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\Controllers\\AccountController.cs",
-              "ToolTip": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\Controllers\\AccountController.cs*",
-              "RelativeToolTip": "Group13_iCAREAPP\\Controllers\\AccountController.cs*",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAqwB8AAAAVAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\jptho\\source\\repos\\Group13_iCAREAPP\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "Group13_iCAREAPP\\Controllers\\AccountController.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAqwA4AAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-24T05:34:16.857Z",
               "EditorCaption": ""

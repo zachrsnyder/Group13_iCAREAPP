@@ -183,6 +183,24 @@
     <Compile Include="ViewModels\LoginViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="clientapp\.gitignore" />
+    <Content Include="clientapp\public\favicon.ico" />
+    <Content Include="clientapp\public\index.html" />
+    <Content Include="clientapp\public\logo192.png" />
+    <Content Include="clientapp\public\logo512.png" />
+    <Content Include="clientapp\public\robots.txt" />
+    <Content Include="clientapp\src\App.css" />
+    <Content Include="clientapp\src\App.js" />
+    <Content Include="clientapp\src\App.test.js" />
+    <Content Include="clientapp\src\components\Login\LoginForm.js" />
+    <Content Include="clientapp\src\index.css" />
+    <Content Include="clientapp\src\index.js" />
+    <Content Include="clientapp\src\tailwind.config.js" />
+    <Content Include="clientapp\src\logo.svg" />
+    <Content Include="clientapp\src\reportWebVitals.js" />
+    <Content Include="clientapp\src\setupTests.js" />
+    <Content Include="clientapp\tailwind.config.js" />
+    <Content Include="clientapp\webpack.config.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -225,6 +243,8 @@
     <Content Include="Models\Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
+    <Content Include="clientapp\package.json" />
+    <Content Include="clientapp\public\manifest.json" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -254,7 +274,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="clientapp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

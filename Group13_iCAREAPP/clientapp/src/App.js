@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import LoginForm from './components/Login/LoginForm';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    return (
+        <Router>
+            <div className="min-h-screen bg-gray-50">
+                <Routes>
+                    <Route
+                        path="/login"
+                        element={
+                            isAuthenticated ?
+                                <Navigate to="/" replace /> :
+                                <LoginForm setIsAuthenticated={setIsAuthenticated} />
+                        }
+                    />
+                    <Route
+                        path="/"
+                        element={
+                            !isAuthenticated ?
+                                <Navigate to="/login" replace /> :
+                                <div className="p-8">
+                                    <h1 className="text-2xl font-bold">Welcome to iCare</h1>
+                                </div>
+                        }
+                    />
+                </Routes>
+            </div>
+        </Router>
+    );
 }
 
 export default App;
