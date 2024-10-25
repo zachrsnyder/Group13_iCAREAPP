@@ -11,7 +11,7 @@
         <EntityTypeShape EntityType="Group13_iCAREDBModel.ModificationHistory" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Group13_iCAREDBModel.PatientRecord" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="Group13_iCAREDBModel.TreatmentRecord" Width="1.5" PointX="8.25" PointY="5.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="Group13_iCAREDBModel.UserRole" Width="1.5" PointX="5.25" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Group13_iCAREDBModel.UserRole" Width="1.5" PointX="6.75" PointY="9.25" IsExpanded="true" />
         <EntityTypeShape EntityType="Group13_iCAREDBModel.UserPassword" Width="1.5" PointX="1" PointY="9.5" IsExpanded="true" />
         <AssociationConnector Association="Group13_iCAREDBModel.FK_DocumentMetadata_iCAREUser" ManuallyRouted="false" />
         <AssociationConnector Association="Group13_iCAREDBModel.FK_DocumentMetadata_PatientRecord" ManuallyRouted="false" />

@@ -27,15 +27,24 @@ export default function LoginForm({ setIsAuthenticated }) {
             });
 
             const data = await response.json();
+            console.log('Login response:', data); // Debug log
 
             if (data.success) {
-                setIsAuthenticated(true);
-                navigate('/');
+                console.log('User roles:', data.user.roles); // Debug log
+                setIsAuthenticated(true, data.user.roles);
+                if (data.user.roles.includes('Admin')) {
+                    console.log('User is admin, navigating to admin dashboard'); // Debug log
+                    navigate('/admin');
+                } else {
+                    console.log('User is not admin, navigating to home'); // Debug log
+                    navigate('/');
+                }
             } else {
                 setError(data.error || 'Invalid username or password');
                 setIsAuthenticated(false);
             }
         } catch (err) {
+            console.error('Login error:', err); // Debug log
             setError('An error occurred. Please try again.');
             setIsAuthenticated(false);
         } finally {

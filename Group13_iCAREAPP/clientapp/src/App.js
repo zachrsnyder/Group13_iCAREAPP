@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginForm from './components/Login/LoginForm';
+import AdminDashboard from './components/Admin/AdminDashboard'; // Add this import
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [userRoles, setUserRoles] = useState([]);
+
+    const handleAuth = (authStatus, roles = []) => {
+        console.log('Setting auth status:', authStatus, 'roles:', roles);
+        setIsAuthenticated(authStatus);
+        setUserRoles(roles);
+    };
+
+    console.log('Current auth status:', isAuthenticated, 'roles:', userRoles); // Debug log
 
     return (
         <Router>
@@ -13,18 +23,37 @@ function App() {
                         path="/login"
                         element={
                             isAuthenticated ?
-                                <Navigate to="/" replace /> :
-                                <LoginForm setIsAuthenticated={setIsAuthenticated} />
+                                (userRoles.includes('Admin') ?
+                                    <Navigate to="/admin" replace /> :
+                                    <Navigate to="/" replace />
+                                ) :
+                                <LoginForm setIsAuthenticated={handleAuth} />
+                        }
+                    />
+                    <Route
+                        path="/admin"
+                        element={
+                            !isAuthenticated ? (
+                                <Navigate to="/login" replace />
+                            ) : userRoles.includes('Admin') ? (
+                                <AdminDashboard />
+                            ) : (
+                                <Navigate to="/" replace />
+                            )
                         }
                     />
                     <Route
                         path="/"
                         element={
-                            !isAuthenticated ?
-                                <Navigate to="/login" replace /> :
+                            !isAuthenticated ? (
+                                <Navigate to="/login" replace />
+                            ) : userRoles.includes('Admin') ? (
+                                <Navigate to="/admin" replace />
+                            ) : (
                                 <div className="p-8">
                                     <h1 className="text-2xl font-bold">Welcome to iCare</h1>
                                 </div>
+                            )
                         }
                     />
                 </Routes>

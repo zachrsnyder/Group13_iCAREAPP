@@ -136,10 +136,12 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserRoleAssignment.cs" />
     <Compile Include="Models\DocumentMetadata.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -192,6 +194,7 @@
     <Content Include="clientapp\src\App.css" />
     <Content Include="clientapp\src\App.js" />
     <Content Include="clientapp\src\App.test.js" />
+    <Content Include="clientapp\src\components\Admin\AdminDashboard.js" />
     <Content Include="clientapp\src\components\Login\LoginForm.js" />
     <Content Include="clientapp\src\index.css" />
     <Content Include="clientapp\src\index.js" />
@@ -276,6 +279,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Admin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -349,8 +353,8 @@
   
   <Target Name="AfterBuild">
   </Target> -->
-	<Target Name="NpmStart" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' ">
-		<Message Text="Starting React development server..." Importance="High" />
-		<Exec Command="cmd /c start /b npm start" WorkingDirectory="clientapp" ContinueOnError="true" />
-	</Target>
+  <Target Name="NpmStart" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' ">
+    <Message Text="Starting React development server..." Importance="High" />
+    <Exec Command="cmd /c start /b npm start" WorkingDirectory="clientapp" ContinueOnError="true" />
+  </Target>
 </Project>

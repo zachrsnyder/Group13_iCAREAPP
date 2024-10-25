@@ -101,6 +101,12 @@ namespace Group13_iCAREAPP.Controllers
 
                 System.Diagnostics.Debug.WriteLine("Login successful for user: " + model.UserName);
 
+                System.Diagnostics.Debug.WriteLine($"User {model.UserName} roles:");
+                foreach (var role in userRoles)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Role: {role}");
+                }
+
                 return Json(new
                 {
                     success = true,
