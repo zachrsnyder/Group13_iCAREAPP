@@ -5,76 +5,154 @@ using System.Web.Security;
 using Group13_iCAREAPP.ViewModels;
 using Group13_iCAREAPP.Models;
 
-
 namespace Group13_iCAREAPP.Controllers
 {
     public class AccountController : Controller
     {
         private Group13_iCAREDBEntities db = new Group13_iCAREDBEntities();
 
-        // POST: Account/Login
-        [HttpPost]
+        // GET: Account/Login
         public ActionResult Login()
         {
-            // Read the JSON from the request body
-            var jsonReader = new System.IO.StreamReader(Request.InputStream);
-            jsonReader.BaseStream.Position = 0;
-            var jsonString = jsonReader.ReadToEnd();
-
-            // Deserialize the JSON to your model
-            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-            var model = serializer.Deserialize<LoginViewModel>(jsonString);
-
-            if (model != null)
-            {
-                var userPassword = db.UserPassword.FirstOrDefault(u => u.userName == model.UserName);
-                if (userPassword != null)
-                {
-                    if (userPassword.encryptedPassword == model.Password)
-                    {
-                        if (userPassword.userAccountExpiryDate >= DateTime.Now)
-                        {
-                            var user = db.iCAREUser.Find(userPassword.ID);
-                            if (user != null)
-                            {
-                                FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-                                Session["UserID"] = user.ID;
-                                Session["UserName"] = user.name;
-                                Session["UserProfession"] = user.profession;
-
-                                var userRoles = db.UserRole
-                                    .Where(r => r.iCAREUser.Any(u => u.ID == user.ID))
-                                    .Select(r => r.roleName)
-                                    .ToList();
-                                Session["UserRoles"] = userRoles;
-
-                                return Json(new
-                                {
-                                    success = true,
-                                    user = new
-                                    {
-                                        name = user.name,
-                                        profession = user.profession,
-                                        roles = userRoles
-                                    }
-                                });
-                            }
-                        }
-                        return Json(new { success = false, error = "Your account has expired." });
-                    }
-                }
-                return Json(new { success = false, error = "Invalid username or password." });
-            }
-            return Json(new { success = false, error = "Invalid request format." });
+            return View();
         }
+
+        // POST: Account/Login
+        [HttpPost]
+        [ValidateInput(false)] // Add this to allow JSON in the request body
+        public ActionResult ValidateLogin()
+        {
+            try
+            {
+                // Read the JSON from the request body
+                var jsonReader = new System.IO.StreamReader(Request.InputStream);
+                jsonReader.BaseStream.Position = 0;
+                var jsonString = jsonReader.ReadToEnd();
+
+                // Deserialize the JSON to your model
+                var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                var model = serializer.Deserialize<LoginViewModel>(jsonString);
+
+                // Debug logging
+                System.Diagnostics.Debug.WriteLine($"Login attempt - Username: {model?.UserName}");
+
+                // Validation
+                if (model == null || string.IsNullOrEmpty(model.UserName) || string.IsNullOrEmpty(model.Password))
+                {
+                    return Json(new { success = false, error = "Username and password are required." });
+                }
+
+                // Find the user - using explicit query
+                var userPassword = db.UserPassword.Where(up => up.userName == model.UserName).FirstOrDefault();
+
+                // Debug logging
+                var allUsers = db.UserPassword.ToList();
+                System.Diagnostics.Debug.WriteLine($"Total users in database: {allUsers.Count}");
+                foreach (var u in allUsers)
+                {
+                    System.Diagnostics.Debug.WriteLine($"DB User: {u.userName}, Password: {u.encryptedPassword}");
+                }
+
+                // If no matching user found
+                if (userPassword == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("No user found with username: " + model.UserName);
+                    return Json(new { success = false, error = "Invalid username or password." });
+                }
+
+                // Check password
+                if (userPassword.encryptedPassword != model.Password)
+                {
+                    System.Diagnostics.Debug.WriteLine("Password mismatch for user: " + model.UserName);
+                    return Json(new { success = false, error = "Invalid username or password." });
+                }
+
+                // Check expiry
+                if (userPassword.userAccountExpiryDate < DateTime.Now)
+                {
+                    System.Diagnostics.Debug.WriteLine("Account expired for user: " + model.UserName);
+                    return Json(new { success = false, error = "Your account has expired." });
+                }
+
+                var user = db.iCAREUser.Find(userPassword.ID);
+                if (user == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("No iCAREUser found for ID: " + userPassword.ID);
+                    return Json(new { success = false, error = "User account not found." });
+                }
+
+                // Get user roles
+                var userRoles = db.UserRole.Where(ur => ur.iCAREUser.Any(u => u.ID == user.ID))
+                                         .Select(ur => ur.roleName)
+                                         .ToList();
+
+                if (!userRoles.Any())
+                {
+                    System.Diagnostics.Debug.WriteLine("No roles found for user: " + model.UserName);
+                    return Json(new { success = false, error = "User has no assigned roles." });
+                }
+
+                // Set authentication cookie and session
+                FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+                Session["UserID"] = user.ID;
+                Session["UserName"] = user.name;
+                Session["UserProfession"] = user.profession;
+                Session["UserRoles"] = userRoles;
+
+                System.Diagnostics.Debug.WriteLine("Login successful for user: " + model.UserName);
+
+                return Json(new
+                {
+                    success = true,
+                    user = new
+                    {
+                        id = user.ID,
+                        name = user.name,
+                        profession = user.profession,
+                        roles = userRoles
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Login error: " + ex.Message);
+                return Json(new { success = false, error = "An error occurred during login." });
+            }
+        }
+
+        public ActionResult GetUserInfo()
+        {
+            var userId = Session["UserID"] as string;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Json(new { error = "Not authenticated" }, JsonRequestBehavior.AllowGet);
+            }
+
+            var user = db.iCAREUser.Find(userId);
+            if (user != null)
+            {
+                var userRoles = db.UserRole.Where(ur => ur.iCAREUser.Any(u => u.ID == userId))
+                                         .Select(ur => ur.roleName)
+                                         .ToList();
+
+                return Json(new
+                {
+                    id = user.ID,
+                    name = user.name,
+                    profession = user.profession,
+                    roles = userRoles
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { error = "User not found" }, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
             Session.Clear();
             return RedirectToAction("Login");
         }
-
-
 
         protected override void Dispose(bool disposing)
         {
