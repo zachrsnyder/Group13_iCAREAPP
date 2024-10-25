@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Collections.Generic;
 using Group13_iCAREAPP.Models;
 using System.Data.SqlClient;
+using BCrypt.Net; // Import BCrypt
 
 namespace Group13_iCAREAPP.Controllers
 {
@@ -97,6 +98,7 @@ namespace Group13_iCAREAPP.Controllers
                     try
                     {
                         // Create new iCAREUser using Entity Framework
+                        string hashedPassword = BCrypt.Net.BCrypt.HashPassword((string)userData["password"]);
                         var newUser = new iCAREUser
                         {
                             ID = newId,
@@ -116,7 +118,7 @@ namespace Group13_iCAREAPP.Controllers
                         db.Database.ExecuteSqlCommand(insertPasswordSql,
                             new SqlParameter("@userId", newId),
                             new SqlParameter("@userName", (string)userData["userName"]),
-                            new SqlParameter("@password", (string)userData["password"]),
+                            new SqlParameter("@password", hashedPassword),
                             new SqlParameter("@expiryTime", 90),
                             new SqlParameter("@accountExpiry", DateTime.Now.AddYears(1)));
 

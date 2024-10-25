@@ -61,7 +61,13 @@ namespace Group13_iCAREAPP.Controllers
                 }
 
                 // Check password
-                if (userPassword.encryptedPassword != model.Password)
+                //if (userPassword.encryptedPassword != model.Password)
+                //{
+                //    System.Diagnostics.Debug.WriteLine("Password mismatch for user: " + model.UserName);
+                //    return Json(new { success = false, error = "Invalid username or password." });
+                //}
+
+                if (!BCrypt.Net.BCrypt.Verify(model.Password, userPassword.encryptedPassword))
                 {
                     System.Diagnostics.Debug.WriteLine("Password mismatch for user: " + model.UserName);
                     return Json(new { success = false, error = "Invalid username or password." });
@@ -122,7 +128,7 @@ namespace Group13_iCAREAPP.Controllers
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("Login error: " + ex.Message);
-                return Json(new { success = false, error = "An error occurred during login." });
+                return Json(new { success = false, error = "An error occurred during login. Password could be incorrect." });
             }
         }
 

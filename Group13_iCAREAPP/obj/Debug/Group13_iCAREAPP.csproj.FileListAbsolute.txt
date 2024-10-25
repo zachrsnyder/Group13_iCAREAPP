@@ -172,3 +172,13 @@ C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\obj\Debug\Group13_
 C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\obj\Debug\Group13_.8BC0FCF5.Up2Date
 C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\obj\Debug\Group13_iCAREAPP.dll
 C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\obj\Debug\Group13_iCAREAPP.pdb
+C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\bin\BCrypt.Net-Next.dll
+C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\bin\System.Buffers.dll
+C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\bin\System.Memory.dll
+C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\bin\System.Numerics.Vectors.dll
+C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\bin\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\bin\BCrypt.Net-Next.xml
+C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\bin\System.Buffers.xml
+C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\bin\System.Memory.xml
+C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\bin\System.Numerics.Vectors.xml
+C:\Users\aaron\Source\Repos\Group13_iCAREAPP\Group13_iCAREAPP\bin\System.Runtime.CompilerServices.Unsafe.xml

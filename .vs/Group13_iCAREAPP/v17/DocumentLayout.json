@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\aaron\\source\\repos\\Group13_iCAREAPP\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\aaron\\source\\repos\\group13_icareapp\\group13_icareapp\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\aaron\\source\\repos\\group13_icareapp\\group13_icareapp\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\users\\aaron\\source\\repos\\group13_icareapp\\group13_icareapp\\clientapp\\src\\components\\admin\\admindashboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\clientapp\\src\\components\\admin\\admindashboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
@@ -22,7 +30,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "App.js",
               "DocumentMoniker": "C:\\Users\\aaron\\source\\repos\\Group13_iCAREAPP\\Group13_iCAREAPP\\clientapp\\src\\App.js",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\clientapp\\src\\App.js",
@@ -37,12 +45,38 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\aaron\\source\\repos\\Group13_iCAREAPP\\Group13_iCAREAPP\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "Group13_iCAREAPP\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\aaron\\source\\repos\\Group13_iCAREAPP\\Group13_iCAREAPP\\Controllers\\AccountController.cs*",
+              "RelativeToolTip": "Group13_iCAREAPP\\Controllers\\AccountController.cs*",
+              "ViewState": "AgIAADYAAAAAAAAAAAAYwEEAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-25T22:13:34.482Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\aaron\\source\\repos\\Group13_iCAREAPP\\Group13_iCAREAPP\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "Group13_iCAREAPP\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\aaron\\source\\repos\\Group13_iCAREAPP\\Group13_iCAREAPP\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "Group13_iCAREAPP\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAYwHsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-25T21:52:32.979Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "AdminDashboard.js",
               "DocumentMoniker": "C:\\Users\\aaron\\source\\repos\\Group13_iCAREAPP\\Group13_iCAREAPP\\clientapp\\src\\components\\Admin\\AdminDashboard.js",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\clientapp\\src\\components\\Admin\\AdminDashboard.js",
-              "ToolTip": "C:\\Users\\aaron\\source\\repos\\Group13_iCAREAPP\\Group13_iCAREAPP\\clientapp\\src\\components\\Admin\\AdminDashboard.js*",
-              "RelativeToolTip": "Group13_iCAREAPP\\clientapp\\src\\components\\Admin\\AdminDashboard.js*",
-              "ViewState": "AgIAAAMBAAAAAAAAAAAcwBgBAABLAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\aaron\\source\\repos\\Group13_iCAREAPP\\Group13_iCAREAPP\\clientapp\\src\\components\\Admin\\AdminDashboard.js",
+              "RelativeToolTip": "Group13_iCAREAPP\\clientapp\\src\\components\\Admin\\AdminDashboard.js",
+              "ViewState": "AgIAAAYBAAAAAAAAAAAcwBkBAABJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2024-10-25T21:32:38.558Z",
               "EditorCaption": ""
