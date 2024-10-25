@@ -3,15 +3,21 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - iCare System</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <title>@ViewBag.Title - iCare</title>
 </head>
 <body>
-    <div id="root"></div>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    <script src="~/dist/bundle.js"></script>
-    @RenderSection("scripts", required: false)
+    <div id="root">
+        @RenderBody()
+    </div>
+
+    @if (Context.IsDebuggingEnabled)
+    {
+        <script src="http://localhost:3000/static/js/bundle.js"></script>
+    }
+    else
+    {
+        <script src="~/clientapp/build/static/js/main.js"></script>
+        <link href="~/clientapp/build/static/css/main.css" rel="stylesheet" />
+    }
 </body>
 </html>

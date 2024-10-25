@@ -1,35 +1,3 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
-}
-
-@if (!Request.IsAuthenticated)
-{
-    <div class="jumbotron">
-        <h1>Welcome to iCare System</h1>
-        <p class="lead">Please @Html.ActionLink("log in", "Login", "Account") to access the system.</p>
-    </div>
-}
-else
-{
-    <div class="jumbotron">
-        <h1>iCare System</h1>
-        <p class="lead">iCare is a system to manage patient record information.</p>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <h2>@Html.ActionLink("My Board", "Assign Patients", "Palette")</h2>
-            <p>
-                Students Basic Information.
-            </p>
-        </div>
-        <div class="col-md-4">
-            <h2>@Html.ActionLink("Patients", "Index", "Patients")</h2>
-            <p>Patients Basic Information.</p>
-        </div>
-        <div class="col-md-4">
-            <h2>@Html.ActionLink("Palette", "Index", "Palette")</h2>
-            <p>Palette.</p>
-        </div>
-    </div>
+    ViewBag.Title = "Home";
 }
