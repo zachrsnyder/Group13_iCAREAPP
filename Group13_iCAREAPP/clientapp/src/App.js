@@ -52,7 +52,7 @@ function App() {
                             ) : userRoles.includes('Admin') ? (
                                 <Navigate to="/admin" replace />
                             ) : (
-                                <WorkerNavBar/>
+                                <WorkerNavBar setIsAuthenticated={handleAuth} />
                             )
                         }
                     />

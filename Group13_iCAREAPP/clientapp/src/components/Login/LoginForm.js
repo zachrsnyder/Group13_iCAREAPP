@@ -100,20 +100,7 @@ export default function LoginForm({ setIsAuthenticated }) {
                             autoComplete="current-password"
                         />
                     </div>
-                    <div className="flex items-center">
-                        <input
-                            type="checkbox"
-                            id="rememberMe"
-                            name="rememberMe"
-                            checked={formData.rememberMe}
-                            onChange={handleInputChange}
-                            className="h-4 w-4 text-blue-600"
-                            disabled={isLoading}
-                        />
-                        <label htmlFor="rememberMe" className="ml-2 text-gray-700">
-                            Remember me
-                        </label>
-                    </div>
+                    
                     <button
                         type="submit"
                         className={`w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 focus:outline-none transition-colors

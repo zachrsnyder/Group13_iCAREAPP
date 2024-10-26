@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Group13_iCAREAPP.ViewModels;
 using Group13_iCAREAPP.Models;
+using System.Web;
 
 namespace Group13_iCAREAPP.Controllers
 {
@@ -159,11 +160,29 @@ namespace Group13_iCAREAPP.Controllers
             return Json(new { error = "User not found" }, JsonRequestBehavior.AllowGet);
         }
 
+        // GET: Account/Logout
+       
         public ActionResult Logout()
         {
-            FormsAuthentication.SignOut();
-            Session.Clear();
-            return RedirectToAction("Login");
+            try
+            {
+                FormsAuthentication.SignOut();
+                Session.Clear();
+                Session.Abandon();
+
+                // Clear authentication cookie
+                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, "")
+                {
+                    Expires = DateTime.Now.AddYears(-1)
+                };
+                Response.Cookies.Add(cookie);
+
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         protected override void Dispose(bool disposing)
