@@ -37,7 +37,7 @@ export default function LoginForm({ setIsAuthenticated }) {
                     navigate('/admin');
                 } else {
                     console.log('User is not admin, navigating to home'); // Debug log
-                    navigate('/');
+                    navigate('/home');
                 }
             } else {
                 setError(data.error || 'Invalid username or password');

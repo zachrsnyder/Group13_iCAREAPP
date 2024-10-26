@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginForm from './components/Login/LoginForm';
 import AdminDashboard from './components/Admin/AdminDashboard'; // Add this import
+import WorkerDashboard from './components/Worker/WorkerDashboard';
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -39,6 +40,18 @@ function App() {
                                 <AdminDashboard />
                             ) : (
                                 <Navigate to="/" replace />
+                            )
+                        }
+                    />
+                    <Route
+                        path="/home"
+                        element={
+                            !isAuthenticated ? (
+                                <Navigate to="/login" replace />
+                            ) : userRoles.includes('Admin') ? (
+                                <Navigate to="/admin" replace />
+                            ) : (
+                                <WorkerDashboard />
                             )
                         }
                     />

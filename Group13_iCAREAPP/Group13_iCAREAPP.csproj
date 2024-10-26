@@ -212,6 +212,7 @@
     <Content Include="clientapp\src\App.test.js" />
     <Content Include="clientapp\src\components\Admin\AdminDashboard.js" />
     <Content Include="clientapp\src\components\Login\LoginForm.js" />
+    <Content Include="clientapp\src\components\Worker\WorkerDashboard.js" />
     <Content Include="clientapp\src\index.css" />
     <Content Include="clientapp\src\index.js" />
     <Content Include="clientapp\src\tailwind.config.js" />
