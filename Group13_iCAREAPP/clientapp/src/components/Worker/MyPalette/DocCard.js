@@ -3,7 +3,7 @@ import React from 'react'
 const DocCard = ({ doc }) => {
   return (
     <button>
-        <tr key={doc.id}>
+        <tr key={doc.id} className='w-full'>
             <td className="px-6 py-4 whitespace-nowrap">{doc.name}</td>
             <td className="px-6 py-4 whitespace-nowrap">{doc.dateOfCreation}</td>
             <td className="px-6 py-4 whitespace-nowrap">{doc.patientName}</td>

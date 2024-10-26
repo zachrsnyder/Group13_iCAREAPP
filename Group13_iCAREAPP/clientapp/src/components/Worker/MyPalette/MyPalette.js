@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import WorkerNavBar from '../WorkerNavBar'
+import DocCard from './DocCard'
 
 
 // This class defines a GUI window that show the available
