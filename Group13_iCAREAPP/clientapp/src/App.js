@@ -1,9 +1,21 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginForm from './components/Login/LoginForm';
-import AdminDashboard from './components/Admin/AdminDashboard'; // Add this import
+import AdminDashboard from './components/Admin/AdminDashboard';
 import WorkerNavBar from './components/Worker/WorkerNavBar';
 import MyPalette from './components/Worker/MyPalette/MyPalette';
+
+// Create a layout component that includes the navbar
+const WorkerLayout = ({ children, handleAuth }) => {
+    return (
+        <div>
+            <WorkerNavBar setIsAuthenticated={handleAuth} />
+            <div className="p-4">
+                {children}
+            </div>
+        </div>
+    );
+};
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,7 +27,7 @@ function App() {
         setUserRoles(roles);
     };
 
-    console.log('Current auth status:', isAuthenticated, 'roles:', userRoles); // Debug log
+    console.log('Current auth status:', isAuthenticated, 'roles:', userRoles);
 
     return (
         <Router>
@@ -27,7 +39,7 @@ function App() {
                             isAuthenticated ?
                                 (userRoles.includes('Admin') ?
                                     <Navigate to="/admin" replace /> :
-                                    <Navigate to="/" replace />
+                                    <Navigate to="/home" replace />
                                 ) :
                                 <LoginForm setIsAuthenticated={handleAuth} />
                         }
@@ -40,7 +52,7 @@ function App() {
                             ) : userRoles.includes('Admin') ? (
                                 <AdminDashboard />
                             ) : (
-                                <Navigate to="/" replace />
+                                <Navigate to="/home" replace />
                             )
                         }
                     />
@@ -52,7 +64,25 @@ function App() {
                             ) : userRoles.includes('Admin') ? (
                                 <Navigate to="/admin" replace />
                             ) : (
-                                <WorkerNavBar setIsAuthenticated={handleAuth} />
+                                <WorkerLayout handleAuth={handleAuth}>
+                                    <div className="p-8">
+                                        <h1 className="text-2xl font-bold">Welcome to iCare</h1>
+                                    </div>
+                                </WorkerLayout>
+                            )
+                        }
+                    />
+                    <Route
+                        path="/mypalette"
+                        element={
+                            !isAuthenticated ? (
+                                <Navigate to="/login" replace />
+                            ) : userRoles.includes('Admin') ? (
+                                <Navigate to="/admin" replace />
+                            ) : (
+                                <WorkerLayout handleAuth={handleAuth}>
+                                    <MyPalette />
+                                </WorkerLayout>
                             )
                         }
                     />
@@ -64,21 +94,7 @@ function App() {
                             ) : userRoles.includes('Admin') ? (
                                 <Navigate to="/admin" replace />
                             ) : (
-                                <div className="p-8">
-                                    <h1 className="text-2xl font-bold">Welcome to iCare</h1>
-                                </div>
-                            )
-                        }
-                    />
-                    <Route
-                        path='/mypalette'
-                        element={
-                            !isAuthenticated ? (
-                                <Navigate to="/login" replace />
-                            ) : userRoles.includes('Admin') ? (
-                                <Navigate to='/admin' replace />
-                            ) : (
-                                <MyPalette/>
+                                <Navigate to="/home" replace />
                             )
                         }
                     />
