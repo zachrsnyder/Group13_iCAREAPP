@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginForm from './components/Login/LoginForm';
 import AdminDashboard from './components/Admin/AdminDashboard'; // Add this import
-import WorkerDashboard from './components/Worker/WorkerDashboard';
+import WorkerNavBar from './components/Worker/WorkerNavBar';
+import MyPalette from './components/Worker/MyPalette/MyPalette';
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -51,7 +52,7 @@ function App() {
                             ) : userRoles.includes('Admin') ? (
                                 <Navigate to="/admin" replace />
                             ) : (
-                                <iCareDashboard />
+                                <WorkerNavBar/>
                             )
                         }
                     />
@@ -66,6 +67,18 @@ function App() {
                                 <div className="p-8">
                                     <h1 className="text-2xl font-bold">Welcome to iCare</h1>
                                 </div>
+                            )
+                        }
+                    />
+                    <Route
+                        path='/mypalette'
+                        element={
+                            !isAuthenticated ? (
+                                <Navigate to="/login" replace />
+                            ) : userRoles.includes('Admin') ? (
+                                <Navigate to='/admin' replace />
+                            ) : (
+                                <MyPalette/>
                             )
                         }
                     />

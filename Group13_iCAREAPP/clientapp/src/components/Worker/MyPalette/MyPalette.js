@@ -11,10 +11,44 @@ import WorkerNavBar from '../WorkerNavBar'
 // purpose.
 
 const MyPalette = () => {
+  let docs = [
+    {name: "PatientDedLol", dateOfCreation: "yesterday", patientName: "Rick", userName: "Jessica", userRole: "Nurse"},
+    {name: "PatientDedLol", dateOfCreation: "yesterday", patientName: "Rick", userName: "Jessica", userRole: "Nurse"},
+    {name: "PatientDedLol", dateOfCreation: "yesterday", patientName: "Rick", userName: "Jessica", userRole: "Nurse"}
+  ]
+  
+  
   return (
-    <div>
+    <div className='w-screen h-screen bg-gray-300'>
       <WorkerNavBar/>
-      
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+            <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date Created
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Patient Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Worker Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Worker Role
+                </th>
+            </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+            {docs.map((doc) => (
+                <DocCard 
+                    doc = {doc}
+                />
+            ))}
+        </tbody>
+      </table>     
     </div>
   )
 }
