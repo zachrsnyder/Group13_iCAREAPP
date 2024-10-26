@@ -57,7 +57,7 @@ export default function WorkerNavBar({ setIsAuthenticated }) {
                             className="text-gray-600 hover:text-gray-900 px-4 py-2"
                             onClick={handleGoPallete}
                         >
-                            MyPalette
+                            MyPalettecd
                         </button>
                         <button
                             type="button"

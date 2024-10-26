@@ -50,9 +50,9 @@ function App() {
                             !isAuthenticated ? (
                                 <Navigate to="/login" replace />
                             ) : userRoles.includes('Admin') ? (
-                                <AdminDashboard />
+                                <AdminDashboard setIsAuthenticated={handleAuth} />
                             ) : (
-                                <Navigate to="/home" replace />
+                                <Navigate to="/" replace />
                             )
                         }
                     />

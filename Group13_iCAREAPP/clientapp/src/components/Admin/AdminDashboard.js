@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ setIsAuthenticated }) { // Add setIsAuthenticated prop
     const [users, setUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
@@ -49,13 +49,36 @@ export default function AdminDashboard() {
     };
 
     const handleLogout = async () => {
+        console.log('Admin logout clicked');
         try {
-            await fetch('/Account/Logout', {
-                credentials: 'include'
+            console.log('Sending logout request...');
+            const response = await fetch('/Account/Logout', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json'
+                }
             });
-            navigate('/login');
+
+            console.log('Logout response status:', response.status);
+
+            if (response.ok || response.status === 302) {
+                console.log('Logout successful, clearing auth state...');
+                setIsAuthenticated(false, []); // Clear authentication state
+                console.log('Navigating to login page...');
+                // Add a small delay to ensure state is cleared before navigation
+                setTimeout(() => {
+                    navigate('/login', { replace: true });
+                }, 100);
+            } else {
+                console.error('Logout failed with status:', response.status);
+                const error = await response.text();
+                console.error('Error details:', error);
+                alert('Logout failed. Please try again.');
+            }
         } catch (err) {
             console.error('Logout error:', err);
+            alert('An error occurred during logout. Please try again.');
         }
     };
 
