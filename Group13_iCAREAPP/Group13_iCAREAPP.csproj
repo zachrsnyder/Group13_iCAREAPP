@@ -153,7 +153,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\DocumentMetadatasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PatientRecordsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -212,7 +214,10 @@
     <Content Include="clientapp\src\App.test.js" />
     <Content Include="clientapp\src\components\Admin\AdminDashboard.js" />
     <Content Include="clientapp\src\components\Login\LoginForm.js" />
+    <Content Include="clientapp\src\components\Worker\MyPalette\DocCard.js" />
+    <Content Include="clientapp\src\components\Worker\MyPalette\MyPalette.js" />
     <Content Include="clientapp\src\components\Worker\WorkerDashboard.js" />
+    <Content Include="clientapp\src\components\Worker\WorkerNavBar.js" />
     <Content Include="clientapp\src\index.css" />
     <Content Include="clientapp\src\index.js" />
     <Content Include="clientapp\src\tailwind.config.js" />
@@ -298,6 +303,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="clientapp\src\components\Display\" />
     <Folder Include="Views\Admin\" />
+    <Folder Include="Views\DocumentMetadatas\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

@@ -18,14 +18,15 @@ namespace Group13_iCAREAPP.Controllers
         public ActionResult Index()
         {
 
-            try{
+            try
+            {
                 var query = from doc in db.DocumentMetadata
                             join user in db.iCAREUser on doc.userID equals user.ID
                             join patient in db.PatientRecord on doc.patientID equals patient.ID
                             select new
                             {
                                 documentID = doc.docID,
-                                documentTitle = doc.docName, 
+                                documentTitle = doc.docName,
                                 documentDate = doc.dateOfCreation,
                                 userName = user.name,
                                 userRole = user.profession,
@@ -36,9 +37,10 @@ namespace Group13_iCAREAPP.Controllers
                 var documentDetails = query.ToList();
                 return Json(documentDetails, JsonRequestBehavior.AllowGet);
             }
-            catch (Exception st){
+            catch (Exception st)
+            {
                 System.Diagnostics.Debug.WriteLine($"Get documents error! Stack trace: {st}");
-                return Json(new { error = "Failed to get document details."}, JsonRequestBehavior.AllowGet);
+                return Json(new { error = "Failed to get document details." }, JsonRequestBehavior.AllowGet);
             }
         }
 
