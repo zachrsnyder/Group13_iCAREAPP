@@ -116,41 +116,55 @@ export default function AdminDashboard({ setIsAuthenticated }) { // Add setIsAut
     };
 
     const handleDeleteUser = async (userId) => {
-        if (window.confirm('Are you sure you want to delete this user?')) {
-            try {
-                console.log('Attempting to delete user:', userId); // Debug log
+        if (!window.confirm('Are you sure you want to delete this user?')) {
+            return;
+        }
 
-                const response = await fetch(`/Admin/DeleteUser?id=${userId}`, {  // Changed URL format
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    credentials: 'include'
-                });
+        try {
+            console.log('Sending delete request for user:', userId);
 
-                // Check if response is JSON
-                const contentType = response.headers.get("content-type");
-                if (contentType && contentType.indexOf("application/json") !== -1) {
-                    const data = await response.json();
-                    console.log('Delete response:', data); // Debug log
+            const response = await fetch(`/Admin/DeleteUser?id=${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
 
-                    if (data.success) {
-                        fetchUsers(); // Refresh the list after successful deletion
-                    } else {
-                        setError(data.error || 'Failed to delete user');
-                        console.error('Delete error:', data.error);
-                    }
-                } else {
-                    // If response is not JSON, log the actual response text
-                    const text = await response.text();
-                    console.error('Non-JSON response:', text);
-                    setError('Server returned an invalid response');
-                }
-            } catch (err) {
-                console.error('Delete error:', err);
-                setError('Failed to delete user: ' + err.message);
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+
+            // Try to get the response as text first
+            const responseText = await response.text();
+            console.log('Raw response:', responseText);
+
+            // Then parse it as JSON
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (e) {
+                console.error('Failed to parse response as JSON:', e);
+                console.log('Response that failed to parse:', responseText);
+                throw new Error('Invalid JSON response from server');
+            }
+
+            console.log('Parsed response:', data);
+
+            if (data.success) {
+                // Success - refresh the user list
+                fetchUsers();
+            } else {
+                // Server returned an error
+                setError(data.error || 'Failed to delete user');
+            }
+        } catch (err) {
+            console.error('Delete operation failed:', err);
+            setError(err.message || 'Failed to delete user');
         }
     };
 
