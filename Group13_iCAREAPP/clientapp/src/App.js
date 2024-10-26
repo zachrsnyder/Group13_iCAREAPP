@@ -51,7 +51,7 @@ function App() {
                             ) : userRoles.includes('Admin') ? (
                                 <Navigate to="/admin" replace />
                             ) : (
-                                <WorkerDashboard />
+                                <iCareDashboard />
                             )
                         }
                     />

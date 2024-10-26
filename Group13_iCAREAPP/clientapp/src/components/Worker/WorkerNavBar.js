@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function AdminDashboard() {
+export default function WorkerNavBar() {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -16,8 +16,6 @@ export default function AdminDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            {/* Header */}
             <nav className="bg-white shadow-lg">
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="flex justify-between items-center h-16">
@@ -31,6 +29,5 @@ export default function AdminDashboard() {
                     </div>
                 </div>
             </nav>
-        </div>
     );
 }

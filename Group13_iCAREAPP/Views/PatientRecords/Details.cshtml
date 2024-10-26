@@ -1,0 +1,82 @@
+﻿@model Group13_iCAREAPP.Models.PatientRecord
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PatientRecord</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.dateOfBirth)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dateOfBirth)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.height)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.height)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.weight)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.weight)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.bloodGroup)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bloodGroup)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.bedID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bedID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.treatmentArea)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.treatmentArea)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
