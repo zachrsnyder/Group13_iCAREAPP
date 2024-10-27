@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Group13_iCAREAPP.Models;
+using System.Data.SqlClient;
 
 namespace Group13_iCAREAPP.Controllers
 {
@@ -59,31 +60,66 @@ namespace Group13_iCAREAPP.Controllers
             return View(documentMetadata);
         }
 
-        // GET: DocumentMetadatas/Create
-        public ActionResult Create()
-        {
-            ViewBag.userID = new SelectList(db.iCAREUser, "ID", "name");
-            ViewBag.patientID = new SelectList(db.PatientRecord, "ID", "name");
-            return View();
-        }
-
-        // POST: DocumentMetadatas/Create
+        // POST: DocumentMetadatas/AddDocument
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //Edited HttpPost to support creation of document metadata as well as creation of the document itself. Assumes document is already converted to BLOB form.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "docID,docName,dateOfCreation,patientID,userID")] DocumentMetadata documentMetadata)
+        public ActionResult AddDocument()
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.DocumentMetadata.Add(documentMetadata);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                //Read and parse request body
+                var jsonReader = new System.IO.StreamReader(Request.InputStream);
+                jsonReader.BaseStream.Position = 0;
+                var jsonString = jsonReader.ReadToEnd();
 
-            ViewBag.userID = new SelectList(db.iCAREUser, "ID", "name", documentMetadata.userID);
-            ViewBag.patientID = new SelectList(db.PatientRecord, "ID", "name", documentMetadata.patientID);
-            return View(documentMetadata);
+                var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                dynamic docData = serializer.Deserialize<dynamic>(jsonString);
+
+                string newId = Guid.NewGuid().ToString();
+
+                using (var transaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var metaData = new DocumentMetadata
+                        {
+                            docID = newId,
+                            docName = docData["docName"],
+                            dateOfCreation = DateTime.Now.ToString(),
+                            patientID = docData["patientID"],
+                            userID = Session["UserID"].ToString(),
+                        };
+
+                        var document = new DocumentStorage
+                        {
+                            Id = newId,
+                            FileData = docData["docData"]
+                        };
+                        db.DocumentMetadata.Add(metaData);
+                        db.DocumentStorage.Add(document);
+
+                        transaction.Commit();
+
+                        return Json(new { status = 200 });
+
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        System.Diagnostics.Debug.WriteLine($"Transaction ran into an error: {ex.Message}");
+                        throw new Exception("Failed transaction");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error adding user: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                return Json(new { status = 400, error = "Failed to add user" });
+            }
         }
 
         // GET: DocumentMetadatas/Edit/5

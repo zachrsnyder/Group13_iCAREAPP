@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import WorkerNavBar from '../WorkerNavBar'
 import DocCard from './DocCard'
+import AddDocumentModal from './AddDocumentModal'
 
 
 // This class defines a GUI window that show the available
@@ -11,15 +11,13 @@ import DocCard from './DocCard'
 // purpose.
 
 const MyPalette = () => {
-    let docs = [
-        { name: "PatientDedLol", dateOfCreation: "yesterday", patientName: "Rick", userName: "Jessica", userRole: "Nurse" },
-        { name: "PatientDedLol", dateOfCreation: "yesterday", patientName: "Rick", userName: "Jessica", userRole: "Nurse" },
-        { name: "PatientDedLol", dateOfCreation: "yesterday", patientName: "Rick", userName: "Jessica", userRole: "Nurse" }
-    ]
-
     const [isLoading, setIsLoading] = useState(true)
-    const [documents, setDocuments] = useState([]);
+    const [documents, setDocuments] = useState([])
+    const [renderModal, setModal] = useState(false)
 
+    const updateAddModal = (newState) => {
+        setModal(false)
+    }
 
     const fetchUsers = async () => {
         const response = await fetch('DocumentMetadatas', {
@@ -43,43 +41,56 @@ const MyPalette = () => {
     }, [])
 
     return (
-        <div className='w-screen h-screen bg-gray-300'>
+        <div className='bg-gray-300'>
+            <div className="flex justify-end mb-6">
+                <button
+                    onClick={() => setModal(true)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                    Add New Document
+                </button>
+            </div>
            
             {isLoading ?
-                <div className='min-w-full bg-gray-50'>
+                <div className='w-full bg-gray-50'>
                     <h1>Loading Document Data...</h1>
                 </div>
                 :
-                <table className="min-w-full divide-y divide-gray-200">
+                <table className="w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-1/5">
                                 Name
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-1/5">
                                 Date Created
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-1/5">
                                 Patient Name
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-1/5">
                                 Worker Name
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-1/5">
                                 Worker Role
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y min-w-full divide-gray-200">
+                    <tbody className="bg-white">
                         {documents.map((document) => (
-                            <DocCard
-                                doc={document}
-                            />
+                            <DocCard doc={document}/>
                         ))}
                     </tbody>
                 </table>
             }
+
+            {renderModal && !isLoading && (
+                <AddDocumentModal setShowAddModal={updateAddModal}/>
+                
+            )}
         </div>
+
+
     )
 }
 

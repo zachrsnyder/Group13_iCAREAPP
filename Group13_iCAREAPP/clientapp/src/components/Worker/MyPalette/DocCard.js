@@ -1,16 +1,27 @@
 import React from 'react'
 
+const onRowClick = (doc) => {
+    console.log(`Clicked Doc: ${doc.documentTitle}`)
+}
+
+
+
 const DocCard = ({ doc }) => {
-  return (
-    <button>
-        <tr key={doc.id} className='w-full'>
-            <td className="px-6 py-4 whitespace-nowrap">{doc.name}</td>
-            <td className="px-6 py-4 whitespace-nowrap">{doc.dateOfCreation}</td>
-            <td className="px-6 py-4 whitespace-nowrap">{doc.patientName}</td>
-            <td className="px-6 py-4 whitespace-nowrap">{doc.userName}</td>
-            <td className="px-6 py-4 whitespace-nowrap">{doc.userRole}</td>
+    return (
+        <tr className="hover:bg-gray-100 cursor-pointer">
+            <td colSpan="5">
+                <button
+                    onClick={() => onRowClick(doc)}
+                    className="w-full text-left py-2 flex justify-between items-center"
+                >
+                    <span className="px-4 w-1/5">{doc.documentTitle}</span>
+                    <span className="px-4 w-1/5">{doc.documentDate}</span>
+                    <span className="px-4 w-1/5">{doc.patientName}</span>
+                    <span className="px-4 w-1/5">{doc.userName}</span>
+                    <span className="px-4 w-1/5">{doc.userRole}</span>
+                </button>
+            </td>
         </tr>
-    </button>
   )
 }
 
