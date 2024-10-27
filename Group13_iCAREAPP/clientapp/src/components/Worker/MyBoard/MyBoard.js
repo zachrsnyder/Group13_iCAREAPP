@@ -20,6 +20,7 @@ const MyBoard = () => {
 
                 const data = await response.json();
                 setPatients(data);
+                console.log(data);
                 setLoading(false);
             } catch (err) {
                 setError(err.message);
