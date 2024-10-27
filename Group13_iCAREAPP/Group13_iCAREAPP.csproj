@@ -159,6 +159,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DocumentStorage.cs" />
     <Compile Include="Models\JsonModelBinder.cs" />
     <Compile Include="Models\UserRoleAssignment.cs" />
     <Compile Include="Models\DocumentMetadata.cs">
@@ -217,7 +218,9 @@
     <Content Include="clientapp\src\components\Admin\AdminDashboard.js" />
     <Content Include="clientapp\src\components\Login\LoginForm.js" />
     <Content Include="clientapp\src\components\Worker\Dashboard\Dashboard.js" />
+    <Content Include="clientapp\src\components\Worker\ICareBoard\ICareBoard.js" />
     <Content Include="clientapp\src\components\Worker\MyBoard\MyBoard.js" />
+    <Content Include="clientapp\src\components\Worker\MyPalette\AddDocumentModal.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\DocCard.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\MyPalette.js" />
     <Content Include="clientapp\src\components\Worker\WorkerDashboard.js" />
