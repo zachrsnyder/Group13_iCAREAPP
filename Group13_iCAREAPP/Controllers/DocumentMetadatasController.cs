@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using Group13_iCAREAPP.Models;
 using System.Data.SqlClient;
+using System.Data.Entity.Infrastructure;
+
 
 namespace Group13_iCAREAPP.Controllers
 {
