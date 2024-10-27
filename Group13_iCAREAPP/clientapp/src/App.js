@@ -6,6 +6,7 @@ import WorkerNavBar from './components/Worker/WorkerNavBar';
 import MyPalette from './components/Worker/MyPalette/MyPalette';
 import Dashboard from './components/Worker/Dashboard/Dashboard';
 import MyBoard from './components/Worker/MyBoard/MyBoard';
+import ICareBoard from './components/Worker/ICareBoard/ICareBoard';
 
 // Create a layout component that includes the navbar
 const WorkerLayout = ({ children, handleAuth }) => {
@@ -98,6 +99,20 @@ function App() {
                             ) : (
                                 <WorkerLayout handleAuth={handleAuth}>
                                     <MyPalette />
+                                </WorkerLayout>
+                            )
+                        }
+                    />
+                    <Route
+                        path="/icareboard"
+                        element={
+                            !isAuthenticated ? (
+                                <Navigate to="/login" replace />
+                            ) : userRoles.includes('Admin') ? (
+                                <Navigate to="/admin" replace />
+                            ) : (
+                                <WorkerLayout handleAuth={handleAuth}>
+                                    <ICareBoard />
                                 </WorkerLayout>
                             )
                         }

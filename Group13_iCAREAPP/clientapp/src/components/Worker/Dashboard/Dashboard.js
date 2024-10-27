@@ -1,4 +1,26 @@
 ﻿import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
+
+const Modal = ({ isOpen, onClose, children }) => {
+    if (!isOpen) return null;
+
+    const handleBackdropClick = (e) => {
+        if (e.target === e.currentTarget) {
+            onClose();
+        }
+    };
+
+    return (
+        <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            onClick={handleBackdropClick}
+        >
+            <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+                {children}
+            </div>
+        </div>
+    );
+};
 
 const Dashboard = () => {
     const [patients, setPatients] = useState([]);
@@ -7,6 +29,8 @@ const Dashboard = () => {
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [showCreateForm, setShowCreateForm] = useState(false);
+    const [selectedPatient, setSelectedPatient] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [newPatient, setNewPatient] = useState({
         name: '',
         address: '',
@@ -19,16 +43,12 @@ const Dashboard = () => {
         assignedUserID: ''
     });
 
-    // Fetch both patients and users data
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch patients
                 const patientsResponse = await fetch('/PatientRecords/GetAllPatients', {
                     credentials: 'include'
                 });
-
-                // Fetch users
                 const usersResponse = await fetch('/PatientRecords/GetAllUsers', {
                     credentials: 'include'
                 });
@@ -55,39 +75,26 @@ const Dashboard = () => {
     const handleCreatePatient = async (e) => {
         e.preventDefault();
         try {
-            console.log('Sending patient data:', newPatient);
-            const url = '/PatientRecords/CreateWithAssignment';
-            console.log('Sending to URL:', url);
-
-            const requestData = {
+            const response = await fetch('/PatientRecords/CreateWithAssignment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(newPatient),
                 credentials: 'include'
-            };
-            console.log('Request details:', requestData);
-
-            const response = await fetch(url, requestData);
-
-            console.log('Response:', response);
-            console.log('Response status:', response.status);
+            });
 
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('Error response text:', errorText);
                 throw new Error(`Failed to create patient: ${errorText}`);
             }
 
-            // Refresh the patients list
             const updatedPatientsResponse = await fetch('/PatientRecords/GetAllPatients', {
                 credentials: 'include'
             });
             const updatedPatients = await updatedPatientsResponse.json();
             setPatients(updatedPatients);
 
-            // Reset form and hide it
             setNewPatient({
                 name: '',
                 address: '',
@@ -104,6 +111,73 @@ const Dashboard = () => {
             setError(err.message);
         }
     };
+
+    const openPatientDetails = (patient) => {
+        setSelectedPatient(patient);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedPatient(null);
+    };
+
+    const PatientDetails = ({ patient }) => (
+        <div className="space-y-4">
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Patient Details</h2>
+                <button
+                    onClick={closeModal}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                    <X className="h-5 w-5" />
+                </button>
+            </div>
+
+            <div className="space-y-4">
+                <div>
+                    <h4 className="font-medium text-sm text-gray-500">ID</h4>
+                    <p>{patient.ID}</p>
+                </div>
+                <div>
+                    <h4 className="font-medium text-sm text-gray-500">Name</h4>
+                    <p>{patient.name}</p>
+                </div>
+                <div>
+                    <h4 className="font-medium text-sm text-gray-500">Address</h4>
+                    <p>{patient.address}</p>
+                </div>
+                <div>
+                    <h4 className="font-medium text-sm text-gray-500">Date of Birth</h4>
+                    <p>{new Date(patient.dateOfBirth).toLocaleDateString()}</p>
+                </div>
+                <div>
+                    <h4 className="font-medium text-sm text-gray-500">Height</h4>
+                    <p>{patient.height} cm</p>
+                </div>
+                <div>
+                    <h4 className="font-medium text-sm text-gray-500">Weight</h4>
+                    <p>{patient.weight} kg</p>
+                </div>
+                <div>
+                    <h4 className="font-medium text-sm text-gray-500">Blood Group</h4>
+                    <p>{patient.bloodGroup}</p>
+                </div>
+                <div>
+                    <h4 className="font-medium text-sm text-gray-500">Treatment Area</h4>
+                    <p>{patient.treatmentArea}</p>
+                </div>
+                <div>
+                    <h4 className="font-medium text-sm text-gray-500">Bed ID</h4>
+                    <p>{patient.bedID}</p>
+                </div>
+                <div>
+                    <h4 className="font-medium text-sm text-gray-500">Assigned To</h4>
+                    <p>{patient.assignedUser?.name || 'Unassigned'}</p>
+                </div>
+            </div>
+        </div>
+    );
 
     const filteredPatients = patients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -293,7 +367,7 @@ const Dashboard = () => {
                                 <td className="p-4">{patient.assignedUser?.name || 'Unassigned'}</td>
                                 <td className="p-4">
                                     <button
-                                        onClick={() => window.location.href = `/PatientRecords/Details/${patient.ID}`}
+                                        onClick={() => openPatientDetails(patient)}
                                         className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition-colors mr-2"
                                     >
                                         View
@@ -309,6 +383,10 @@ const Dashboard = () => {
                     </div>
                 )}
             </div>
+
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+                {selectedPatient && <PatientDetails patient={selectedPatient} />}
+            </Modal>
         </div>
     );
 };

@@ -39,6 +39,10 @@ export default function WorkerNavBar({ setIsAuthenticated }) {
         navigate('/mypalette');
     };
 
+    const handleGoICareBoard = () => {
+        navigate('/icareboard');
+    };
+
     const handleGoDashboard = () => {
         navigate('/home');
     };
@@ -47,6 +51,7 @@ export default function WorkerNavBar({ setIsAuthenticated }) {
         <nav className="bg-white shadow-lg">
             <div className="max-w-7xl mx-auto px-4">
                 <div className="flex justify-between items-center h-16">
+                    
                     <button
                         onClick={handleGoDashboard}
                         className="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors"
@@ -54,6 +59,13 @@ export default function WorkerNavBar({ setIsAuthenticated }) {
                         iCare Dashboard
                     </button>
                     <div className="flex items-center space-x-4">
+                        <button
+                            type="button"
+                            className="text-gray-600 hover:text-gray-900 px-4 py-2"
+                            onClick={handleGoICareBoard}
+                        >
+                            iCareBoard
+                        </button>
                         <button
                             type="button"
                             className="text-gray-600 hover:text-gray-900 px-4 py-2"

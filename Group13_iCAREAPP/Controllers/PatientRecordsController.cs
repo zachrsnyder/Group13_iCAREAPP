@@ -164,7 +164,7 @@ namespace Group13_iCAREAPP.Controllers
             try
             {
                 // Get current user ID from authentication
-                var currentUserID = User.Identity.Name;
+                var currentUserID = Session["UserID"];
 
                 // Debug logging
                 System.Diagnostics.Debug.WriteLine($"Current User ID: {currentUserID}");
