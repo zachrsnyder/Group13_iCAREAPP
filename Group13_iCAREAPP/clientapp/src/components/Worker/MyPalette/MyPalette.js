@@ -44,7 +44,7 @@ const MyPalette = () => {
 
     return (
         <div className='w-screen h-screen bg-gray-300'>
-            <WorkerNavBar />
+           
             {isLoading ?
                 <div className='min-w-full bg-gray-50'>
                     <h1>Loading Document Data...</h1>

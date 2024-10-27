@@ -4,6 +4,8 @@ import LoginForm from './components/Login/LoginForm';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import WorkerNavBar from './components/Worker/WorkerNavBar';
 import MyPalette from './components/Worker/MyPalette/MyPalette';
+import Dashboard from './components/Worker/Dashboard/Dashboard';
+import MyBoard from './components/Worker/MyBoard/MyBoard';
 
 // Create a layout component that includes the navbar
 const WorkerLayout = ({ children, handleAuth }) => {
@@ -65,9 +67,23 @@ function App() {
                                 <Navigate to="/admin" replace />
                             ) : (
                                 <WorkerLayout handleAuth={handleAuth}>
-                                    <div className="p-8">
-                                        <h1 className="text-2xl font-bold">Welcome to iCare</h1>
-                                    </div>
+                                    <Dashboard />
+                                </WorkerLayout>
+                            )
+                        }
+                    />
+
+                    {/* MyBoard route */}
+                    <Route
+                        path="/myboard"
+                        element={
+                            !isAuthenticated ? (
+                                <Navigate to="/login" replace />
+                            ) : userRoles.includes('Admin') ? (
+                                <Navigate to="/admin" replace />
+                            ) : (
+                                <WorkerLayout handleAuth={handleAuth}>
+                                    <MyBoard />
                                 </WorkerLayout>
                             )
                         }

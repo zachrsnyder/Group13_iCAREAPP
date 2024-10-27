@@ -5,8 +5,12 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Web.Mvc;
 using Group13_iCAREAPP.Models;
+using Group13_iCAREAPP.ViewModels;
+using System.IO;
 
 namespace Group13_iCAREAPP.Controllers
 {
@@ -18,6 +22,181 @@ namespace Group13_iCAREAPP.Controllers
         public ActionResult Index()
         {
             return View(db.PatientRecord.ToList());
+        }
+
+        // GET: PatientRecords/GetAllPatients
+        public ActionResult GetAllPatients()
+        {
+            try
+            {
+                var patients = db.PatientRecord
+                    .Select(p => new
+                    {
+                        p.ID,
+                        p.name,
+                        p.address,
+                        p.dateOfBirth,
+                        p.height,
+                        p.weight,
+                        p.bloodGroup,
+                        p.bedID,
+                        p.treatmentArea,
+                        assignedUser = p.DocumentMetadata
+                            .OrderByDescending(d => d.dateOfCreation)
+                            .Select(d => new { d.iCAREUser.ID, d.iCAREUser.name })
+                            .FirstOrDefault()
+                    })
+                    .ToList();
+
+                return Json(patients, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        // GET: PatientRecords/GetAllUsers
+        public ActionResult GetAllUsers()
+        {
+            try
+            {
+                var users = db.iCAREUser
+                    .Select(u => new { u.ID, u.name, u.profession })
+                    .ToList();
+
+                return Json(users, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        // Add this model class
+        public class PatientCreateModel
+        {
+            public string name { get; set; }
+            public string address { get; set; }
+            public string dateOfBirth { get; set; }
+            public string height { get; set; }
+            public string weight { get; set; }
+            public string bloodGroup { get; set; }
+            public string bedID { get; set; }
+            public string treatmentArea { get; set; }
+            public string assignedUserID { get; set; }
+        }
+
+        [HttpPost]
+        public ActionResult CreateWithAssignment([ModelBinder(typeof(JsonModelBinder))] PatientCreateModel data)
+        {
+            System.Diagnostics.Debug.WriteLine("Starting CreateWithAssignment");
+            System.Diagnostics.Debug.WriteLine($"Received data: {JsonConvert.SerializeObject(data)}");
+
+            try
+            {
+                if (data == null)
+                {
+                    Response.StatusCode = 400;
+                    return Json(new { error = "No data received" });
+                }
+
+                using (var transaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        // Generate a new ID for the patient
+                        string patientId = "PAT" + DateTime.Now.Ticks.ToString().Substring(0, 8);
+
+                        // Create new patient record
+                        var patient = new PatientRecord
+                        {
+                            ID = patientId,
+                            name = data.name,
+                            address = data.address,
+                            dateOfBirth = DateTime.Parse(data.dateOfBirth),
+                            height = float.Parse(data.height),
+                            weight = float.Parse(data.weight),
+                            bloodGroup = data.bloodGroup,
+                            bedID = data.bedID,
+                            treatmentArea = data.treatmentArea
+                        };
+
+                        db.PatientRecord.Add(patient);
+
+                        // Create document metadata
+                        var docMeta = new DocumentMetadata
+                        {
+                            docID = "DOC" + DateTime.Now.Ticks.ToString().Substring(0, 8),
+                            docName = "Initial Assignment",
+                            dateOfCreation = DateTime.Now.ToString("yyyy-MM-dd"),
+                            patientID = patientId,
+                            userID = data.assignedUserID
+                        };
+
+                        db.DocumentMetadata.Add(docMeta);
+                        db.SaveChanges();
+                        transaction.Commit();
+
+                        return Json(new { success = true, patientId = patientId });
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in CreateWithAssignment: {ex.Message}");
+                Response.StatusCode = 500;
+                return Json(new { error = ex.Message });
+            }
+        }
+
+
+        // GET: PatientRecords/MyPatients
+        public ActionResult MyPatients()
+        {
+            try
+            {
+                // Get current user ID from authentication
+                var currentUserID = User.Identity.Name;
+
+                // Debug logging
+                System.Diagnostics.Debug.WriteLine($"Current User ID: {currentUserID}");
+
+                // Get patients associated with the current user through DocumentMetadata
+                var patientRecords = db.DocumentMetadata
+                    .Where(d => d.userID == currentUserID)
+                    .Select(d => new {
+                        ID = d.PatientRecord.ID,
+                        name = d.PatientRecord.name,
+                        address = d.PatientRecord.address,
+                        dateOfBirth = d.PatientRecord.dateOfBirth,
+                        height = d.PatientRecord.height,
+                        weight = d.PatientRecord.weight,
+                        bloodGroup = d.PatientRecord.bloodGroup,
+                        bedID = d.PatientRecord.bedID,
+                        treatmentArea = d.PatientRecord.treatmentArea
+                    })
+                    .Distinct()
+                    .ToList();
+
+                // Debug logging
+                System.Diagnostics.Debug.WriteLine($"Found {patientRecords.Count} patients");
+
+                return Json(patientRecords, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in MyPatients: {ex.Message}");
+                Response.StatusCode = 500;
+                return Json(new { error = ex.Message });
+            }
         }
 
         // GET: PatientRecords/Details/5

@@ -5,29 +5,22 @@ export default function WorkerNavBar({ setIsAuthenticated }) {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
-        console.log('Logout button clicked'); // Debug log
-
+        console.log('Logout button clicked');
         try {
-            console.log('Sending logout request...'); // Debug log
-
-            // Changed to GET request and adjusted URL format
+            console.log('Sending logout request...');
             const response = await fetch('/Account/Logout', {
-                method: 'GET', // Changed to GET to match C# controller
+                method: 'GET',
                 credentials: 'include',
             });
-
-            console.log('Logout response status:', response.status); // Debug log
-            console.log('Logout response:', response); // Debug log
-
-            // Handle both successful response and redirect
+            console.log('Logout response status:', response.status);
+            console.log('Logout response:', response);
             if (response.ok || response.status === 302) {
-                console.log('Logout successful, clearing auth state...'); // Debug log
+                console.log('Logout successful, clearing auth state...');
                 setIsAuthenticated(false, []);
-                console.log('Navigating to login page...'); // Debug log
+                console.log('Navigating to login page...');
                 navigate('/login', { replace: true });
             } else {
                 console.error('Logout failed with status:', response.status);
-                // Try to get more error details if available
                 const errorText = await response.text();
                 console.error('Error details:', errorText);
                 alert(`Logout failed (${response.status}). Please try again.`);
@@ -38,11 +31,15 @@ export default function WorkerNavBar({ setIsAuthenticated }) {
         }
     };
 
+    const handleGoMyBoard = () => {
+        navigate('/myboard');
+    };
+
     const handleGoPallete = () => {
         navigate('/mypalette');
     };
 
-    const handleGoMyBoard = () => {
+    const handleGoDashboard = () => {
         navigate('/home');
     };
 
@@ -50,21 +47,26 @@ export default function WorkerNavBar({ setIsAuthenticated }) {
         <nav className="bg-white shadow-lg">
             <div className="max-w-7xl mx-auto px-4">
                 <div className="flex justify-between items-center h-16">
-                    <h1 className="text-2xl font-bold text-gray-900">iCare Dashboard</h1>
+                    <button
+                        onClick={handleGoDashboard}
+                        className="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors"
+                    >
+                        iCare Dashboard
+                    </button>
                     <div className="flex items-center space-x-4">
-                        <button
-                            type="button"
-                            className="text-gray-600 hover:text-gray-900 px-4 py-2"
-                            onClick={handleGoPallete}
-                        >
-                            MyPalette
-                        </button>
                         <button
                             type="button"
                             className="text-gray-600 hover:text-gray-900 px-4 py-2"
                             onClick={handleGoMyBoard}
                         >
                             MyBoard
+                        </button>
+                        <button
+                            type="button"
+                            className="text-gray-600 hover:text-gray-900 px-4 py-2"
+                            onClick={handleGoPallete}
+                        >
+                            MyPalette
                         </button>
                         <button
                             type="button"
