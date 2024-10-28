@@ -5,9 +5,13 @@ import {React, useEffect, useState} from 'react'
 //TODO: Add box for failing to add doc.
 //TODO:
 
-const AddDocumentModal = (setShowAddModal) => {
+const AddDocumentModal = ({setShowAddModal}) => {
   
-    const [newDocument, setDocument] = useState({})
+    const [newDocument, setDocument] = useState({
+        Name: "",
+        patientID: "",
+        FileData: null
+    })
     const [patients, setPatients] = useState([])
     const [error, setError] = useState('')
     const [loadingPatients, setLoadingPatients] = useState(true)
@@ -41,13 +45,21 @@ const AddDocumentModal = (setShowAddModal) => {
     const handleAddDoc = async(e) => {
         e.preventDefault();
         try{
+            console.log("New document data: ", newDocument);
+
+            const formData = new FormData();
+            formData.append("Name", newDocument.Name)
+            formData.append("PatientID", "Woof")
+            formData.append("FileData", newDocument.FileData)
+
+            for (const [key, value] of formData.entries()) {
+                console.log(`${key}:`, value);
+            }
+
             const url = 'DocumentMetadatas/AddDocument';
             const requestData = {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newDocument),
+                body: formData,
                 credentials: 'include'
             };
 
@@ -60,13 +72,14 @@ const AddDocumentModal = (setShowAddModal) => {
             }
         }catch(ex){
             console.log("Failed to add document.")
+            console.log(ex);
         }
         setShowAddModal(false)
     }
   
     return (
     
-    <div className='fixed inset-0 bg-opacity-50 bg-gray-400 justify-center align-center'>
+    <div className='fixed inset-0 bg-opacity-50 bg-gray-400 flex justify-center align-center'>
         <div className="bg-white rounded-lg p-8 max-w-md w-full">
             {loadingPatients ? (
             <div>
@@ -74,7 +87,7 @@ const AddDocumentModal = (setShowAddModal) => {
             </div>
             ) : error === '' ? (<>
             <h2 className="text-2xl font-bold mb-4">Add New Document</h2>
-            <form onSubmit={handleAddDoc} className="space-y-4">
+                        <form onSubmit={handleAddDoc} className="space-y-4" encType="multipart/form-data">
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Name</label>
                     <input
@@ -88,19 +101,19 @@ const AddDocumentModal = (setShowAddModal) => {
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Corresponding Patient</label>
                     <select
-                        value={newDocument.roleID}
-                        onChange={(e) => setDocument({ ...newDocument, patientID: e.target.value })}
+                        value={newDocument.patientID}
+                        onChange={(e) => setDocument({ ...newDocument, patientID: "woof" })}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                         required
                     >
                         {patients.map((patient) => (
-                            <option value={patient.ID}>{patient.name} Id: {patient.ID}</option>
+                            <option key={patient.ID} value={patient.ID}>{patient.name} Id: {patient.ID}</option>
                         ))}
                     </select>
                 </div>
                 <div>
                     <label htmlFor="fileUpload">Upload Document:</label>
-                    <input type="file" id="fileUpload" onChange={(e) => setDocument({...newDocument, FileData: new Blob([e.target.files[0]], { type: e.target.files[0].type })})} />
+                    <input type="file" id="fileUpload" onChange={(e) => setDocument({...newDocument, FileData: e.target.files[0]})} />
                 </div>
                 <div className="flex justify-end space-x-4 mt-6">
                     <button

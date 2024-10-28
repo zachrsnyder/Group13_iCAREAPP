@@ -9,6 +9,10 @@ using System.Web.Mvc;
 using Group13_iCAREAPP.Models;
 using System.Data.SqlClient;
 using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
+using System.Media;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 
 namespace Group13_iCAREAPP.Controllers
@@ -50,6 +54,7 @@ namespace Group13_iCAREAPP.Controllers
         // GET: DocumentMetadatas/Details/5
         public ActionResult Details(string id)
         {
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -62,24 +67,62 @@ namespace Group13_iCAREAPP.Controllers
             return View(documentMetadata);
         }
 
+        public class DocumentUploadModel
+        {
+            public string Name { get; set; }
+            public string PatientID { get; set; }
+
+            [Microsoft.AspNetCore.Mvc.ModelBinding.BindRequired]
+            public HttpPostedFileBase FileData { get; set; }
+        }
+
         // POST: DocumentMetadatas/AddDocument
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         //Edited HttpPost to support creation of document metadata as well as creation of the document itself. Assumes document is already converted to BLOB form.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddDocument()
+        [Microsoft.AspNetCore.Mvc.HttpPost("DocumentMetadatas/AddDocument")]
+        public ActionResult AddDocument([Microsoft.AspNetCore.Mvc.FromForm] DocumentUploadModel payload/*string Name, [Microsoft.AspNetCore.Mvc.FromForm] string PatientID, [Microsoft.AspNetCore.Mvc.FromForm] IFormFile FileData*/)
         {
+            System.Diagnostics.Debug.WriteLine("Attempoting to add document");
+
             try
             {
+
+                /*System.Diagnostics.Debug.WriteLine($"Testing info transfer using FromForm: {Name}");
+                System.Diagnostics.Debug.WriteLine($"PatientId? : {PatientID}");*/
+                System.Diagnostics.Debug.WriteLine($"File? : {payload.FileData.InputStream}");
+
+                byte[] fileData;
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    payload.FileData.InputStream.CopyTo(memoryStream);
+                    fileData = memoryStream.ToArray();
+                }
+
+               
+
+                System.Diagnostics.Debug.WriteLine($"FileByteString: {fileData}");
+
+
+
+                /*
                 //Read and parse request body
                 var jsonReader = new System.IO.StreamReader(Request.InputStream);
                 jsonReader.BaseStream.Position = 0;
                 var jsonString = jsonReader.ReadToEnd();
 
+                System.Diagnostics.Debug.WriteLine("String ", jsonString);
+
                 var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 dynamic docData = serializer.Deserialize<dynamic>(jsonString);
 
+                foreach(var item in docData["FileData"].Keys)
+                    System.Diagnostics.Debug.WriteLine($"{item}");
+                foreach(var item in docData["FileData"].Values)
+                    System.Diagnostics.Debug.WriteLine($"{item}");
+
+                */
                 string newId = Guid.NewGuid().ToString();
 
                 using (var transaction = db.Database.BeginTransaction())
@@ -89,23 +132,24 @@ namespace Group13_iCAREAPP.Controllers
                         var metaData = new DocumentMetadata
                         {
                             docID = newId,
-                            docName = docData["docName"],
+                            docName = payload.Name,
                             dateOfCreation = DateTime.Now.ToString(),
-                            patientID = docData["patientID"],
+                            patientID = payload.PatientID,
                             userID = Session["UserID"].ToString(),
                         };
+
 
                         var document = new DocumentStorage
                         {
                             Id = newId,
-                            FileData = docData["docData"]
+                            FileData = fileData,
                         };
                         db.DocumentMetadata.Add(metaData);
                         db.DocumentStorage.Add(document);
 
                         transaction.Commit();
 
-                        return Json(new { status = 200 });
+                        
 
                     }
                     catch (Exception ex)
@@ -115,6 +159,7 @@ namespace Group13_iCAREAPP.Controllers
                         throw new Exception("Failed transaction");
                     }
                 }
+                return Json(new { status = 200 });
             }
             catch (Exception ex)
             {
