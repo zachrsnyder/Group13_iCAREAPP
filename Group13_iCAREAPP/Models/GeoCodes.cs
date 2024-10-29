@@ -17,12 +17,15 @@ namespace Group13_iCAREAPP.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public GeoCodes()
         {
+            this.PatientRecord = new HashSet<PatientRecord>();
             this.iCAREUser = new HashSet<iCAREUser>();
         }
     
         public string ID { get; set; }
         public string description { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PatientRecord> PatientRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<iCAREUser> iCAREUser { get; set; }
     }

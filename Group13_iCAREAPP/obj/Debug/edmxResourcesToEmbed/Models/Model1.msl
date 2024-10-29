@@ -4,102 +4,118 @@
     <EntitySetMapping Name="DocumentMetadata">
       <EntityTypeMapping TypeName="Group13_iCAREDBModel.DocumentMetadata">
         <MappingFragment StoreEntitySet="DocumentMetadata">
-          <ScalarProperty Name="docID" ColumnName="docID" />
-          <ScalarProperty Name="docName" ColumnName="docName" />
-          <ScalarProperty Name="dateOfCreation" ColumnName="dateOfCreation" />
-          <ScalarProperty Name="patientID" ColumnName="patientID" />
           <ScalarProperty Name="userID" ColumnName="userID" />
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="dateOfCreation" ColumnName="dateOfCreation" />
+          <ScalarProperty Name="docName" ColumnName="docName" />
+          <ScalarProperty Name="docID" ColumnName="docID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocumentStorage">
+      <EntityTypeMapping TypeName="Group13_iCAREDBModel.DocumentStorage">
+        <MappingFragment StoreEntitySet="DocumentStorage">
+          <ScalarProperty Name="FileData" ColumnName="FileData" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="GeoCodes">
       <EntityTypeMapping TypeName="Group13_iCAREDBModel.GeoCodes">
         <MappingFragment StoreEntitySet="GeoCodes">
-          <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="iCAREUser">
       <EntityTypeMapping TypeName="Group13_iCAREDBModel.iCAREUser">
         <MappingFragment StoreEntitySet="iCAREUser">
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="name" ColumnName="name" />
-          <ScalarProperty Name="profession" ColumnName="profession" />
-          <ScalarProperty Name="adminEmail" ColumnName="adminEmail" />
-          <ScalarProperty Name="dateHired" ColumnName="dateHired" />
           <ScalarProperty Name="dateFinished" ColumnName="dateFinished" />
+          <ScalarProperty Name="dateHired" ColumnName="dateHired" />
+          <ScalarProperty Name="adminEmail" ColumnName="adminEmail" />
+          <ScalarProperty Name="profession" ColumnName="profession" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="ModificationHistory">
       <EntityTypeMapping TypeName="Group13_iCAREDBModel.ModificationHistory">
         <MappingFragment StoreEntitySet="ModificationHistory">
-          <ScalarProperty Name="docID" ColumnName="docID" />
-          <ScalarProperty Name="dateOfModification" ColumnName="dateOfModification" />
           <ScalarProperty Name="descrption" ColumnName="descrption" />
+          <ScalarProperty Name="dateOfModification" ColumnName="dateOfModification" />
+          <ScalarProperty Name="docID" ColumnName="docID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="PatientRecord">
       <EntityTypeMapping TypeName="Group13_iCAREDBModel.PatientRecord">
         <MappingFragment StoreEntitySet="PatientRecord">
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="name" ColumnName="name" />
-          <ScalarProperty Name="address" ColumnName="address" />
-          <ScalarProperty Name="dateOfBirth" ColumnName="dateOfBirth" />
-          <ScalarProperty Name="height" ColumnName="height" />
-          <ScalarProperty Name="weight" ColumnName="weight" />
-          <ScalarProperty Name="bloodGroup" ColumnName="bloodGroup" />
-          <ScalarProperty Name="bedID" ColumnName="bedID" />
           <ScalarProperty Name="treatmentArea" ColumnName="treatmentArea" />
+          <ScalarProperty Name="bedID" ColumnName="bedID" />
+          <ScalarProperty Name="bloodGroup" ColumnName="bloodGroup" />
+          <ScalarProperty Name="weight" ColumnName="weight" />
+          <ScalarProperty Name="height" ColumnName="height" />
+          <ScalarProperty Name="dateOfBirth" ColumnName="dateOfBirth" />
+          <ScalarProperty Name="address" ColumnName="address" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="TreatmentRecord">
       <EntityTypeMapping TypeName="Group13_iCAREDBModel.TreatmentRecord">
         <MappingFragment StoreEntitySet="TreatmentRecord">
-          <ScalarProperty Name="treatmentID" ColumnName="treatmentID" />
-          <ScalarProperty Name="description" ColumnName="description" />
-          <ScalarProperty Name="treatmentDate" ColumnName="treatmentDate" />
-          <ScalarProperty Name="patientID" ColumnName="patientID" />
           <ScalarProperty Name="userID" ColumnName="userID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="UserRole">
-      <EntityTypeMapping TypeName="Group13_iCAREDBModel.UserRole">
-        <MappingFragment StoreEntitySet="UserRole">
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="roleName" ColumnName="roleName" />
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="treatmentDate" ColumnName="treatmentDate" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="treatmentID" ColumnName="treatmentID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="UserPassword">
       <EntityTypeMapping TypeName="Group13_iCAREDBModel.UserPassword">
         <MappingFragment StoreEntitySet="UserPassword">
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="userName" ColumnName="userName" />
-          <ScalarProperty Name="encryptedPassword" ColumnName="encryptedPassword" />
-          <ScalarProperty Name="passwordExpiryTime" ColumnName="passwordExpiryTime" />
           <ScalarProperty Name="userAccountExpiryDate" ColumnName="userAccountExpiryDate" />
+          <ScalarProperty Name="passwordExpiryTime" ColumnName="passwordExpiryTime" />
+          <ScalarProperty Name="encryptedPassword" ColumnName="encryptedPassword" />
+          <ScalarProperty Name="userName" ColumnName="userName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserRole">
+      <EntityTypeMapping TypeName="Group13_iCAREDBModel.UserRole">
+        <MappingFragment StoreEntitySet="UserRole">
+          <ScalarProperty Name="roleName" ColumnName="roleName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <AssociationSetMapping Name="PatientGeoCode" TypeName="Group13_iCAREDBModel.PatientGeoCode" StoreEntitySet="PatientGeoCode">
+      <EndProperty Name="PatientRecord">
+        <ScalarProperty Name="ID" ColumnName="patientID" />
+      </EndProperty>
       <EndProperty Name="GeoCodes">
         <ScalarProperty Name="ID" ColumnName="geoID" />
       </EndProperty>
-      <EndProperty Name="iCAREUser">
-        <ScalarProperty Name="ID" ColumnName="patientID" />
-      </EndProperty>
     </AssociationSetMapping>
     <AssociationSetMapping Name="UserRoleAssignment" TypeName="Group13_iCAREDBModel.UserRoleAssignment" StoreEntitySet="UserRoleAssignment">
+      <EndProperty Name="UserRole">
+        <ScalarProperty Name="ID" ColumnName="roleID" />
+      </EndProperty>
       <EndProperty Name="iCAREUser">
         <ScalarProperty Name="ID" ColumnName="userID" />
       </EndProperty>
-      <EndProperty Name="UserRole">
-        <ScalarProperty Name="ID" ColumnName="roleID" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="WorkerGeoCode" TypeName="Group13_iCAREDBModel.WorkerGeoCode" StoreEntitySet="WorkerGeoCode">
+      <EndProperty Name="iCAREUser">
+        <ScalarProperty Name="ID" ColumnName="workerID" />
+      </EndProperty>
+      <EndProperty Name="GeoCodes">
+        <ScalarProperty Name="ID" ColumnName="geoID" />
       </EndProperty>
     </AssociationSetMapping>
   </EntityContainerMapping>

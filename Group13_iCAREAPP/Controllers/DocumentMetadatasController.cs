@@ -11,7 +11,7 @@ using System.Data.SqlClient;
 using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Media;
-using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Http;
 using System.IO;
 
 
@@ -72,7 +72,7 @@ namespace Group13_iCAREAPP.Controllers
             public string Name { get; set; }
             public string PatientID { get; set; }
 
-            [Microsoft.AspNetCore.Mvc.ModelBinding.BindRequired]
+            //[Microsoft.AspNetCore.Mvc.ModelBinding.BindRequired]
             public HttpPostedFileBase FileData { get; set; }
         }
 
@@ -80,8 +80,9 @@ namespace Group13_iCAREAPP.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         //Edited HttpPost to support creation of document metadata as well as creation of the document itself. Assumes document is already converted to BLOB form.
-        [Microsoft.AspNetCore.Mvc.HttpPost("DocumentMetadatas/AddDocument")]
-        public ActionResult AddDocument([Microsoft.AspNetCore.Mvc.FromForm] DocumentUploadModel payload/*string Name, [Microsoft.AspNetCore.Mvc.FromForm] string PatientID, [Microsoft.AspNetCore.Mvc.FromForm] IFormFile FileData*/)
+        [HttpPost]
+        [Route("DocumentMetadatas/AddDocument")]
+        public ActionResult AddDocument(DocumentUploadModel payload)
         {
             System.Diagnostics.Debug.WriteLine("Attempoting to add document");
 
@@ -144,9 +145,11 @@ namespace Group13_iCAREAPP.Controllers
                             Id = newId,
                             FileData = fileData,
                         };
+                        System.Diagnostics.Debug.WriteLine(document.FileData.Length);
+
                         db.DocumentMetadata.Add(metaData);
                         db.DocumentStorage.Add(document);
-
+                        System.Diagnostics.Debug.WriteLine("Attempting to save changes");
                         transaction.Commit();
 
                         

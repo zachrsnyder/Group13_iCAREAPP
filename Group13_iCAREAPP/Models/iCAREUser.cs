@@ -19,9 +19,8 @@ namespace Group13_iCAREAPP.Models
         {
             this.DocumentMetadata = new HashSet<DocumentMetadata>();
             this.TreatmentRecord = new HashSet<TreatmentRecord>();
-            this.UserPassword = new HashSet<UserPassword>();
-            this.GeoCodes = new HashSet<GeoCodes>();
             this.UserRole = new HashSet<UserRole>();
+            this.GeoCodes = new HashSet<GeoCodes>();
         }
     
         public string ID { get; set; }
@@ -33,13 +32,14 @@ namespace Group13_iCAREAPP.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocumentMetadata> DocumentMetadata { get; set; }
+        public virtual iCAREUser iCAREUser1 { get; set; }
+        public virtual iCAREUser iCAREUser2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TreatmentRecord> TreatmentRecord { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserPassword> UserPassword { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GeoCodes> GeoCodes { get; set; }
+        public virtual UserPassword UserPassword { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserRole> UserRole { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GeoCodes> GeoCodes { get; set; }
     }
 }

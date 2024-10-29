@@ -19,6 +19,7 @@ namespace Group13_iCAREAPP.Models
         {
             this.DocumentMetadata = new HashSet<DocumentMetadata>();
             this.TreatmentRecord = new HashSet<TreatmentRecord>();
+            this.GeoCodes = new HashSet<GeoCodes>();
         }
     
         public string ID { get; set; }
@@ -35,5 +36,7 @@ namespace Group13_iCAREAPP.Models
         public virtual ICollection<DocumentMetadata> DocumentMetadata { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TreatmentRecord> TreatmentRecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GeoCodes> GeoCodes { get; set; }
     }
 }

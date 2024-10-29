@@ -49,7 +49,7 @@ const AddDocumentModal = ({setShowAddModal}) => {
 
             const formData = new FormData();
             formData.append("Name", newDocument.Name)
-            formData.append("PatientID", "Woof")
+            formData.append("PatientID", newDocument.patientID)
             formData.append("FileData", newDocument.FileData)
 
             for (const [key, value] of formData.entries()) {
@@ -102,7 +102,7 @@ const AddDocumentModal = ({setShowAddModal}) => {
                     <label className="block text-sm font-medium text-gray-700">Corresponding Patient</label>
                     <select
                         value={newDocument.patientID}
-                        onChange={(e) => setDocument({ ...newDocument, patientID: "woof" })}
+                        onChange={(e) => setDocument({ ...newDocument, patientID: e.target.value })}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                         required
                     >

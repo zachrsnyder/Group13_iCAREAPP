@@ -20,6 +20,7 @@ namespace Group13_iCAREAPP.Models
         public string patientID { get; set; }
         public string userID { get; set; }
     
+        public virtual DocumentStorage DocumentStorage { get; set; }
         public virtual iCAREUser iCAREUser { get; set; }
         public virtual PatientRecord PatientRecord { get; set; }
     }
