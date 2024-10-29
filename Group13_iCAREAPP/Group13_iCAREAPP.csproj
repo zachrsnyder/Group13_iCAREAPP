@@ -155,6 +155,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\DocumentMetadatasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ICareBoardController.cs" />
     <Compile Include="Controllers\PatientRecordsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -163,11 +164,11 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\JsonModelBinder.cs" />
-    <Compile Include="Models\UserRoleAssignment.cs" />
-    <Compile Include="Models\DocumentMetadata.cs">
+    <Compile Include="Models\PatientGeoCode.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GeoCodes.cs">
+    <Compile Include="Models\UserRoleAssignment.cs" />
+    <Compile Include="Models\DocumentMetadata.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\iCAREUser.cs">
@@ -203,7 +204,9 @@
     <Compile Include="Models\UserRole.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\WorkerGeoCode.cs" />
+    <Compile Include="Models\WorkerGeoCode.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\PatientCreateModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
@@ -314,6 +317,7 @@
     <Folder Include="clientapp\src\components\Display\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\DocumentMetadatas\" />
+    <Folder Include="Views\MyBoard\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
