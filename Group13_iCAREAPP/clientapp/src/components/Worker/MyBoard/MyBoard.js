@@ -5,6 +5,9 @@ const MyBoard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedPatient, setSelectedPatient] = useState(null);
+
 
     useEffect(() => {
         const fetchPatients = async () => {
@@ -36,6 +39,16 @@ const MyBoard = () => {
         patient.ID.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.treatmentArea.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const openModal = (patient) => {
+        setSelectedPatient(patient);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setSelectedPatient(null);
+        setIsModalOpen(false);
+    };
 
     if (loading) {
         return (
@@ -90,7 +103,7 @@ const MyBoard = () => {
                                 <td className="p-4">{patient.bloodGroup}</td>
                                 <td className="p-4">
                                     <button
-                                        onClick={() => window.location.href = `/PatientRecords/Details/${patient.ID}`}
+                                        onClick={() => openModal(patient)}
                                         className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition-colors mr-2"
                                     >
                                         View
@@ -106,6 +119,30 @@ const MyBoard = () => {
                     </div>
                 )}
             </div>
+            {isModalOpen && selectedPatient && (
+                <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">
+                        <h2 className="text-xl font-bold mb-4">Patient Details</h2>
+                        <div className="mb-4">
+                            <p><strong>ID:</strong> {selectedPatient.ID}</p>
+                            <p><strong>Name:</strong> {selectedPatient.name}</p>
+                            <p><strong>Address:</strong> {selectedPatient.address}</p>
+                            <p><strong>Date of Birth:</strong> {selectedPatient.dateOfBirth}</p>
+                            <p><strong>Height:</strong> {selectedPatient.height}</p>
+                            <p><strong>Weight:</strong> {selectedPatient.weight}</p>
+                            <p><strong>Blood Group:</strong> {selectedPatient.bloodGroup}</p>
+                            <p><strong>Bed ID:</strong> {selectedPatient.bedID}</p>
+                            <p><strong>Treatment Area:</strong> {selectedPatient.treatmentArea}</p>
+                        </div>
+                        <button
+                            onClick={closeModal}
+                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

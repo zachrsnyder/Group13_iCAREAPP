@@ -176,7 +176,7 @@ namespace Group13_iCAREAPP.Controllers
                         ID = d.PatientRecord.ID,
                         name = d.PatientRecord.name,
                         address = d.PatientRecord.address,
-                        dateOfBirth = d.PatientRecord.dateOfBirth,
+                        dateOfBirth = d.PatientRecord.dateOfBirth.ToString().Replace("/Date(", "").Replace(")/", ""),
                         height = d.PatientRecord.height,
                         weight = d.PatientRecord.weight,
                         bloodGroup = d.PatientRecord.bloodGroup,

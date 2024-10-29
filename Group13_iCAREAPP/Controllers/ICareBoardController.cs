@@ -24,39 +24,6 @@ namespace Group13_iCAREAPP.Controllers
             return View();
         }
 
-        // GET: ICareBoard/GetAllPatients
-        public ActionResult GetAllPatients()
-        {
-            try
-            {
-                var patients = db.PatientRecord
-                    .Select(p => new
-                    {
-                        p.ID,
-                        p.name,
-                        p.address,
-                        p.dateOfBirth,
-                        p.height,
-                        p.weight,
-                        p.bloodGroup,
-                        p.bedID,
-                        p.treatmentArea,
-                        assignedUser = p.DocumentMetadata
-                            .OrderByDescending(d => d.dateOfCreation)
-                            .Select(d => new { d.iCAREUser.ID, d.iCAREUser.name })
-                            .FirstOrDefault()
-                    })
-                    .ToList();
-
-                return Json(patients, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                Response.StatusCode = 500;
-                return Json(new { error = ex.Message });
-            }
-        }
-
         // GET: ICareBoard/HospitalPatients
         public ActionResult HospitalPatients()
         {
@@ -84,7 +51,7 @@ namespace Group13_iCAREAPP.Controllers
                                           ID = p.ID,
                                           name = p.name,
                                           address = p.address,
-                                          dateOfBirth = p.dateOfBirth,
+                                          dateOfBirth = p.dateOfBirth.ToString().Replace("/Date(", "").Replace(")/", ""),
                                           height = p.height,
                                           weight = p.weight,
                                           bloodGroup = p.bloodGroup,
