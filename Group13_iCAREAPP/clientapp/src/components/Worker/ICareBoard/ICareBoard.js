@@ -1,12 +1,13 @@
 ﻿import React, { useState, useEffect } from 'react';
 
-const MyBoard = () => {
-    const [patients, setPatients] = useState([]);
+const ICareBoard = () => {
+    const [selectedPatients, setSelectedPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [notification, setNotification] = useState(false);
 
     useEffect(() => {
         const fetchPatients = async () => {
@@ -17,7 +18,7 @@ const MyBoard = () => {
                 if (!response.ok) throw new Error('Failed to fetch patients');
 
                 const data = await response.json();
-                setPatients(data);
+                setSelectedPatients(data);
                 setLoading(false);
             } catch (err) {
                 setError(err.message);
@@ -28,7 +29,14 @@ const MyBoard = () => {
         fetchPatients();
     }, []);
 
-    const filteredPatients = patients.filter(patient =>
+    const showNotification = () => {
+        setNotification(true);
+        setTimeout(() => {
+            setNotification(false);
+        }, 5000); // Hide after 5 seconds
+    };
+
+    const filteredPatients = selectedPatients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.ID.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.treatmentArea.toLowerCase().includes(searchTerm.toLowerCase())
@@ -44,11 +52,25 @@ const MyBoard = () => {
         setIsModalOpen(false);
     };
 
-    const formatDate = (dateString) => {
-        if (!dateString) return '';
-        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-        const date = new Date(dateString);
-        return date.toLocaleDateString(undefined, options);
+    const assignPatients = async () => {
+        const selectedIDs = selectedPatients
+            .filter(patient => patient.selected)
+            .map(patient => patient.ID);
+
+        try {
+            const response = await fetch('/ICareBoard/AssignPatients', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ selectedIDs })
+            });
+
+            if (!response.ok) throw new Error('Failed to assign patients');
+            alert('Patients assigned successfully!');
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
     };
 
     if (loading) return <div className="flex justify-center items-center h-64"><div className="text-xl text-gray-600">Loading patients...</div></div>;
@@ -73,6 +95,7 @@ const MyBoard = () => {
                 <table className="w-full">
                     <thead>
                         <tr className="bg-gray-50">
+                            <th className="p-4 text-left font-medium text-gray-600">Select Patients</th>
                             <th className="p-4 text-left font-medium text-gray-600">ID</th>
                             <th className="p-4 text-left font-medium text-gray-600">Name</th>
                             <th className="p-4 text-left font-medium text-gray-600">Treatment Area</th>
@@ -82,23 +105,45 @@ const MyBoard = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredPatients.map((patient) => (
-                            <tr key={patient.ID} className="border-t hover:bg-gray-50">
-                                <td className="p-4">{patient.ID}</td>
-                                <td className="p-4">{patient.name}</td>
-                                <td className="p-4">{patient.treatmentArea}</td>
-                                <td className="p-4">{patient.bedID}</td>
-                                <td className="p-4">{patient.bloodGroup}</td>
-                                <td className="p-4">
-                                    <button
-                                        onClick={() => openModal(patient)}
-                                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition-colors mr-2"
-                                    >
-                                        View
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                        {filteredPatients.map((patient) => {
+                            const isRestricted = patient.treatmentArea === 'ICU' || patient.bedID === null;
+
+                            return (
+                                <tr key={patient.ID} className="border-t hover:bg-gray-50">
+                                    <td className="p-4">
+                                        <input
+                                            type="checkbox"
+                                            checked={patient.selected || false}
+                                            onClick={() => {
+                                                if (isRestricted) {
+                                                    showNotification();
+                                                } else {
+                                                    setSelectedPatients(selectedPatients.map(p =>
+                                                        p.ID === patient.ID
+                                                            ? { ...p, selected: !p.selected }
+                                                            : p
+                                                    ));
+                                                }
+                                            }}
+                                            disabled={isRestricted}
+                                        />
+                                    </td>
+                                    <td className="p-4">{patient.ID}</td>
+                                    <td className="p-4">{patient.name}</td>
+                                    <td className="p-4">{patient.treatmentArea}</td>
+                                    <td className="p-4">{patient.bedID}</td>
+                                    <td className="p-4">{patient.bloodGroup}</td>
+                                    <td className="p-4">
+                                        <button
+                                            onClick={() => openModal(patient)}
+                                            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition-colors mr-2"
+                                        >
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
                 {filteredPatients.length === 0 && (
@@ -107,6 +152,12 @@ const MyBoard = () => {
                     </div>
                 )}
             </div>
+
+            {notification && (
+                <div className="fixed top-0 left-0 w-full bg-red-500 text-white text-center p-4 z-50">
+                    You cannot select this patient due to certain restrictions.
+                </div>
+            )}
 
             {isModalOpen && selectedPatient && (
                 <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
@@ -132,8 +183,15 @@ const MyBoard = () => {
                     </div>
                 </div>
             )}
+
+            <button
+                onClick={assignPatients}
+                className="fixed bottom-6 right-6 bg-green-500 text-white px-5 py-3 rounded-full hover:bg-green-600 shadow-lg transition-colors"
+            >
+                Assign Patients
+            </button>
         </div>
     );
 };
 
-export default MyBoard;
+export default ICareBoard;
