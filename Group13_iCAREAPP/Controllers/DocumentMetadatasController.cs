@@ -150,6 +150,7 @@ namespace Group13_iCAREAPP.Controllers
                         db.DocumentMetadata.Add(metaData);
                         db.DocumentStorage.Add(document);
                         System.Diagnostics.Debug.WriteLine("Attempting to save changes");
+                        db.SaveChanges();
                         transaction.Commit();
 
                         
