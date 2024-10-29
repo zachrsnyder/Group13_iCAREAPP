@@ -17,13 +17,6 @@
     <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="FileData" Type="varbinary(max)" Nullable="false" />
   </EntityType>
-  <EntityType Name="GeoCodes">
-    <Key>
-      <PropertyRef Name="ID" />
-    </Key>
-    <Property Name="ID" Type="varchar" MaxLength="50" Nullable="false" />
-    <Property Name="description" Type="varchar(max)" Nullable="false" />
-  </EntityType>
   <EntityType Name="iCAREUser">
     <Key>
       <PropertyRef Name="ID" />
@@ -100,8 +93,6 @@
     <Property Name="userID" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="roleID" Type="varchar" MaxLength="50" Nullable="false" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6002: The table/view 'Group13_iCAREDB.dbo.WorkerGeoCode' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
   <EntityType Name="WorkerGeoCode">
     <Key>
       <PropertyRef Name="geoID" />
@@ -157,18 +148,6 @@ warning 6002: The table/view 'Group13_iCAREDB.dbo.WorkerGeoCode' does not have a
       </Principal>
       <Dependent Role="iCAREUser1">
         <PropertyRef Name="ID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_PatientGeoCode_GeoCodes">
-    <End Role="GeoCodes" Type="Self.GeoCodes" Multiplicity="1" />
-    <End Role="PatientGeoCode" Type="Self.PatientGeoCode" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="GeoCodes">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="PatientGeoCode">
-        <PropertyRef Name="geoID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -244,18 +223,6 @@ warning 6002: The table/view 'Group13_iCAREDB.dbo.WorkerGeoCode' does not have a
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_WorkerGeoCode_GeoCodes">
-    <End Role="GeoCodes" Type="Self.GeoCodes" Multiplicity="1" />
-    <End Role="WorkerGeoCode" Type="Self.WorkerGeoCode" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="GeoCodes">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="WorkerGeoCode">
-        <PropertyRef Name="geoID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_WorkerGeoCode_iCAREUser">
     <End Role="iCAREUser" Type="Self.iCAREUser" Multiplicity="1" />
     <End Role="WorkerGeoCode" Type="Self.WorkerGeoCode" Multiplicity="*" />
@@ -271,7 +238,6 @@ warning 6002: The table/view 'Group13_iCAREDB.dbo.WorkerGeoCode' does not have a
   <EntityContainer Name="Group13_iCAREDBModelStoreContainer">
     <EntitySet Name="DocumentMetadata" EntityType="Self.DocumentMetadata" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocumentStorage" EntityType="Self.DocumentStorage" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="GeoCodes" EntityType="Self.GeoCodes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="iCAREUser" EntityType="Self.iCAREUser" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ModificationHistory" EntityType="Self.ModificationHistory" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PatientGeoCode" EntityType="Self.PatientGeoCode" Schema="dbo" store:Type="Tables" />
@@ -280,12 +246,7 @@ warning 6002: The table/view 'Group13_iCAREDB.dbo.WorkerGeoCode' does not have a
     <EntitySet Name="UserPassword" EntityType="Self.UserPassword" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserRoleAssignment" EntityType="Self.UserRoleAssignment" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="WorkerGeoCode" EntityType="Self.WorkerGeoCode" store:Type="Tables" store:Schema="dbo">
-      <DefiningQuery>SELECT 
-    [WorkerGeoCode].[geoID] AS [geoID], 
-    [WorkerGeoCode].[workerID] AS [workerID]
-    FROM [dbo].[WorkerGeoCode] AS [WorkerGeoCode]</DefiningQuery>
-    </EntitySet>
+    <EntitySet Name="WorkerGeoCode" EntityType="Self.WorkerGeoCode" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_DocumentMetadata_DocumentStorage" Association="Self.FK_DocumentMetadata_DocumentStorage">
       <End Role="DocumentMetadata" EntitySet="DocumentMetadata" />
       <End Role="DocumentStorage" EntitySet="DocumentStorage" />
@@ -301,10 +262,6 @@ warning 6002: The table/view 'Group13_iCAREDB.dbo.WorkerGeoCode' does not have a
     <AssociationSet Name="FK_iCAREUser_iCAREUser" Association="Self.FK_iCAREUser_iCAREUser">
       <End Role="iCAREUser" EntitySet="iCAREUser" />
       <End Role="iCAREUser1" EntitySet="iCAREUser" />
-    </AssociationSet>
-    <AssociationSet Name="FK_PatientGeoCode_GeoCodes" Association="Self.FK_PatientGeoCode_GeoCodes">
-      <End Role="GeoCodes" EntitySet="GeoCodes" />
-      <End Role="PatientGeoCode" EntitySet="PatientGeoCode" />
     </AssociationSet>
     <AssociationSet Name="FK_PatientGeoCode_iCAREUser" Association="Self.FK_PatientGeoCode_iCAREUser">
       <End Role="PatientRecord" EntitySet="PatientRecord" />
@@ -329,10 +286,6 @@ warning 6002: The table/view 'Group13_iCAREDB.dbo.WorkerGeoCode' does not have a
     <AssociationSet Name="FK_UserRoleAssignment_UserRole" Association="Self.FK_UserRoleAssignment_UserRole">
       <End Role="UserRole" EntitySet="UserRole" />
       <End Role="UserRoleAssignment" EntitySet="UserRoleAssignment" />
-    </AssociationSet>
-    <AssociationSet Name="FK_WorkerGeoCode_GeoCodes" Association="Self.FK_WorkerGeoCode_GeoCodes">
-      <End Role="GeoCodes" EntitySet="GeoCodes" />
-      <End Role="WorkerGeoCode" EntitySet="WorkerGeoCode" />
     </AssociationSet>
     <AssociationSet Name="FK_WorkerGeoCode_iCAREUser" Association="Self.FK_WorkerGeoCode_iCAREUser">
       <End Role="iCAREUser" EntitySet="iCAREUser" />

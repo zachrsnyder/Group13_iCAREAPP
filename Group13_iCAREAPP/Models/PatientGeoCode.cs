@@ -15,27 +15,16 @@ namespace Group13_iCAREAPP.Models
 using System;
     using System.Collections.Generic;
     
-public partial class UserRole
+public partial class PatientGeoCode
 {
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-    public UserRole()
-    {
+    public string geoID { get; set; }
 
-        this.iCAREUser = new HashSet<iCAREUser>();
-
-    }
-
-
-    public string ID { get; set; }
-
-    public string roleName { get; set; }
+    public string patientID { get; set; }
 
 
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-
-    public virtual ICollection<iCAREUser> iCAREUser { get; set; }
+    public virtual PatientRecord PatientRecord { get; set; }
 
 }
 

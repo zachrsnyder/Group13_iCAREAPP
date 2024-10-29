@@ -20,14 +20,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="GeoCodes">
-      <EntityTypeMapping TypeName="Group13_iCAREDBModel.GeoCodes">
-        <MappingFragment StoreEntitySet="GeoCodes">
-          <ScalarProperty Name="description" ColumnName="description" />
-          <ScalarProperty Name="ID" ColumnName="ID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="iCAREUser">
       <EntityTypeMapping TypeName="Group13_iCAREDBModel.iCAREUser">
         <MappingFragment StoreEntitySet="iCAREUser">
@@ -46,6 +38,14 @@
           <ScalarProperty Name="descrption" ColumnName="descrption" />
           <ScalarProperty Name="dateOfModification" ColumnName="dateOfModification" />
           <ScalarProperty Name="docID" ColumnName="docID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PatientGeoCode">
+      <EntityTypeMapping TypeName="Group13_iCAREDBModel.PatientGeoCode">
+        <MappingFragment StoreEntitySet="PatientGeoCode">
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="geoID" ColumnName="geoID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -94,28 +94,20 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <AssociationSetMapping Name="PatientGeoCode" TypeName="Group13_iCAREDBModel.PatientGeoCode" StoreEntitySet="PatientGeoCode">
-      <EndProperty Name="PatientRecord">
-        <ScalarProperty Name="ID" ColumnName="patientID" />
-      </EndProperty>
-      <EndProperty Name="GeoCodes">
-        <ScalarProperty Name="ID" ColumnName="geoID" />
-      </EndProperty>
-    </AssociationSetMapping>
+    <EntitySetMapping Name="WorkerGeoCode">
+      <EntityTypeMapping TypeName="Group13_iCAREDBModel.WorkerGeoCode">
+        <MappingFragment StoreEntitySet="WorkerGeoCode">
+          <ScalarProperty Name="workerID" ColumnName="workerID" />
+          <ScalarProperty Name="geoID" ColumnName="geoID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="UserRoleAssignment" TypeName="Group13_iCAREDBModel.UserRoleAssignment" StoreEntitySet="UserRoleAssignment">
       <EndProperty Name="UserRole">
         <ScalarProperty Name="ID" ColumnName="roleID" />
       </EndProperty>
       <EndProperty Name="iCAREUser">
         <ScalarProperty Name="ID" ColumnName="userID" />
-      </EndProperty>
-    </AssociationSetMapping>
-    <AssociationSetMapping Name="WorkerGeoCode" TypeName="Group13_iCAREDBModel.WorkerGeoCode" StoreEntitySet="WorkerGeoCode">
-      <EndProperty Name="iCAREUser">
-        <ScalarProperty Name="ID" ColumnName="workerID" />
-      </EndProperty>
-      <EndProperty Name="GeoCodes">
-        <ScalarProperty Name="ID" ColumnName="geoID" />
       </EndProperty>
     </AssociationSetMapping>
   </EntityContainerMapping>
