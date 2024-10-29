@@ -289,16 +289,6 @@ export default function AdminDashboard({ setIsAuthenticated }) { // Add setIsAut
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Profession</label>
-                                    <input
-                                        type="text"
-                                        value={newUser.profession}
-                                        onChange={(e) => setNewUser({ ...newUser, profession: e.target.value })}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                                        required
-                                    />
-                                </div>
-                                <div>
                                     {(newUser.roleID === '1') && (
                                         <>
                                             <label className="block text-sm font-medium text-gray-700">Admin Email</label>
@@ -316,7 +306,7 @@ export default function AdminDashboard({ setIsAuthenticated }) { // Add setIsAut
                                     <label className="block text-sm font-medium text-gray-700">Role</label>
                                     <select
                                         value={newUser.roleID}
-                                        onChange={(e) => setNewUser({ ...newUser, roleID: e.target.value })}
+                                        onChange={(e) => setNewUser({ ...newUser, roleID: e.target.value, profession: e.target.value })}
                                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                                         required
                                     >
