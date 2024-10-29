@@ -13,7 +13,9 @@ using System.Diagnostics;
 using System.Media;
 //using Microsoft.AspNetCore.Http;
 using System.IO;
-
+using System.Security.Cryptography;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace Group13_iCAREAPP.Controllers
 {
@@ -74,7 +76,45 @@ namespace Group13_iCAREAPP.Controllers
 
             //[Microsoft.AspNetCore.Mvc.ModelBinding.BindRequired]
             public HttpPostedFileBase FileData { get; set; }
+
+            public string text {  get; set; }
         }
+
+        public byte[] CreatePdfWithImageAndText(Stream imageStream, string userText)
+        {
+
+            System.Diagnostics.Debug.WriteLine(imageStream, userText);
+            using (var pdfStream = new MemoryStream())
+            {
+                // Set up the PDF document with standard A4 size
+                var document = new Document(PageSize.A4);
+                PdfWriter.GetInstance(document, pdfStream);
+                document.Open();
+
+                // Add the text input to the PDF
+                if (!string.IsNullOrEmpty(userText))
+                {
+                    var font = FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.BLACK);
+                    var paragraph = new Paragraph(userText, font);
+                    paragraph.SpacingAfter = 20f; // Add spacing after the text
+                    document.Add(paragraph);
+                }
+
+                // Add the image to the PDF, if an image stream is provided
+                if (imageStream != null)
+                {
+                    var image = iTextSharp.text.Image.GetInstance(imageStream);
+                    image.ScaleToFit(PageSize.A4.Width - 50, PageSize.A4.Height / 2); // Scale image to fit
+                    image.Alignment = Element.ALIGN_CENTER;
+                    document.Add(image);
+                }
+
+                document.Close();
+                return pdfStream.ToArray();
+            }
+        }
+
+
 
         // POST: DocumentMetadatas/AddDocument
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -87,43 +127,13 @@ namespace Group13_iCAREAPP.Controllers
             System.Diagnostics.Debug.WriteLine("Attempoting to add document");
 
             try
-            {
+            { 
 
-                /*System.Diagnostics.Debug.WriteLine($"Testing info transfer using FromForm: {Name}");
-                System.Diagnostics.Debug.WriteLine($"PatientId? : {PatientID}");*/
-                System.Diagnostics.Debug.WriteLine($"File? : {payload.FileData.InputStream}");
+                byte[] fileData = CreatePdfWithImageAndText(payload.FileData.InputStream, payload.text);
 
-                byte[] fileData;
-
-                using (var memoryStream = new MemoryStream())
-                {
-                    payload.FileData.InputStream.CopyTo(memoryStream);
-                    fileData = memoryStream.ToArray();
-                }
-
-               
 
                 System.Diagnostics.Debug.WriteLine($"FileByteString: {fileData}");
 
-
-
-                /*
-                //Read and parse request body
-                var jsonReader = new System.IO.StreamReader(Request.InputStream);
-                jsonReader.BaseStream.Position = 0;
-                var jsonString = jsonReader.ReadToEnd();
-
-                System.Diagnostics.Debug.WriteLine("String ", jsonString);
-
-                var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-                dynamic docData = serializer.Deserialize<dynamic>(jsonString);
-
-                foreach(var item in docData["FileData"].Keys)
-                    System.Diagnostics.Debug.WriteLine($"{item}");
-                foreach(var item in docData["FileData"].Values)
-                    System.Diagnostics.Debug.WriteLine($"{item}");
-
-                */
                 string newId = Guid.NewGuid().ToString();
 
                 using (var transaction = db.Database.BeginTransaction())
@@ -152,9 +162,6 @@ namespace Group13_iCAREAPP.Controllers
                         System.Diagnostics.Debug.WriteLine("Attempting to save changes");
                         db.SaveChanges();
                         transaction.Commit();
-
-                        
-
                     }
                     catch (Exception ex)
                     {
@@ -170,6 +177,30 @@ namespace Group13_iCAREAPP.Controllers
                 System.Diagnostics.Debug.WriteLine($"Error adding user: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
                 return Json(new { status = 400, error = "Failed to add user" });
+            }
+        }
+
+        // GET: Document
+        [HttpGet]
+        [Route("Document/{id}")]
+        public ActionResult GetDocument(string id)
+        {
+            System.Diagnostics.Debug.WriteLine(id);
+            try
+            {
+                var query = from doc in db.DocumentStorage
+                            where doc.Id == id select new
+                            {
+                                fileData = doc.FileData
+                            };
+                var result = query.ToList();
+                System.Diagnostics.Debug.WriteLine(result[0]);
+                return File(result[0].fileData, "application/pdf");
+            }
+            catch (Exception st)
+            {
+                System.Diagnostics.Debug.WriteLine($"Get documents error! Stack trace: {st}");
+                return Json(new { error = "Failed to get document." }, JsonRequestBehavior.AllowGet);
             }
         }
 

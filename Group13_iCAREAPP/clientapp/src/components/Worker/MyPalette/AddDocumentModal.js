@@ -10,7 +10,8 @@ const AddDocumentModal = ({setShowAddModal}) => {
     const [newDocument, setDocument] = useState({
         Name: "",
         patientID: "",
-        FileData: null
+        FileData: null,
+        text: ""
     })
     const [patients, setPatients] = useState([])
     const [error, setError] = useState('')
@@ -51,6 +52,7 @@ const AddDocumentModal = ({setShowAddModal}) => {
             formData.append("Name", newDocument.Name)
             formData.append("PatientID", newDocument.patientID)
             formData.append("FileData", newDocument.FileData)
+            formData.append("text", newDocument.text)
 
             for (const [key, value] of formData.entries()) {
                 console.log(`${key}:`, value);
@@ -114,6 +116,23 @@ const AddDocumentModal = ({setShowAddModal}) => {
                 <div>
                     <label htmlFor="fileUpload">Upload Document:</label>
                     <input type="file" id="fileUpload" onChange={(e) => setDocument({...newDocument, FileData: e.target.files[0]})} />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Document Text</label>
+                    <textarea
+                        value={newDocument.text}
+                        onChange={(e) => setDocument({ ...newDocument, text: e.target.value })}
+                        crows="10"
+                        cols="50"
+                        style={{
+                            width: "100%",
+                            height: "200px",
+                            padding: "10px",
+                            fontSize: "16px",
+                            resize: "vertical",
+                        }}
+                        required
+                    />
                 </div>
                 <div className="flex justify-end space-x-4 mt-6">
                     <button

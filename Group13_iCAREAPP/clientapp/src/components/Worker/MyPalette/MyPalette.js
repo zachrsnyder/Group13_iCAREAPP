@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import DocCard from './DocCard'
 import AddDocumentModal from './AddDocumentModal'
+import DocumentViewModal from './DocumentViewModal'
 
 
 // This class defines a GUI window that show the available
@@ -14,6 +15,9 @@ const MyPalette = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [documents, setDocuments] = useState([])
     const [renderModal, setModal] = useState(false)
+
+    const [selectedDoc, setSelectedDoc] = useState(null)
+    const [showDoc, setShowDoc] = useState(false)
 
     const updateAddModal = (newState) => {
         setModal(false)
@@ -78,7 +82,7 @@ const MyPalette = () => {
                     </thead>
                     <tbody className="bg-white">
                         {documents.map((document) => (
-                            <DocCard doc={document}/>
+                            <DocCard doc={document} setShowDoc={setShowDoc} setSelectedDoc={setSelectedDoc}/>
                         ))}
                     </tbody>
                 </table>
@@ -88,6 +92,12 @@ const MyPalette = () => {
                 <AddDocumentModal setShowAddModal={updateAddModal}/>
                 
             )}
+
+            {showDoc && selectedDoc && (
+                <DocumentViewModal doc={selectedDoc} />
+            )}
+
+            
         </div>
 
 

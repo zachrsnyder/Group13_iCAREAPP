@@ -1,12 +1,18 @@
 import React from 'react'
 
-const onRowClick = (doc) => {
-    console.log(`Clicked Doc: ${doc.documentTitle}`)
-}
 
 
 
-const DocCard = ({ doc }) => {
+
+const DocCard = ({ doc, setShowDoc, setSelectedDoc }) => {
+
+    const onRowClick = (doc) => {
+        console.log(`Clicked Doc: ${doc.documentTitle}`)
+        setShowDoc(true)
+        setSelectedDoc(doc)
+    }
+
+
     return (
         <tr className="hover:bg-gray-100 cursor-pointer">
             <td colSpan="5">
