@@ -1,59 +1,58 @@
 ﻿import React, { useState, useEffect } from 'react';
 
-const ICareBoard = () => {
-
+const MyBoard = () => {
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedPatient, setSelectedPatient] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchPatients = async () => {
             try {
-                // Update the URL to match your MVC route pattern
-                const response = await fetch('/ICareboard/HospitalPatients', {
+                const response = await fetch('/ICareBoard/HospitalPatients', {
                     credentials: 'include'
                 });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch patients');
-                }
+                if (!response.ok) throw new Error('Failed to fetch patients');
 
                 const data = await response.json();
                 setPatients(data);
-                console.log(data);
                 setLoading(false);
             } catch (err) {
                 setError(err.message);
                 setLoading(false);
             }
         };
+
         fetchPatients();
     }, []);
 
-
-    
     const filteredPatients = patients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.ID.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.treatmentArea.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center h-64">
-                <div className="text-xl text-gray-600">Loading patients...</div>
-            </div>
-        );
-    }
+    const openModal = (patient) => {
+        setSelectedPatient(patient);
+        setIsModalOpen(true);
+    };
 
-    if (error) {
-        return (
-            <div className="flex justify-center items-center h-64">
-                <div className="text-xl text-red-600">Error: {error}</div>
-            </div>
-        );
-    }
+    const closeModal = () => {
+        setSelectedPatient(null);
+        setIsModalOpen(false);
+    };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        const date = new Date(dateString);
+        return date.toLocaleDateString(undefined, options);
+    };
+
+    if (loading) return <div className="flex justify-center items-center h-64"><div className="text-xl text-gray-600">Loading patients...</div></div>;
+    if (error) return <div className="flex justify-center items-center h-64"><div className="text-xl text-red-600">Error: {error}</div></div>;
 
     return (
         <div className="p-6 bg-white rounded-lg shadow">
@@ -92,7 +91,7 @@ const ICareBoard = () => {
                                 <td className="p-4">{patient.bloodGroup}</td>
                                 <td className="p-4">
                                     <button
-                                        onClick={() => window.location.href = `/ICareBoard/Details/${patient.ID}`}
+                                        onClick={() => openModal(patient)}
                                         className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition-colors mr-2"
                                     >
                                         View
@@ -108,8 +107,33 @@ const ICareBoard = () => {
                     </div>
                 )}
             </div>
+
+            {isModalOpen && selectedPatient && (
+                <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">
+                        <h2 className="text-xl font-bold mb-4">Patient Details</h2>
+                        <div className="mb-4">
+                            <p><strong>ID:</strong> {selectedPatient.ID}</p>
+                            <p><strong>Name:</strong> {selectedPatient.name}</p>
+                            <p><strong>Address:</strong> {selectedPatient.address}</p>
+                            <p><strong>Date of Birth:</strong> {selectedPatient.dateOfBirth}</p>
+                            <p><strong>Height:</strong> {selectedPatient.height}</p>
+                            <p><strong>Weight:</strong> {selectedPatient.weight}</p>
+                            <p><strong>Blood Group:</strong> {selectedPatient.bloodGroup}</p>
+                            <p><strong>Bed ID:</strong> {selectedPatient.bedID}</p>
+                            <p><strong>Treatment Area:</strong> {selectedPatient.treatmentArea}</p>
+                        </div>
+                        <button
+                            onClick={closeModal}
+                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
-export default ICareBoard;
+export default MyBoard;

@@ -1,10 +1,16 @@
-﻿using Group13_iCAREAPP.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Web.Mvc;
+using Group13_iCAREAPP.Models;
+using Group13_iCAREAPP.ViewModels;
+using System.IO;
 
 namespace Group13_iCAREAPP.Controllers
 {
@@ -115,7 +121,7 @@ namespace Group13_iCAREAPP.Controllers
             return View(patientRecord);
         }
 
-        // GET: PatientRecords/Create
+        // GET: ICareBoard/Create
         public ActionResult Create()
         {
             return View();

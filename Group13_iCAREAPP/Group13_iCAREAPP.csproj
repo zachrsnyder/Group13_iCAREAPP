@@ -317,6 +317,7 @@
     <Folder Include="clientapp\src\components\Display\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\DocumentMetadatas\" />
+    <Folder Include="Views\MyBoard\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
