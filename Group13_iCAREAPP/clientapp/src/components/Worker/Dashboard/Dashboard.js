@@ -43,6 +43,24 @@ const Dashboard = () => {
         assignedUserID: ''
     });
 
+    const treatmentAreas = [
+        "Emergency Department",
+        "Intensive Care Unit (ICU)",
+        "Cardiac Care Unit (CCU)",
+        "Pediatric Ward",
+        "Maternity Ward",
+        "Surgery Ward",
+        "Orthopedic Ward",
+        "Oncology Ward",
+        "Neurology Ward",
+        "Psychiatric Ward",
+        "General Medicine",
+        "Rehabilitation Unit",
+        "Burn Unit",
+        "Respiratory Care Unit",
+        "Isolation Ward"
+    ];
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -321,13 +339,19 @@ const Dashboard = () => {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Area</label>
-                                            <input
-                                                type="text"
+                                            <select
                                                 required
                                                 className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                                                 value={newPatient.treatmentArea}
                                                 onChange={(e) => setNewPatient({ ...newPatient, treatmentArea: e.target.value })}
-                                            />
+                                            >
+                                                <option value="">Select Treatment Area</option>
+                                                {treatmentAreas.map((area) => (
+                                                    <option key={area} value={area}>
+                                                        {area}
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </div>
                                         <div className="col-span-2">
                                             <button
