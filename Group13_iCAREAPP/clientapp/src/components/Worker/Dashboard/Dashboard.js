@@ -466,7 +466,7 @@ const Dashboard = () => {
                                             <div className="flex items-center">
                                                 <span className="px-3 py-2 border border-r-0 border-gray-300 bg-gray-100 rounded-l-md text-gray-500">BED</span>
                                                 <input
-                                                    type="text"
+                                                    type="number"
                                                     required
                                                     className="w-full px-3 py-2 border border-gray-300 rounded-r-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                                                     value={newPatient.bedID}
