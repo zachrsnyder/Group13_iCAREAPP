@@ -23,7 +23,7 @@ const MyPalette = () => {
         setModal(false)
     }
 
-    const fetchUsers = async () => {
+    const fetchDocs = async () => {
         const response = await fetch('DocumentMetadatas', {
             credentials: 'include'
         })
@@ -41,8 +41,8 @@ const MyPalette = () => {
     }
 
     useEffect(() => {
-        fetchUsers()
-    }, [])
+        fetchDocs()
+    }, [showDoc, renderModal])
 
     return (
         <div className='bg-gray-300'>
@@ -94,7 +94,7 @@ const MyPalette = () => {
             )}
 
             {showDoc && selectedDoc && (
-                <DocumentViewModal doc={selectedDoc} />
+                <DocumentViewModal doc={selectedDoc} showDoc={setShowDoc} selectedDoc={setSelectedDoc} />
             )}
 
             

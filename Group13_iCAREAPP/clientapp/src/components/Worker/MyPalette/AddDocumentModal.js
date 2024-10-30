@@ -1,4 +1,7 @@
-import {React, useEffect, useState} from 'react'
+import {React, useEffect, useState, createElement, useRef} from 'react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import html2pdf from 'html2pdf.js'
 
 
 
@@ -10,17 +13,23 @@ const AddDocumentModal = ({setShowAddModal}) => {
     const [newDocument, setDocument] = useState({
         Name: "",
         patientID: "",
-        FileData: null,
-        text: ""
+        htmlContent: "",
     })
     const [patients, setPatients] = useState([])
     const [error, setError] = useState('')
     const [loadingPatients, setLoadingPatients] = useState(true)
 
+    const editorContent = useRef('');
+
+    const handleEditorChange = (event, editor) => {
+      editorContent.current = editor.getData(); // Store editor content
+    };
 
     const fetchPatients = async () => {
         try {
-            const response = await fetch('/PatientRecords/MyPatients', {
+
+            //TODO: CHange back to MyPAtiennts
+            const response = await fetch('/PatientRecords/GetAllPatients', {
                 credentials: 'include'
             });
 
@@ -51,8 +60,15 @@ const AddDocumentModal = ({setShowAddModal}) => {
             const formData = new FormData();
             formData.append("Name", newDocument.Name)
             formData.append("PatientID", newDocument.patientID)
-            formData.append("FileData", newDocument.FileData)
-            formData.append("text", newDocument.text)
+
+            ////TODO: clean doc
+            //// Create a temporary div to hold the content
+            //const tempDiv = document.createElement('div');
+            //tempDiv.innerHTML = editorContent.current;
+            //document.body.appendChild(tempDiv);
+
+            formData.append("htmlContent", editorContent.current)
+            
 
             for (const [key, value] of formData.entries()) {
                 console.log(`${key}:`, value);
@@ -113,7 +129,7 @@ const AddDocumentModal = ({setShowAddModal}) => {
                         ))}
                     </select>
                 </div>
-                <div>
+                {/*<div>
                     <label htmlFor="fileUpload">Upload Document:</label>
                     <input type="file" id="fileUpload" onChange={(e) => setDocument({...newDocument, FileData: e.target.files[0]})} />
                 </div>
@@ -132,6 +148,22 @@ const AddDocumentModal = ({setShowAddModal}) => {
                             resize: "vertical",
                         }}
                         required
+                    />
+                </div>*/}
+                <div>
+                    <CKEditor
+                        editor={ClassicEditor}
+                        data="<p>Start typing here...</p>"
+                        onChange={handleEditorChange}
+                        config={{
+                        ckfinder: {
+                            uploadUrl: 'docUrl', // You may need a backend to handle this
+                        },
+                        toolbar: [
+                            'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
+                            'imageUpload', 'blockQuote', 'insertTable', 'undo', 'redo'
+                        ],
+                        }}
                     />
                 </div>
                 <div className="flex justify-end space-x-4 mt-6">
