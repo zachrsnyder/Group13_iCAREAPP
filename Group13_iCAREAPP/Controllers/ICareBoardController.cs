@@ -71,7 +71,8 @@ namespace Group13_iCAREAPP.Controllers
                     p.bloodGroup,
                     p.bedID,
                     p.treatmentArea,
-                    fullyAssigned = CheckIfFullyAssigned(p.ID)
+                    fullyAssigned = CheckIfFullyAssigned(p.ID),
+                    alreadyAssigned = CheckIfAlreadyAssigned(p.ID)
                 }).ToList();
 
                 System.Diagnostics.Debug.WriteLine($"Found {patientRecordsWithAssignment.Count} patients");
@@ -244,12 +245,23 @@ namespace Group13_iCAREAPP.Controllers
 
             return false;
         }
-
-
-        // GET: ICareBoard/Create
-        public ActionResult Create()
+        private bool CheckIfAlreadyAssigned(string patientID)
         {
-            return View();
+            var userProfession = Session["UserProfession"]?.ToString();
+            var currentUserID = Session["UserID"].ToString();
+
+            if (userProfession == "Nurse" && !string.IsNullOrEmpty(currentUserID))
+            {
+                bool isAlreadyAssigned = db.TreatmentRecord
+                    .Any(tr => tr.patientID == patientID && tr.userID == currentUserID);
+
+                if (isAlreadyAssigned)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Nurse {currentUserID} is already assigned to patient {patientID}");
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
