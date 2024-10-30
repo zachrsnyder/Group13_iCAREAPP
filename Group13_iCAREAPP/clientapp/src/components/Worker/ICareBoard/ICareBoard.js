@@ -8,6 +8,7 @@ const ICareBoard = () => {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [notification, setNotification] = useState(false);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchPatients = async () => {
@@ -50,6 +51,14 @@ const ICareBoard = () => {
     const closeModal = () => {
         setSelectedPatient(null);
         setIsModalOpen(false);
+    };
+
+    const openConfirmModal = () => {
+        setIsConfirmModalOpen(true);
+    };
+
+    const closeConfirmModal = () => {
+        setIsConfirmModalOpen(false);
     };
 
     const assignPatients = async () => {
@@ -95,7 +104,7 @@ const ICareBoard = () => {
                 <table className="w-full">
                     <thead>
                         <tr className="bg-gray-50">
-                            <th className="p-4 text-left font-medium text-gray-600">Select Patients</th>
+                            <th className="p-4 text-center font-medium text-gray-600">Select Patients</th>
                             <th className="p-4 text-left font-medium text-gray-600">ID</th>
                             <th className="p-4 text-left font-medium text-gray-600">Name</th>
                             <th className="p-4 text-left font-medium text-gray-600">Treatment Area</th>
@@ -110,7 +119,7 @@ const ICareBoard = () => {
 
                             return (
                                 <tr key={patient.ID} className="border-t hover:bg-gray-50">
-                                    <td className="p-4">
+                                    <td className="p-4 text-center">
                                         <input
                                             type="checkbox"
                                             checked={patient.selected || false}
@@ -184,8 +193,75 @@ const ICareBoard = () => {
                 </div>
             )}
 
+            {isConfirmModalOpen && (
+                <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 max-h-[70vh] overflow-auto">
+                        <h2 className="text-xl font-bold mb-4">Confirm Patient Assignments</h2>
+                        <div className="overflow-y-auto max-h-60">
+                            {selectedPatients.filter(patient => patient.selected).length === 0 ? (
+                                <div className="text-center text-red-600 mb-20">
+                                    No patients selected
+                                </div>
+                            ) : (
+                                <table className="w-full mb-4">
+                                    <thead>
+                                        <tr className="bg-gray-50">
+                                            <th className="p-4 text-center font-medium text-gray-600">Select</th>
+                                            <th className="p-4 text-left font-medium text-gray-600">ID</th>
+                                            <th className="p-4 text-left font-medium text-gray-600">Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {selectedPatients
+                                            .filter(patient => patient.selected)
+                                            .map(patient => (
+                                                <tr key={patient.ID} className="border-t">
+                                                    <td className="p-4 text-center">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={patient.selected}
+                                                            onChange={() =>
+                                                                setSelectedPatients(selectedPatients.map(p =>
+                                                                    p.ID === patient.ID
+                                                                        ? { ...p, selected: !p.selected }
+                                                                        : p
+                                                                ))
+                                                            }
+                                                        />
+                                                    </td>
+                                                    <td className="p-4">{patient.ID}</td>
+                                                    <td className="p-4">{patient.name}</td>
+                                                </tr>
+                                            ))}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                        <div className="flex justify-end">
+                            <button
+                                onClick={closeConfirmModal}
+                                className="bg-red-400 text-white px-4 py-2 rounded hover:bg-gray-500 mr-2"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => {
+                                    assignPatients();
+                                    closeConfirmModal();
+                                }}
+                                className={`px-4 py-2 rounded ${selectedPatients.filter(patient => patient.selected).length === 0 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-green-500 text-white hover:bg-green-600'}`}
+                                disabled={selectedPatients.filter(patient => patient.selected).length === 0}
+                            >
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
             <button
-                onClick={assignPatients}
+                onClick={openConfirmModal}
                 className="fixed bottom-6 right-6 bg-green-500 text-white px-5 py-3 rounded-full hover:bg-green-600 shadow-lg transition-colors"
             >
                 Assign Patients
