@@ -236,6 +236,7 @@
     <Content Include="clientapp\src\components\Worker\ICareBoard\ICareBoard.js" />
     <Content Include="clientapp\src\components\Worker\MyBoard\MyBoard.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\AddDocumentModal.js" />
+    <Content Include="clientapp\src\components\Worker\MyPalette\AddImageModal.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\DocCard.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\DocumentViewModal.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\EditDocModal.js" />
