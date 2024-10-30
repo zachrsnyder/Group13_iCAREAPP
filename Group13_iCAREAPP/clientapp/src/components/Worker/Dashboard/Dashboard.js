@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, ChevronUp, ChevronDown } from 'lucide-react';
 
 const Modal = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
@@ -31,6 +31,10 @@ const Dashboard = () => {
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [sortConfig, setSortConfig] = useState({
+        key: null,
+        direction: 'asc'
+    });
     const [newPatient, setNewPatient] = useState({
         name: '',
         address: '',
@@ -140,6 +144,36 @@ const Dashboard = () => {
         }
     };
 
+    const handleSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const getSortedPatients = (patientsToSort) => {
+        if (!sortConfig.key) return patientsToSort;
+
+        return [...patientsToSort].sort((a, b) => {
+            let aValue = a[sortConfig.key];
+            let bValue = b[sortConfig.key];
+
+            // Handle nested assignedUser property
+            if (sortConfig.key === 'assignment') {
+                aValue = a.assignedUser ? 'Assigned' : 'Unassigned';
+                bValue = b.assignedUser ? 'Assigned' : 'Unassigned';
+            }
+
+            // Convert to lowercase if string
+            if (typeof aValue === 'string') aValue = aValue.toLowerCase();
+            if (typeof bValue === 'string') bValue = bValue.toLowerCase();
+
+            if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    };
 
     const openPatientDetails = (patient) => {
         setSelectedPatient(patient);
@@ -271,11 +305,37 @@ const Dashboard = () => {
         );
     };
 
+    // Column configuration
+    const columns = [
+        { key: 'ID', label: 'ID' },
+        { key: 'name', label: 'Name' },
+        { key: 'geoCode', label: 'Location' },
+        { key: 'treatmentArea', label: 'Treatment Area' },
+        { key: 'bedID', label: 'Bed ID' },
+        { key: 'bloodGroup', label: 'Blood Group' },
+        { key: 'assignment', label: 'Assignment' },
+    ];
+
+    const SortIcon = ({ column }) => {
+        if (sortConfig.key !== column) {
+            return (
+                <ChevronUp className="h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-50" />
+            );
+        }
+        return sortConfig.direction === 'asc' ? (
+            <ChevronUp className="h-4 w-4 text-gray-700" />
+        ) : (
+            <ChevronDown className="h-4 w-4 text-gray-700" />
+        );
+    };
+
     const filteredPatients = patients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.ID?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.treatmentArea?.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const sortedPatients = getSortedPatients(filteredPatients);
 
     if (loading) {
         return (
@@ -413,7 +473,6 @@ const Dashboard = () => {
                                                     onChange={(e) => setNewPatient({ ...newPatient, bedID: e.target.value })}
                                                 />
                                             </div>
-
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Area</label>
@@ -455,22 +514,31 @@ const Dashboard = () => {
                                 </div>
 
                                 <div className="overflow-x-auto">
-                                    {/* Update the table header */}
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead className="bg-gray-50">
                                             <tr>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Treatment Area</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bed ID</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Blood Group</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assignment</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                                {columns.map((column) => (
+                                                    <th
+                                                        key={column.key}
+                                                        className="group px-6 py-3 text-left"
+                                                        onClick={() => handleSort(column.key)}
+                                                        style={{ cursor: 'pointer' }}
+                                                    >
+                                                        <div className="flex items-center space-x-1">
+                                                            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                                {column.label}
+                                                            </span>
+                                                            <SortIcon column={column.key} />
+                                                        </div>
+                                                    </th>
+                                                ))}
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Actions
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white divide-y divide-gray-200">
-                                            {filteredPatients.map((patient) => (
+                                            {sortedPatients.map((patient) => (
                                                 <tr key={patient.ID} className="hover:bg-gray-50">
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.ID}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.name}</td>
@@ -499,7 +567,7 @@ const Dashboard = () => {
                                             ))}
                                         </tbody>
                                     </table>
-                                    {filteredPatients.length === 0 && (
+                                    {sortedPatients.length === 0 && (
                                         <div className="text-center py-12 text-gray-500">
                                             No patients found
                                         </div>
