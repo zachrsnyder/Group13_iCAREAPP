@@ -41,7 +41,6 @@ namespace Group13_iCAREAPP.Controllers
 
                 var geoID = workerGeoCode.userGeoID;
 
-                // Retrieve patient records without `fullyAssigned`
                 var patientRecords = (from p in db.PatientRecord
                                       where p.patientGeoID == geoID
                                       select new
@@ -59,7 +58,6 @@ namespace Group13_iCAREAPP.Controllers
                                       .Distinct()
                                       .ToList();
 
-                // Create a new list with `fullyAssigned` included
                 var patientRecordsWithAssignment = patientRecords.Select(p => new
                 {
                     p.ID,
@@ -120,7 +118,7 @@ namespace Group13_iCAREAPP.Controllers
             {
                 System.Diagnostics.Debug.WriteLine($"Processing patient {patientId}");
 
-                TreatmentRecord assignment = null; // Declare assignment here
+                TreatmentRecord assignment = null;
 
                 try
                 {
@@ -145,10 +143,19 @@ namespace Group13_iCAREAPP.Controllers
                         description = "To be decided"
                     };
 
-                    // Add the new record to the context
+                    // Add the new record
                     db.TreatmentRecord.Add(assignment);
 
-                    // Try to save changes for each assignment individually
+                    // Find and update the DocumentMetadata for this patient
+                    var documentMetadata = db.DocumentMetadata.FirstOrDefault(dm => dm.patientID == patientId);
+                    if (documentMetadata != null)
+                    {
+                        documentMetadata.userID = currentUserID;
+                        documentMetadata.docName = ("Assigned to " + Session["UserName"].ToString());
+                        db.Entry(documentMetadata).State = EntityState.Modified;
+                    }
+
+                    // Save changes for this assignment
                     db.SaveChanges();
                     successfulAssignments.Add(patientId);
                     System.Diagnostics.Debug.WriteLine($"Successfully assigned patient {patientId}");
@@ -164,22 +171,18 @@ namespace Group13_iCAREAPP.Controllers
                     }
                     failedAssignments.Add($"Validation error for patient {patientId}");
                 }
-
                 catch (DbUpdateException dbEx)
                 {
                     System.Diagnostics.Debug.WriteLine($"DbUpdateException for patient {patientId}: {dbEx.InnerException?.Message ?? dbEx.Message}");
                     failedAssignments.Add($"DbUpdate error for patient {patientId}: {dbEx.InnerException?.Message ?? dbEx.Message}");
                 }
-                
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine($"Error assigning patient {patientId}: {ex.Message}");
                     failedAssignments.Add($"Error assigning patient {patientId}: {ex.Message}");
                 }
-
                 finally
                 {
-                    // Optionally: Detach the entity if needed to prevent conflicts in future iterations
                     if (assignment != null)
                     {
                         db.Entry(assignment).State = EntityState.Detached;
@@ -187,7 +190,6 @@ namespace Group13_iCAREAPP.Controllers
                 }
             }
 
-            // Return detailed response
             if (failedAssignments.Any())
             {
                 return Json(new
@@ -205,6 +207,7 @@ namespace Group13_iCAREAPP.Controllers
                 message = $"Successfully assigned {successfulAssignments.Count} patients."
             });
         }
+
 
 
         // Request model for deserialization
