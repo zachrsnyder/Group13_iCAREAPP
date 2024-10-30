@@ -173,7 +173,7 @@ const Dashboard = () => {
                 </div>
                 <div>
                     <h4 className="font-medium text-sm text-gray-500">Assigned To</h4>
-                    <p>{patient.assignedUser?.name || '--------'}</p>
+                    <p>{patient.assignedUser?.name || '     N/A'}</p>
                 </div>
             </div>
         </div>
@@ -364,7 +364,7 @@ const Dashboard = () => {
                                 <td className="p-4">{patient.treatmentArea}</td>
                                 <td className="p-4">{patient.bedID}</td>
                                 <td className="p-4">{patient.bloodGroup}</td>
-                                <td className="p-4">{patient.assignedUser?.name || 'Unassigned'}</td>
+                                <td className="p-4">{patient.assignedUser?.name || '    N/A'}</td>
                                 <td className="p-4">
                                     <button
                                         onClick={() => openPatientDetails(patient)}
