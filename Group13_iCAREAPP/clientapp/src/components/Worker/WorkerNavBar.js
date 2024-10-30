@@ -135,7 +135,7 @@ export default function WorkerNavBar({ setIsAuthenticated }) {
                                     </div>
                                     <div className="px-4 py-3">
                                         <p className="text-sm text-gray-700">
-                                            <span className="font-semibold block">GeoCode:</span>
+                                            <span className="font-semibold block">Location:</span>
                                             {userInfo?.geoCode}
                                         </p>
                                     </div>
