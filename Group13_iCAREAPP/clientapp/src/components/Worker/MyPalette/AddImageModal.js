@@ -113,6 +113,7 @@ const AddImageModal = ({setShowAddModal}) => {
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                         required
                     >
+                        <option key='' value=''></option>
                         {patients.map((patient) => (
                             <option key={patient.ID} value={patient.ID}>{patient.name} Id: {patient.ID}</option>
                         ))}
