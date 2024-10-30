@@ -125,7 +125,7 @@ const Dashboard = () => {
     const PatientDetails = ({ patient }) => (
         <div className="space-y-4">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">Patient Details</h2>
+                <h2 className="text-xl font-bold text-gray-900">Patient Details</h2>
                 <button
                     onClick={closeModal}
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -187,7 +187,7 @@ const Dashboard = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64">
+            <div className="flex justify-center items-center h-screen bg-gray-100">
                 <div className="text-xl text-gray-600">Loading...</div>
             </div>
         );
@@ -195,198 +195,216 @@ const Dashboard = () => {
 
     if (error) {
         return (
-            <div className="flex justify-center items-center h-64">
+            <div className="flex justify-center items-center h-screen bg-gray-100">
                 <div className="text-xl text-red-600">Error: {error}</div>
             </div>
         );
     }
 
     return (
-        <div className="p-6 bg-white rounded-lg shadow">
-            <div className="mb-6 flex justify-between items-center">
-                <h2 className="text-2xl font-bold">All Patients</h2>
-                <button
-                    onClick={() => setShowCreateForm(!showCreateForm)}
-                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
-                >
-                    {showCreateForm ? 'Cancel' : 'Create New Patient'}
-                </button>
-            </div>
-
-            {showCreateForm && (
-                <form onSubmit={handleCreatePatient} className="mb-6 grid grid-cols-2 gap-4 p-4 border rounded">
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Name</label>
-                        <input
-                            type="text"
-                            required
-                            className="w-full p-2 border rounded"
-                            value={newPatient.name}
-                            onChange={(e) => setNewPatient({ ...newPatient, name: e.target.value })}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Address</label>
-                        <input
-                            type="text"
-                            required
-                            className="w-full p-2 border rounded"
-                            value={newPatient.address}
-                            onChange={(e) => setNewPatient({ ...newPatient, address: e.target.value })}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Date of Birth</label>
-                        <input
-                            type="date"
-                            required
-                            className="w-full p-2 border rounded"
-                            value={newPatient.dateOfBirth}
-                            onChange={(e) => setNewPatient({ ...newPatient, dateOfBirth: e.target.value })}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Height (cm)</label>
-                        <input
-                            type="number"
-                            required
-                            step="0.1"
-                            className="w-full p-2 border rounded"
-                            value={newPatient.height}
-                            onChange={(e) => setNewPatient({ ...newPatient, height: e.target.value })}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Weight (kg)</label>
-                        <input
-                            type="number"
-                            required
-                            step="0.1"
-                            className="w-full p-2 border rounded"
-                            value={newPatient.weight}
-                            onChange={(e) => setNewPatient({ ...newPatient, weight: e.target.value })}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Blood Group</label>
-                        <select
-                            required
-                            className="w-full p-2 border rounded"
-                            value={newPatient.bloodGroup}
-                            onChange={(e) => setNewPatient({ ...newPatient, bloodGroup: e.target.value })}
-                        >
-                            <option value="">Select Blood Group</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Bed ID</label>
-                        <input
-                            type="text"
-                            required
-                            className="w-full p-2 border rounded"
-                            value={newPatient.bedID}
-                            onChange={(e) => setNewPatient({ ...newPatient, bedID: e.target.value })}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Treatment Area</label>
-                        <input
-                            type="text"
-                            required
-                            className="w-full p-2 border rounded"
-                            value={newPatient.treatmentArea}
-                            onChange={(e) => setNewPatient({ ...newPatient, treatmentArea: e.target.value })}
-                        />
-                    </div>
-                    {/*<div>*/}
-                    {/*    <label className="block text-sm font-medium mb-1">Assign to User</label>*/}
-                    {/*    <select*/}
-                    {/*        required*/}
-                    {/*        className="w-full p-2 border rounded"*/}
-                    {/*        value={newPatient.assignedUserID}*/}
-                    {/*        onChange={(e) => setNewPatient({ ...newPatient, assignedUserID: e.target.value })}*/}
-                    {/*    >*/}
-                    {/*        <option value="">Select User</option>*/}
-                    {/*        {users.map(user => (*/}
-                    {/*            <option key={user.ID} value={user.ID}>*/}
-                    {/*                {user.name} ({user.profession})*/}
-                    {/*            </option>*/}
-                    {/*        ))}*/}
-                    {/*    </select>*/}
-                    {/*</div>*/}
-                    <div className="col-span-2">
-                        <button
-                            type="submit"
-                            className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-                        >
-                            Create Patient
-                        </button>
-                    </div>
-                </form>
-            )}
-
-            <div className="mb-4">
-                <input
-                    type="text"
-                    placeholder="Search patients..."
-                    className="w-full p-2 border rounded"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-            </div>
-
-            <div className="overflow-x-auto">
-                <table className="w-full">
-                    <thead>
-                        <tr className="bg-gray-50">
-                            <th className="p-4 text-left font-medium text-gray-600">ID</th>
-                            <th className="p-4 text-left font-medium text-gray-600">Name</th>
-                            <th className="p-4 text-left font-medium text-gray-600">Treatment Area</th>
-                            <th className="p-4 text-left font-medium text-gray-600">Bed ID</th>
-                            <th className="p-4 text-left font-medium text-gray-600">Blood Group</th>
-                            <th className="p-4 text-left font-medium text-gray-600">Assignment Status</th>
-                            <th className="p-4 text-left font-medium text-gray-600">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredPatients.map((patient) => (
-                            <tr key={patient.ID} className="border-t hover:bg-gray-50">
-                                <td className="p-4">{patient.ID}</td>
-                                <td className="p-4">{patient.name}</td>
-                                <td className="p-4">{patient.treatmentArea}</td>
-                                <td className="p-4">{patient.bedID}</td>
-                                <td className="p-4">{patient.bloodGroup}</td>
-                                <td className="p-4">{patient.assignedUser ? '✅' : '❌'}</td>
-                                <td className="p-4">
+        <div className="flex min-h-screen bg-gray-100">
+            <div className="flex-1 flex flex-col">
+                <main className="flex-1 overflow-y-auto p-6">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="bg-white rounded-lg shadow-xl border border-gray-200">
+                            <div className="p-6">
+                                <div className="flex justify-between items-center mb-6">
+                                    <div className="flex items-center space-x-3">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 82.84 74.5"
+                                            className="h-8 w-8"
+                                        >
+                                            <g>
+                                                <path
+                                                    fill="none"
+                                                    stroke="#FF1D48"
+                                                    strokeWidth="9"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    d="M41.42,12.57C34.04,3.97,21.7,1.31,12.46,9.19c-9.25,7.88-10.55,21.05-3.29,30.36,6.04,7.75,24.31,24.08,30.3,29.37.67.59,1.01.89,1.4,1,.34.1.71.1,1.06,0,.39-.12.73-.41,1.4-1,5.99-5.29,24.26-21.62,30.3-29.37,7.26-9.32,6.12-22.57-3.29-30.36-9.41-7.79-21.53-5.22-28.91,3.38h-.01Z"
+                                                />
+                                            </g>
+                                        </svg>
+                                        <h2 className="text-2xl font-bold text-gray-900">All Patients</h2>
+                                    </div>
                                     <button
-                                        onClick={() => openPatientDetails(patient)}
-                                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition-colors mr-2"
+                                        onClick={() => setShowCreateForm(!showCreateForm)}
+                                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors"
                                     >
-                                        View
+                                        {showCreateForm ? 'Cancel' : 'Create New Patient'}
                                     </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                {filteredPatients.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
-                        No patients found
-                    </div>
-                )}
-            </div>
+                                </div>
 
-            <Modal isOpen={isModalOpen} onClose={closeModal}>
-                {selectedPatient && <PatientDetails patient={selectedPatient} />}
-            </Modal>
+                                {showCreateForm && (
+                                    <form onSubmit={handleCreatePatient} className="mb-6 grid grid-cols-2 gap-4 p-6 border border-gray-200 rounded-lg bg-gray-50">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                                value={newPatient.name}
+                                                onChange={(e) => setNewPatient({ ...newPatient, name: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                                value={newPatient.address}
+                                                onChange={(e) => setNewPatient({ ...newPatient, address: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                                            <input
+                                                type="date"
+                                                required
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                                value={newPatient.dateOfBirth}
+                                                onChange={(e) => setNewPatient({ ...newPatient, dateOfBirth: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Height (cm)</label>
+                                            <input
+                                                type="number"
+                                                required
+                                                step="0.1"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                                value={newPatient.height}
+                                                onChange={(e) => setNewPatient({ ...newPatient, height: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
+                                            <input
+                                                type="number"
+                                                required
+                                                step="0.1"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                                value={newPatient.weight}
+                                                onChange={(e) => setNewPatient({ ...newPatient, weight: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Blood Group</label>
+                                            <select
+                                                required
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                                value={newPatient.bloodGroup}
+                                                onChange={(e) => setNewPatient({ ...newPatient, bloodGroup: e.target.value })}
+                                            >
+                                                <option value="">Select Blood Group</option>
+                                                <option value="A+">A+</option>
+                                                <option value="A-">A-</option>
+                                                <option value="B+">B+</option>
+                                                <option value="B-">B-</option>
+                                                <option value="AB+">AB+</option>
+                                                <option value="AB-">AB-</option>
+                                                <option value="O+">O+</option>
+                                                <option value="O-">O-</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Bed ID</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                                value={newPatient.bedID}
+                                                onChange={(e) => setNewPatient({ ...newPatient, bedID: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Area</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                                value={newPatient.treatmentArea}
+                                                onChange={(e) => setNewPatient({ ...newPatient, treatmentArea: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-span-2">
+                                            <button
+                                                type="submit"
+                                                className="w-full px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors"
+                                            >
+                                                Create Patient
+                                            </button>
+                                        </div>
+                                    </form>
+                                )}
+
+                                <div className="mb-6">
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            placeholder="Search patients..."
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="overflow-x-auto">
+                                    <table className="min-w-full divide-y divide-gray-200">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Treatment Area</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bed ID</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Blood Group</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assignment</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                            {filteredPatients.map((patient) => (
+                                                <tr key={patient.ID} className="hover:bg-gray-50">
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.ID}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.name}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.treatmentArea}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.bedID}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.bloodGroup}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${patient.assignedUser ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                                            {patient.assignedUser ? 'Assigned' : 'Unassigned'}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <button
+                                                            onClick={() => openPatientDetails(patient)}
+                                                            className="text-rose-600 hover:text-rose-900 font-medium transition-colors"
+                                                        >
+                                                            View Details
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                    {filteredPatients.length === 0 && (
+                                        <div className="text-center py-12 text-gray-500">
+                                            No patients found
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <Modal isOpen={isModalOpen} onClose={closeModal}>
+                    {selectedPatient && <PatientDetails patient={selectedPatient} />}
+                </Modal>
+            </div>
         </div>
     );
 };
