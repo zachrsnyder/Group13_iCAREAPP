@@ -8,7 +8,6 @@ const ICareBoard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [notification, setNotification] = useState(false);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
     useEffect(() => {
@@ -30,13 +29,6 @@ const ICareBoard = () => {
 
         fetchPatients();
     }, []);
-
-    const showNotification = () => {
-        setNotification(true);
-        setTimeout(() => {
-            setNotification(false);
-        }, 5000);
-    };
 
     const filteredPatients = selectedPatients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -170,27 +162,25 @@ const ICareBoard = () => {
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {filteredPatients.map((patient) => {
-                                            const isRestricted = patient.treatmentArea === 'ICU' || patient.bedID === null;
                                             return (
                                                 <tr key={patient.ID} className="hover:bg-gray-50">
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={patient.selected || false}
-                                                            onChange={() => {
-                                                                if (isRestricted) {
-                                                                    showNotification();
-                                                                } else {
+                                                        {patient.fullyAssigned ? (
+                                                            <span className="text-gray-500">Fully Assigned</span>
+                                                        ) : (
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={patient.selected || false}
+                                                                onChange={() => {
                                                                     setSelectedPatients(selectedPatients.map(p =>
                                                                         p.ID === patient.ID
                                                                             ? { ...p, selected: !p.selected }
                                                                             : p
                                                                     ));
-                                                                }
-                                                            }}
-                                                            disabled={isRestricted}
-                                                            className="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded"
-                                                        />
+                                                                }}
+                                                                className="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded"
+                                                            />
+                                                        )}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.ID}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.name}</td>
@@ -223,13 +213,6 @@ const ICareBoard = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* Notification */}
-                {notification && (
-                    <div className="fixed top-0 left-0 w-full bg-red-500 text-white text-center p-4 z-50">
-                        You cannot select this patient due to certain restrictions.
-                    </div>
-                )}
 
                 {/* View Patient Modal */}
                 {isModalOpen && selectedPatient && (
