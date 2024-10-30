@@ -93,12 +93,21 @@ const Dashboard = () => {
     const handleCreatePatient = async (e) => {
         e.preventDefault();
         try {
+            // Concatenate "BED" with the current bedID
+            const fullBedID = `BED${newPatient.bedID}`; // Add "BED" prefix to the bedID
+
+            // Create a newPatient object with the updated bedID
+            const patientDataToSend = {
+                ...newPatient, // Spread the rest of the patient data
+                bedID: fullBedID // Update the bedID with the new value
+            };
+
             const response = await fetch('/PatientRecords/CreateWithAssignment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(newPatient),
+                body: JSON.stringify(patientDataToSend), // Send the updated patient data
                 credentials: 'include'
             });
 
@@ -113,6 +122,7 @@ const Dashboard = () => {
             const updatedPatients = await updatedPatientsResponse.json();
             setPatients(updatedPatients);
 
+            // Reset the newPatient state
             setNewPatient({
                 name: '',
                 address: '',
@@ -120,7 +130,7 @@ const Dashboard = () => {
                 height: '',
                 weight: '',
                 bloodGroup: '',
-                bedID: '',
+                bedID: '', // Reset bedID to empty
                 treatmentArea: '',
                 assignedUserID: ''
             });
@@ -129,6 +139,7 @@ const Dashboard = () => {
             setError(err.message);
         }
     };
+
 
     const openPatientDetails = (patient) => {
         setSelectedPatient(patient);
@@ -329,13 +340,17 @@ const Dashboard = () => {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Bed ID</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                                                value={newPatient.bedID}
-                                                onChange={(e) => setNewPatient({ ...newPatient, bedID: e.target.value })}
-                                            />
+                                            <div className="flex items-center">
+                                                <span className="px-3 py-2 border border-r-0 border-gray-300 bg-gray-100 rounded-l-md text-gray-500">BED</span>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-r-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                                    value={newPatient.bedID}
+                                                    onChange={(e) => setNewPatient({ ...newPatient, bedID: e.target.value })}
+                                                />
+                                            </div>
+
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Area</label>
