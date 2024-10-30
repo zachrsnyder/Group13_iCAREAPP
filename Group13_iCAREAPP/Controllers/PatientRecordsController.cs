@@ -112,15 +112,30 @@ namespace Group13_iCAREAPP.Controllers
                 {
                     try
                     {
-                        // Generate a new ID for the patient
-                        string patientId = "PAT" + DateTime.Now.Ticks.ToString().Substring(0, 8);
+                        // Get the latest patient ID from the database
+                        var lastPatientId = db.PatientRecord
+                            .Where(p => p.ID.StartsWith("PAT"))
+                            .Select(p => p.ID)
+                            .OrderByDescending(id => id)
+                            .FirstOrDefault();
+
+                        // Generate the next patient ID
+                        string patientId;
+                        if (lastPatientId == null)
+                        {
+                            patientId = "PAT01";
+                        }
+                        else
+                        {
+                            int currentNumber = int.Parse(lastPatientId.Substring(3));
+                            patientId = $"PAT{(currentNumber + 1):D2}";
+                        }
 
                         var currentUserID = Session["UserID"]?.ToString();
                         var geocode = db.iCAREUser
                             .Where(u => u.ID == currentUserID)
                             .Select(u => u.userGeoID)
                             .FirstOrDefault();
-
 
                         // Create new patient record
                         var patient = new PatientRecord
@@ -169,7 +184,6 @@ namespace Group13_iCAREAPP.Controllers
                 return Json(new { error = ex.Message });
             }
         }
-
 
         // GET: PatientRecords/MyPatients
         public ActionResult MyPatients()
