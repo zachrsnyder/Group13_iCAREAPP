@@ -1,31 +1,26 @@
 import {React, useEffect, useState, createElement, useRef} from 'react'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import { CKEditor } from '@ckeditor/ckeditor5-react'
-import html2pdf from 'html2pdf.js'
 import { type } from 'whoops'
+
 
 
 
 //TODO: Add box for failing to add doc.
 //TODO:
 
-const AddDocumentModal = ({setShowAddModal}) => {
+const AddImageModal = ({setShowAddModal}) => {
   
     const [newDocument, setDocument] = useState({
         Name: "",
         patientID: "",
-        htmlContent: "",
+        file: ""
     })
     const [patients, setPatients] = useState([])
     const [error, setError] = useState('')
     const [loadingPatients, setLoadingPatients] = useState(true)
 
-    const editorContent = useRef('');
+    
 
-    const handleEditorChange = (event, editor) => {
-      editorContent.current = editor.getData(); // Store editor content
-    };
-
+    
     const fetchPatients = async () => {
         try {
 
@@ -58,25 +53,10 @@ const AddDocumentModal = ({setShowAddModal}) => {
         try{
             console.log("New document data: ", newDocument);
 
-
-            if(newDocument.Name.endsWith("_Image")){
-                newDocument.Name.replaceAll("_Image", "_Text")
-            }
             const formData = new FormData();
-            formData.append("Name", newDocument.Name)
+            formData.append("Name", newDocument.Name + "_Image")
             formData.append("PatientID", newDocument.patientID)
-
-            ////TODO: clean doc
-            //// Create a temporary div to hold the content
-            //const tempDiv = document.createElement('div');
-            //tempDiv.innerHTML = editorContent.current;
-            //document.body.appendChild(tempDiv);
-
-            const content = editorContent.current; // Get the current content from your editor
-            const blob = new Blob([content], { type: 'text/plain' }); // Create a Blob from the content
-            const file = new File([blob], newDocument.Name,  { type: 'text/plain' });
-
-            formData.append("File", file)
+            formData.append("File", newDocument.file);
             
 
             for (const [key, value] of formData.entries()) {
@@ -107,7 +87,7 @@ const AddDocumentModal = ({setShowAddModal}) => {
     return (
     
     <div className='fixed inset-0 bg-opacity-50 bg-gray-400 flex justify-center align-center'>
-        <div className="bg-white rounded-lg p-8 max-w-md w-full overvlow-y-scroll">
+        <div className="bg-white rounded-lg p-8 max-w-md w-full overflow-y-scroll">
             {loadingPatients ? (
             <div>
                 <h2>Loading Info...</h2>
@@ -138,39 +118,18 @@ const AddDocumentModal = ({setShowAddModal}) => {
                         ))}
                     </select>
                 </div>
-                {/*<div>
-                    <label htmlFor="fileUpload">Upload Document:</label>
-                    <input type="file" id="fileUpload" onChange={(e) => setDocument({...newDocument, FileData: e.target.files[0]})} />
-                </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Document Text</label>
-                    <textarea
-                        value={newDocument.text}
-                        onChange={(e) => setDocument({ ...newDocument, text: e.target.value })}
-                        crows="10"
-                        cols="50"
-                        style={{
-                            width: "100%",
-                            height: "200px",
-                            padding: "10px",
-                            fontSize: "16px",
-                            resize: "vertical",
-                        }}
-                        required
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setDocument({ ...newDocument, file: e.target.files[0]})}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                     />
-                </div>*/}
-                <div>
-                    <CKEditor
-                        editor={ClassicEditor}
-                        data="<p>Start typing here...</p>"
-                        onChange={handleEditorChange}
-                        config={{
-                        toolbar: [
-                            'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
-                            'blockQuote', 'insertTable', 'undo', 'redo'
-                        ],
-                        }}
-                    />
+                    {/* {newDocument.file && (
+                        <div className="mt-2 text-sm text-gray-700">
+                            Selected file: {imageFile.name}
+                        </div>
+                    )} */}
                 </div>
                 <div className="flex justify-end space-x-4 mt-6">
                     <button
@@ -198,4 +157,4 @@ const AddDocumentModal = ({setShowAddModal}) => {
   )
 }
 
-export default AddDocumentModal
+export default AddImageModal;
