@@ -172,8 +172,8 @@ const Dashboard = () => {
                     <p>{patient.bedID}</p>
                 </div>
                 <div>
-                    <h4 className="font-medium text-sm text-gray-500">Assigned To</h4>
-                    <p>{patient.assignedUser?.name || 'Unassigned'}</p>
+                    <h4 className="font-medium text-sm text-gray-500">Assignment Status</h4>
+                    <p>{patient.assignedUser ? '✅' : '❌'}</p>
                 </div>
             </div>
         </div>
@@ -306,22 +306,22 @@ const Dashboard = () => {
                             onChange={(e) => setNewPatient({ ...newPatient, treatmentArea: e.target.value })}
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Assign to User</label>
-                        <select
-                            required
-                            className="w-full p-2 border rounded"
-                            value={newPatient.assignedUserID}
-                            onChange={(e) => setNewPatient({ ...newPatient, assignedUserID: e.target.value })}
-                        >
-                            <option value="">Select User</option>
-                            {users.map(user => (
-                                <option key={user.ID} value={user.ID}>
-                                    {user.name} ({user.profession})
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    {/*<div>*/}
+                    {/*    <label className="block text-sm font-medium mb-1">Assign to User</label>*/}
+                    {/*    <select*/}
+                    {/*        required*/}
+                    {/*        className="w-full p-2 border rounded"*/}
+                    {/*        value={newPatient.assignedUserID}*/}
+                    {/*        onChange={(e) => setNewPatient({ ...newPatient, assignedUserID: e.target.value })}*/}
+                    {/*    >*/}
+                    {/*        <option value="">Select User</option>*/}
+                    {/*        {users.map(user => (*/}
+                    {/*            <option key={user.ID} value={user.ID}>*/}
+                    {/*                {user.name} ({user.profession})*/}
+                    {/*            </option>*/}
+                    {/*        ))}*/}
+                    {/*    </select>*/}
+                    {/*</div>*/}
                     <div className="col-span-2">
                         <button
                             type="submit"
@@ -352,7 +352,7 @@ const Dashboard = () => {
                             <th className="p-4 text-left font-medium text-gray-600">Treatment Area</th>
                             <th className="p-4 text-left font-medium text-gray-600">Bed ID</th>
                             <th className="p-4 text-left font-medium text-gray-600">Blood Group</th>
-                            <th className="p-4 text-left font-medium text-gray-600">Assigned To</th>
+                            <th className="p-4 text-left font-medium text-gray-600">Assignment Status</th>
                             <th className="p-4 text-left font-medium text-gray-600">Actions</th>
                         </tr>
                     </thead>
@@ -364,7 +364,7 @@ const Dashboard = () => {
                                 <td className="p-4">{patient.treatmentArea}</td>
                                 <td className="p-4">{patient.bedID}</td>
                                 <td className="p-4">{patient.bloodGroup}</td>
-                                <td className="p-4">{patient.assignedUser?.name || 'Unassigned'}</td>
+                                <td className="p-4">{patient.assignedUser ? '✅' : '❌'}</td>
                                 <td className="p-4">
                                     <button
                                         onClick={() => openPatientDetails(patient)}

@@ -34,7 +34,7 @@ const ICareBoard = () => {
         setNotification(true);
         setTimeout(() => {
             setNotification(false);
-        }, 5000); // Hide after 5 seconds
+        }, 5000);
     };
 
     const filteredPatients = selectedPatients.filter(patient =>
@@ -65,6 +65,7 @@ const ICareBoard = () => {
         const selectedIDs = selectedPatients
             .filter(patient => patient.selected)
             .map(patient => patient.ID);
+        console.log("Selected assign patient IDs: " + selectedIDs);
 
         try {
             const response = await fetch('/ICareBoard/AssignPatients', {
@@ -76,7 +77,26 @@ const ICareBoard = () => {
             });
 
             if (!response.ok) throw new Error('Failed to assign patients');
-            alert('Patients assigned successfully!');
+
+            const result = await response.json();
+
+            if (result.failedAssignments && result.failedAssignments.length > 0) {
+                // Show partial success/failure message
+                alert(`${result.message}\n\nFailed assignments:\n${result.failedAssignments.join('\n')}`);
+            } else {
+                // Show success message
+                alert(result.message);
+            }
+
+            // Refresh the patient list to update UI
+            const updatedResponse = await fetch('/ICareBoard/HospitalPatients', {
+                credentials: 'include'
+            });
+            if (!updatedResponse.ok) throw new Error('Failed to refresh patient list');
+
+            const updatedData = await updatedResponse.json();
+            setSelectedPatients(updatedData);
+
         } catch (error) {
             alert(`Error: ${error.message}`);
         }
@@ -123,7 +143,7 @@ const ICareBoard = () => {
                                         <input
                                             type="checkbox"
                                             checked={patient.selected || false}
-                                            onClick={() => {
+                                            onChange={() => {
                                                 if (isRestricted) {
                                                     showNotification();
                                                 } else {
@@ -219,7 +239,7 @@ const ICareBoard = () => {
                                                     <td className="p-4 text-center">
                                                         <input
                                                             type="checkbox"
-                                                            checked={patient.selected}
+                                                            checked={!!patient.selected}
                                                             onChange={() =>
                                                                 setSelectedPatients(selectedPatients.map(p =>
                                                                     p.ID === patient.ID

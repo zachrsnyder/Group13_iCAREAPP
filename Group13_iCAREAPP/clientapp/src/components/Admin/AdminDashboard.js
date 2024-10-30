@@ -1,8 +1,10 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { User, Lock, Search, Plus, Trash2 } from 'lucide-react';
 
-export default function AdminDashboard({ setIsAuthenticated }) { // Add setIsAuthenticated prop
+const AdminDashboard = ({ setIsAuthenticated }) => {
     const [users, setUsers] = useState([]);
+    const [geoCodes, setGeoCodes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
@@ -12,7 +14,8 @@ export default function AdminDashboard({ setIsAuthenticated }) { // Add setIsAut
         password: '',
         profession: '',
         adminEmail: '',
-        roleID: ''
+        roleID: '',
+        userGeoID: ''
     });
 
     const navigate = useNavigate();
@@ -20,6 +23,38 @@ export default function AdminDashboard({ setIsAuthenticated }) { // Add setIsAut
     useEffect(() => {
         fetchUsers();
     }, []);
+
+    useEffect(() => {
+        fetchGeoCodes();
+    }, []);
+
+    const fetchGeoCodes = async () => {
+        try {
+            const response = await fetch('/Admin/GetGeoCodes', {
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+            console.log('Fetched GeoCodes data', data);
+
+            if (data.error) {
+                setError(data.error);
+                return;
+            }
+
+            if (Array.isArray(data)) {
+                setGeoCodes(data);
+            } else {
+                setError('Invalid data format received');
+            }
+        } catch (err) {
+            console.error('Error fetching users:', err);
+            setError('Failed to load users');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
 
     const fetchUsers = async () => {
         try {
@@ -104,7 +139,8 @@ export default function AdminDashboard({ setIsAuthenticated }) { // Add setIsAut
                     password: '',
                     profession: '',
                     adminEmail: '',
-                    roleID: ''
+                    roleID: '',
+                    userGeoID: ''
                 });
                 fetchUsers(); // Refresh user list
             } else {
@@ -133,33 +169,25 @@ export default function AdminDashboard({ setIsAuthenticated }) { // Add setIsAut
             });
 
             console.log('Response status:', response.status);
-            console.log('Response headers:', response.headers);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            // Try to get the response as text first
             const responseText = await response.text();
             console.log('Raw response:', responseText);
 
-            // Then parse it as JSON
             let data;
             try {
                 data = JSON.parse(responseText);
             } catch (e) {
                 console.error('Failed to parse response as JSON:', e);
-                console.log('Response that failed to parse:', responseText);
                 throw new Error('Invalid JSON response from server');
             }
 
-            console.log('Parsed response:', data);
-
             if (data.success) {
-                // Success - refresh the user list
                 fetchUsers();
             } else {
-                // Server returned an error
                 setError(data.error || 'Failed to delete user');
             }
         } catch (err) {
@@ -169,173 +197,225 @@ export default function AdminDashboard({ setIsAuthenticated }) { // Add setIsAut
     };
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            {/* Header */}
-            <nav className="bg-white shadow-lg">
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="flex justify-between items-center h-16">
-                        <h1 className="text-2xl font-bold text-gray-900">iCare User Management</h1>
-                        <button
-                            onClick={handleLogout}
-                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+        <div className="flex min-h-screen bg-gray-100">
+            {/* Sidebar */}
+            <div className="hidden md:flex md:flex-col md:w-64 bg-white shadow-xl">
+                <div className="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto">
+                    <div className="flex items-center justify-center flex-shrink-0 px-4 mb-5">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 235.25 199.32"
+                            className="w-32 h-32"
                         >
-                            Logout
-                        </button>
+                            <defs>
+                                <linearGradient id="logoGradient" x1="0" y1="1" x2="0" y2="0">
+                                    <stop offset="0%" stopColor="#FF1D48" />
+                                    <stop offset="100%" stopColor="#FF758C" />
+                                </linearGradient>
+                            </defs>
+                            <g id="Layer_1-2">
+                                <path fill="url(#logoGradient)" d="M206.27,29.52c15.86,27.4,18.42,60.44,7.02,89.95-9.41,24.36-28.78,44.25-52.25,55.37-24.49,11.6-53.32,12.45-78.71,3.3-24.6-8.86-44.99-27.55-56.7-50.82-15.73-31.26-13.63-69.05,4.18-98.97,4.95-8.31-8.01-15.87-12.95-7.57C-1.33,51.31-5.3,89.5,7.39,122.84c10.74,28.19,32.01,51.99,59.38,64.95,28.03,13.28,60.98,15.36,90.27,4.82s52.16-30.88,65.66-57.71c17.94-35.66,16.51-78.41-3.48-112.95-4.84-8.35-17.8-.81-12.95,7.57h0Z" />
+                                <path fill="url(#logoGradient)" d="M56.68,165.22V42.45c0-4.83-.41-9.89,1.46-14.45,3.75-9.17,12.32-12.82,21.62-12.82h78.43l-3.79-1.02c10.15,7.38,17.83,17.87,26.49,26.84l-2.2-5.3v129.53c0,9.65,15,9.67,15,0V40.88c0-1.43.05-2.87,0-4.3-.14-3.94-2.2-6.17-4.85-8.96-4.74-5-9.2-10.26-13.97-15.24-3.93-4.11-9.92-11.13-15.7-12.06-3.81-.62-8-.13-11.84-.13h-25.18c-14.61,0-29.23-.09-43.84,0-20.54.13-36.49,15.78-36.64,36.4-.08,11.34,0,22.68,0,34.02,0,30.89-.47,61.82,0,92.71,0,.64,0,1.27,0,1.91,0,9.65,15,9.67,15,0h0Z" />
+                                <path fill="url(#logoGradient)" d="M78.12,166.88h81.78c4.83,0,4.83-7.5,0-7.5h-81.78c-4.83,0-4.83,7.5,0,7.5h0Z" />
+                                <path fill="url(#logoGradient)" d="M78.12,145.55h81.78c4.83,0,4.83-7.5,0-7.5h-81.78c-4.83,0-4.83,7.5,0,7.5h0Z" />
+                                <path fill="none" stroke="url(#logoGradient)" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" d="M119,70.16c-7.38-8.6-19.72-11.26-28.96-3.38-9.25,7.88-10.55,21.05-3.29,30.36,6.04,7.75,24.31,24.08,30.3,29.37.67.59,1.01.89,1.4,1,.34.1.71.1,1.06,0,.39-.12.73-.41,1.4-1,5.99-5.29,24.26-21.62,30.3-29.37,7.26-9.32,6.12-22.57-3.29-30.36-9.41-7.79-21.53-5.22-28.91,3.38Z" />
+                                <polyline fill="none" stroke="url(#logoGradient)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" points="139.07 94.83 128.63 94.83 123.02 82.8 110.98 106.87 106.77 94.83 98.94 94.83" />
+                                <path fill="url(#logoGradient)" d="M143.38,14.68v31.01c0,3.04,2.58,5.62,5.62,5.62h30.19c7.24,0,7.25-11.25,0-11.25h-30.19l5.62,5.62V14.68c0-7.24-11.25-7.25-11.25,0h0Z" />
+                            </g>
+                        </svg>
+                    </div>
+                    <div className="mt-2 text-center">
+                        <h2 className="text-xl font-semibold text-gray-800">iCare</h2>
+                        <p className="text-sm text-gray-600">Healthcare Management</p>
                     </div>
                 </div>
-            </nav>
-
-            {/* Main Content */}
-            <div className="max-w-7xl mx-auto py-6 px-4">
-                <div className="flex justify-end mb-6">
+                <div className="p-4 border-t border-gray-200">
                     <button
-                        onClick={() => setShowAddModal(true)}
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        onClick={handleLogout}
+                        className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-rose-600 rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors"
                     >
-                        Add New User
+                        <Lock className="w-4 h-4 mr-2" />
+                        Sign Out
                     </button>
                 </div>
+            </div>
 
-                {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                        {error}
-                    </div>
-                )}
-
-                {isLoading ? (
-                    <div className="text-center">Loading users...</div>
-                ) : (
-                    <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Name
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Username
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Profession
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Email
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Role
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {users.map((user) => (
-                                    <tr key={user.id}>
-                                        <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{user.userName}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{user.profession}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{user.adminEmail}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{user.roleName}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <button
-                                                onClick={() => handleDeleteUser(user.id)}
-                                                className="text-red-600 hover:text-red-900"
-                                            >
-                                                Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-
-                {/* Add User Modal */}
-                {showAddModal && (
-                    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
-                        <div className="bg-white rounded-lg p-8 max-w-md w-full">
-                            <h2 className="text-2xl font-bold mb-4">Add New User</h2>
-                            <form onSubmit={handleAddUser} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Name</label>
-                                    <input
-                                        type="text"
-                                        value={newUser.name}
-                                        onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Username</label>
-                                    <input
-                                        type="text"
-                                        value={newUser.userName}
-                                        onChange={(e) => setNewUser({ ...newUser, userName: e.target.value })}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Password</label>
-                                    <input
-                                        type="password"
-                                        value={newUser.password}
-                                        onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    {(newUser.roleID === '1') && (
-                                        <>
-                                            <label className="block text-sm font-medium text-gray-700">Admin Email</label>
-                                            <input
-                                                type="email"
-                                                value={newUser.adminEmail}
-                                                onChange={(e) => setNewUser({ ...newUser, adminEmail: e.target.value })}
-                                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                                                required
-                                            />
-                                        </>
-                                    )}
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Role</label>
-                                    <select
-                                        value={newUser.roleID}
-                                        onChange={(e) => setNewUser({ ...newUser, roleID: e.target.value, profession: e.target.value })}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                                        required
-                                    >
-                                        <option value="">Select a role</option>
-                                        <option value="1">Admin</option>
-                                        <option value="2">Doctor</option>
-                                        <option value="3">Nurse</option>
-                                    </select>
-                                </div>
-                                <div className="flex justify-end space-x-4 mt-6">
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowAddModal(false)}
-                                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                                    >
-                                        Add User
-                                    </button>
-                                </div>
-                            </form>
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col">
+                {/* Top Navigation */}
+                <nav className="bg-white shadow-sm z-10">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between h-16">
+                            <div className="flex items-center">
+                                <h1 className="text-2xl font-bold text-gray-900 ">User Management</h1>
+                            </div>
+                            <div className="flex items-center">
+                                <button
+                                    onClick={() => setShowAddModal(true)}
+                                    className="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+                                >
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add User
+                                </button>
+                            </div>
                         </div>
                     </div>
-                )}
+                </nav>
+
+                {/* Main Content Area */}
+                <main className="flex-1 overflow-y-auto bg-gray-100 p-6">
+                    {error && (
+                        <div className="mb-4 bg-red-50 text-red-700 p-4 rounded-md border border-red-200 text-sm">
+                            {error}
+                        </div>
+                    )}
+
+                    {isLoading ? (
+                        <div className="flex items-center justify-center h-64">
+                            <div className="text-gray-600">Loading users...</div>
+                        </div>
+                    ) : (
+                        <div className="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {users.map((user) => (
+                                        <tr key={user.id} className="hover:bg-gray-50">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.name}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.userName}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-rose-100 text-rose-800">
+                                                    {user.roleName}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.adminEmail}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                <button
+                                                    onClick={() => handleDeleteUser(user.id)}
+                                                    className="text-rose-600 hover:text-rose-900 inline-flex items-center"
+                                                >
+                                                    <Trash2 className="h-4 w-4 mr-1" />
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </main>
             </div>
+
+            {/* Add User Modal - Remains exactly the same as before */}
+            {showAddModal && (
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+                    <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+                        <h2 className="text-2xl font-bold mb-6 text-gray-800">Add New User</h2>
+                        <form onSubmit={handleAddUser} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <input
+                                    type="text"
+                                    value={newUser.name}
+                                    onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                                <input
+                                    type="text"
+                                    value={newUser.userName}
+                                    onChange={(e) => setNewUser({ ...newUser, userName: e.target.value })}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                <input
+                                    type="password"
+                                    value={newUser.password}
+                                    onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                {newUser.roleID === '1' && (
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Admin Email</label>
+                                        <input
+                                            type="email"
+                                            value={newUser.adminEmail}
+                                            onChange={(e) => setNewUser({ ...newUser, adminEmail: e.target.value })}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                                <select
+                                    value={newUser.userGeoID}
+                                    onChange={(e) => setNewUser({ ...newUser, userGeoID: e.target.value })}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                    required
+                                >
+                                    <option value="">Select a location</option>
+                                    {geoCodes.map((geoCode) => (
+                                        <option key={geoCode.ID} value={geoCode.ID}>
+                                            {geoCode.description}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                                <select
+                                    value={newUser.roleID}
+                                    onChange={(e) => setNewUser({ ...newUser, roleID: e.target.value, profession: e.target.options[e.target.selectedIndex].text })}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                    required
+                                >
+                                    <option value="">Select a role</option>
+                                    <option value="1">Admin</option>
+                                    <option value="2">Doctor</option>
+                                    <option value="3">Nurse</option>
+                                </select>
+                            </div>
+                            <div className="flex justify-end space-x-3 mt-6">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowAddModal(false)}
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 text-sm font-medium text-white bg-rose-600 rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+                                >
+                                    Add User
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
-}
+};
+
+export default AdminDashboard;

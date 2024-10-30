@@ -26,6 +26,47 @@ namespace Group13_iCAREAPP.Controllers
             return userRoles != null && userRoles.Contains("Admin");
         }
 
+        public ActionResult GetGeoCodes()
+        {
+            System.Diagnostics.Debug.WriteLine("GetUsers called");
+            var isAdmin = IsAdmin();
+            System.Diagnostics.Debug.WriteLine($"IsAdmin check result: {isAdmin}");
+            if (!isAdmin)
+            {
+                System.Diagnostics.Debug.WriteLine("Unauthorized access attempt to GetUsers");
+                return Json(new { error = "Unauthorized" }, JsonRequestBehavior.AllowGet);
+            }
+
+            try
+            {
+
+                // Modified query to use existing navigation properties
+                var geoCodes = db.GeoCodes
+                               .Select( geoCode => new
+                               {
+                                   ID = geoCode.ID,
+                                   description = geoCode.description
+                               }).ToList();
+
+                System.Diagnostics.Debug.WriteLine($"Successfully retrieved {geoCodes.Count} geocodes");
+
+                // Debug output
+                foreach (var geoCode in geoCodes)
+                {
+                    System.Diagnostics.Debug.WriteLine($"ID: {geoCode.ID}, Description: {geoCode.description}");
+                }
+
+                return Json(geoCodes, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in GetGeoCodes: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                return Json(new { error = "Failed to fetch GeoCodes" }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         public ActionResult GetUsers()
         {
             System.Diagnostics.Debug.WriteLine("GetUsers called");
@@ -72,6 +113,8 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
+
+
         [HttpPost]
         public ActionResult AddUser()
         {
@@ -105,7 +148,8 @@ namespace Group13_iCAREAPP.Controllers
                             name = userData["name"],
                             profession = userData["profession"],
                             adminEmail = userData["adminEmail"],
-                            dateHired = DateTime.Now
+                            dateHired = DateTime.Now,
+                            userGeoID = userData["userGeoID"]
                         };
                         db.iCAREUser.Add(newUser);
                         db.SaveChanges();
