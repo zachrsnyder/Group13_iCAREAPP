@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import DocCard from './DocCard'
 import AddDocumentModal from './AddDocumentModal'
 import DocumentViewModal from './DocumentViewModal'
+import AddImageModal from './AddImageModal'
 
 
 // This class defines a GUI window that show the available
@@ -15,12 +16,19 @@ const MyPalette = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [documents, setDocuments] = useState([])
     const [renderModal, setModal] = useState(false)
+    const [renderImageModal, setRenderImageModal] = useState(false)
 
     const [selectedDoc, setSelectedDoc] = useState(null)
     const [showDoc, setShowDoc] = useState(false)
 
+
+    //Functions to pass as props for removing models.
     const updateAddModal = (newState) => {
         setModal(false)
+    }
+
+    const updateAddImageModal = (newState) => {
+        setRenderImageModal(false)
     }
 
     const fetchDocs = async () => {
@@ -47,6 +55,12 @@ const MyPalette = () => {
     return (
         <div className='bg-gray-300'>
             <div className="flex justify-end mb-6">
+                <button
+                        onClick={() => setRenderImageModal(true)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    >
+                        Add New Image
+                </button>
                 <button
                     onClick={() => setModal(true)}
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -91,6 +105,10 @@ const MyPalette = () => {
             {renderModal && !isLoading && (
                 <AddDocumentModal setShowAddModal={updateAddModal}/>
                 
+            )}
+
+            {renderImageModal && !isLoading && (
+                <AddImageModal setShowAddModal={updateAddImageModal}/>
             )}
 
             {showDoc && selectedDoc && (
