@@ -162,7 +162,7 @@ namespace Group13_iCAREAPP.Controllers
                         {
                             docID = "DOC" + DateTime.Now.Ticks.ToString().Substring(0, 8),
                             docName = "Initial Assignment",
-                            dateOfCreation = DateTime.Now.ToString("yyyy-MM-dd"),
+                            dateOfCreation = DateTime.Now.ToString(),
                             patientID = patientId,
                             userID = Session["UserID"].ToString()
                         };
