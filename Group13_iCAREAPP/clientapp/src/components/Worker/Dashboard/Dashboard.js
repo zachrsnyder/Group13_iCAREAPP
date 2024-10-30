@@ -152,57 +152,102 @@ const Dashboard = () => {
     };
 
     const PatientDetails = ({ patient }) => (
-        <div className="space-y-4">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold text-gray-900">Patient Details</h2>
+        <div className="space-y-6">
+            {/* Header */}
+            <div className="flex justify-between items-center border-b border-gray-200 pb-4">
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-900">{patient.name}</h2>
+                    <p className="text-sm text-gray-500 mt-1">Patient ID: {patient.ID}</p>
+                </div>
                 <button
                     onClick={closeModal}
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                 >
-                    <X className="h-5 w-5" />
+                    <X className="h-5 w-5 text-gray-500" />
                 </button>
             </div>
 
-            <div className="space-y-4">
-                <div>
-                    <h4 className="font-medium text-sm text-gray-500">ID</h4>
-                    <p>{patient.ID}</p>
+            {/* Main Content - Two Columns */}
+            <div className="grid grid-cols-2 gap-6">
+                {/* Personal Information */}
+                <div className="space-y-4">
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Personal Information</h3>
+                        <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                            <div>
+                                <span className="text-sm text-gray-500">Date of Birth</span>
+                                <p className="text-gray-900">{new Date(patient.dateOfBirth).toLocaleDateString()}</p>
+                            </div>
+                            <div>
+                                <span className="text-sm text-gray-500">Address</span>
+                                <p className="text-gray-900">{patient.address}</p>
+                            </div>
+                            <div>
+                                <span className="text-sm text-gray-500">Blood Group</span>
+                                <p className="text-gray-900 font-semibold">{patient.bloodGroup}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Physical Details</h3>
+                        <div className="bg-gray-50 rounded-lg p-4 grid grid-cols-2 gap-4">
+                            <div>
+                                <span className="text-sm text-gray-500">Height</span>
+                                <p className="text-gray-900">{patient.height} cm</p>
+                            </div>
+                            <div>
+                                <span className="text-sm text-gray-500">Weight</span>
+                                <p className="text-gray-900">{patient.weight} kg</p>
+                            </div>
+                            <div className="col-span-2">
+                                <span className="text-sm text-gray-500">BMI</span>
+                                <p className="text-gray-900">
+                                    {((patient.weight / ((patient.height / 100) * (patient.height / 100))).toFixed(1))}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h4 className="font-medium text-sm text-gray-500">Name</h4>
-                    <p>{patient.name}</p>
-                </div>
-                <div>
-                    <h4 className="font-medium text-sm text-gray-500">Address</h4>
-                    <p>{patient.address}</p>
-                </div>
-                <div>
-                    <h4 className="font-medium text-sm text-gray-500">Date of Birth</h4>
-                    <p>{new Date(patient.dateOfBirth).toLocaleDateString()}</p>
-                </div>
-                <div>
-                    <h4 className="font-medium text-sm text-gray-500">Height</h4>
-                    <p>{patient.height} cm</p>
-                </div>
-                <div>
-                    <h4 className="font-medium text-sm text-gray-500">Weight</h4>
-                    <p>{patient.weight} kg</p>
-                </div>
-                <div>
-                    <h4 className="font-medium text-sm text-gray-500">Blood Group</h4>
-                    <p>{patient.bloodGroup}</p>
-                </div>
-                <div>
-                    <h4 className="font-medium text-sm text-gray-500">Treatment Area</h4>
-                    <p>{patient.treatmentArea}</p>
-                </div>
-                <div>
-                    <h4 className="font-medium text-sm text-gray-500">Bed ID</h4>
-                    <p>{patient.bedID}</p>
-                </div>
-                <div>
-                    <h4 className="font-medium text-sm text-gray-500">Assignment Status</h4>
-                    <p>{patient.assignedUser ? '✅' : '❌'}</p>
+
+                {/* Hospital Information */}
+                <div className="space-y-4">
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Hospital Details</h3>
+                        <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                            <div>
+                                <span className="text-sm text-gray-500">Treatment Area</span>
+                                <div className="mt-1">
+                                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-rose-100 text-rose-800">
+                                        {patient.treatmentArea}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <span className="text-sm text-gray-500">Location</span>
+                                <div className="mt-1">
+                                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        {patient.geoCode || 'Unassigned'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <span className="text-sm text-gray-500">Bed ID</span>
+                                <p className="text-gray-900 font-mono">{patient.bedID}</p>
+                            </div>
+                            <div>
+                                <span className="text-sm text-gray-500">Assignment Status</span>
+                                <div className="mt-1">
+                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${patient.assignedUser
+                                            ? 'bg-green-100 text-green-800'
+                                            : 'bg-yellow-100 text-yellow-800'
+                                        }`}>
+                                        {patient.assignedUser ? 'Assigned' : 'Unassigned'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -392,11 +437,13 @@ const Dashboard = () => {
                                 </div>
 
                                 <div className="overflow-x-auto">
+                                    {/* Update the table header */}
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead className="bg-gray-50">
                                             <tr>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Treatment Area</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bed ID</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Blood Group</th>
@@ -409,6 +456,11 @@ const Dashboard = () => {
                                                 <tr key={patient.ID} className="hover:bg-gray-50">
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.ID}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.name}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                            {patient.geoCode || 'Unassigned'}
+                                                        </span>
+                                                    </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.treatmentArea}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.bedID}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.bloodGroup}</td>
