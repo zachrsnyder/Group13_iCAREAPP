@@ -51,7 +51,7 @@ const MyPalette = () => {
 
     return (
         <div className="flex-1 flex flex-col">
-            <main className="flex-1 overflow-y-auto bg-gray-100 p-6">
+            <main className="flex-1 overflow-y-auto p-6">
                 <div className="max-w-7xl mx-auto">
                     <div className="bg-white rounded-lg shadow-xl border border-gray-200">
                         <div className="p-6">
@@ -94,7 +94,7 @@ const MyPalette = () => {
                                     <input
                                         type="text"
                                         placeholder="Search documents..."
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
