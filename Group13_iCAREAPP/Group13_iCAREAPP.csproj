@@ -165,6 +165,7 @@
     <Compile Include="Controllers\DocumentMetadatasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ICareBoardController.cs" />
+    <Compile Include="Controllers\MyBoardController.cs" />
     <Compile Include="Controllers\PatientRecordsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
