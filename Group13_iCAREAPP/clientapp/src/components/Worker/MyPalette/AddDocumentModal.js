@@ -11,11 +11,19 @@ const AddDocumentModal = ({ setShowAddModal }) => {
         patientID: "",
         htmlContent: "",
     });
+    const [editorInstance, setEditorInstance] = useState(null);
     const [patients, setPatients] = useState([]);
     const [error, setError] = useState('');
     const [loadingPatients, setLoadingPatients] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const editorContent = useRef('');
+
+    const handleDrugSelect = (drugName) => {
+        if (editorInstance) {
+            const currentContent = editorInstance.getData();
+            editorInstance.setData(currentContent + ' ' + drugName);
+        }
+    };
 
     const handleEditorChange = (event, editor) => {
         editorContent.current = editor.getData();
@@ -160,17 +168,20 @@ const AddDocumentModal = ({ setShowAddModal }) => {
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">Document Content</label>
                                         <div className="border border-gray-300 rounded-lg">
-                                            <CKEditor
-                                                editor={ClassicEditor}
-                                                data="<p>Start typing here...</p>"
-                                                onChange={handleEditorChange}
-                                                config={{
-                                                    toolbar: [
-                                                        'heading', '|', 'bold', 'italic', 'bulletedList', 'numberedList', '|',
-                                                        'blockQuote', 'undo', 'redo'
-                                                    ],
-                                                }}
-                                            />
+                                                    <CKEditor
+                                                        editor={ClassicEditor}
+                                                        data="<p>Start typing here...</p>"
+                                                        onChange={handleEditorChange}
+                                                        onReady={editor => {
+                                                            setEditorInstance(editor);
+                                                        }}
+                                                        config={{
+                                                            toolbar: [
+                                                                'heading', '|', 'bold', 'italic', 'bulletedList', 'numberedList', '|',
+                                                                'blockQuote', 'undo', 'redo'
+                                                            ],
+                                                        }}
+                                                    />
                                         </div>
                                     </div>
                                 </div>
@@ -208,6 +219,7 @@ const AddDocumentModal = ({ setShowAddModal }) => {
             <DrugInfoModal
                 isOpen={showDrugInfo}
                 onClose={() => setShowDrugInfo(false)}
+                onDrugSelect={handleDrugSelect}
             />
         </>
     );
