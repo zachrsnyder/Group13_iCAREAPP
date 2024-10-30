@@ -4,6 +4,7 @@ import { User, Lock, Search, Plus, Trash2 } from 'lucide-react';
 
 const AdminDashboard = ({ setIsAuthenticated }) => {
     const [users, setUsers] = useState([]);
+    const [geoCodes, setGeoCodes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
@@ -13,7 +14,8 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
         password: '',
         profession: '',
         adminEmail: '',
-        roleID: ''
+        roleID: '',
+        userGeoID: ''
     });
 
     const navigate = useNavigate();
@@ -21,6 +23,38 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
     useEffect(() => {
         fetchUsers();
     }, []);
+
+    useEffect(() => {
+        fetchGeoCodes();
+    }, []);
+
+    const fetchGeoCodes = async () => {
+        try {
+            const response = await fetch('/Admin/GetGeoCodes', {
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+            console.log('Fetched GeoCodes data', data);
+
+            if (data.error) {
+                setError(data.error);
+                return;
+            }
+
+            if (Array.isArray(data)) {
+                setGeoCodes(data);
+            } else {
+                setError('Invalid data format received');
+            }
+        } catch (err) {
+            console.error('Error fetching users:', err);
+            setError('Failed to load users');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
 
     const fetchUsers = async () => {
         try {
@@ -105,7 +139,8 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
                     password: '',
                     profession: '',
                     adminEmail: '',
-                    roleID: ''
+                    roleID: '',
+                    userGeoID: ''
                 });
                 fetchUsers(); // Refresh user list
             } else {
@@ -316,23 +351,40 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
                                     required
                                 />
                             </div>
-                            {newUser.roleID === '1' && (
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Admin Email</label>
-                                    <input
-                                        type="email"
-                                        value={newUser.adminEmail}
-                                        onChange={(e) => setNewUser({ ...newUser, adminEmail: e.target.value })}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                                        required
-                                    />
-                                </div>
-                            )}
+                            <div>
+                                {newUser.roleID === '1' && (
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Admin Email</label>
+                                        <input
+                                            type="email"
+                                            value={newUser.adminEmail}
+                                            onChange={(e) => setNewUser({ ...newUser, adminEmail: e.target.value })}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <select
+                                    value={newUser.userGeoID}
+                                    onChange={(e) => setNewUser({ ...newUser, userGeoID: e.target.value })}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                    required
+                                >
+                                    <option value="">Select a location</option>
+                                    {geoCodes.map((geoCode) => (
+                                        <option key={geoCode.ID} value={geoCode.ID}>
+                                            {geoCode.description}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
                                 <select
                                     value={newUser.roleID}
-                                    onChange={(e) => setNewUser({ ...newUser, roleID: e.target.value, profession: e.target.value })}
+                                    onChange={(e) => setNewUser({ ...newUser, roleID: e.target.value, profession: e.target.options[e.target.selectedIndex].text })}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                                     required
                                 >
