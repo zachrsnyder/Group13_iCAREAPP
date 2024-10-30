@@ -16,6 +16,7 @@ using System.IO;
 using System.Security.Cryptography;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
 
 namespace Group13_iCAREAPP.Controllers
 {
@@ -75,45 +76,69 @@ namespace Group13_iCAREAPP.Controllers
             public string PatientID { get; set; }
 
             //[Microsoft.AspNetCore.Mvc.ModelBinding.BindRequired]
-            public HttpPostedFileBase FileData { get; set; }
-
-            public string text {  get; set; }
+            public string htmlContent { get; set; }
         }
 
-        public byte[] CreatePdfWithImageAndText(Stream imageStream, string userText)
-        {
+        
 
-            System.Diagnostics.Debug.WriteLine(imageStream, userText);
-            using (var pdfStream = new MemoryStream())
+        //TODO: Fix. Add route.
+        //Complication of embedding files into the CKEditor.
+        //Since images are embedded into the doc using a path, it is necessary
+        //to have a designated path in the backend to blobify that embedded image.
+        [HttpPost]
+        public ActionResult ImageUpload(HttpPostedFileBase upload)
+        {
+            if (upload != null && upload.ContentLength > 0)
             {
-                // Set up the PDF document with standard A4 size
-                var document = new Document(PageSize.A4);
-                PdfWriter.GetInstance(document, pdfStream);
+                try
+                {
+                   //Use Guid to generate a unique filename for the file, so they dont get mixed around in the final blobbing.
+                    var fileName = Path.GetFileName(upload.FileName);
+                    var uniqueFileName = $"{Guid.NewGuid()}_{fileName}";
+                    //temp path for embedded image.
+                    var uploadPath = Path.Combine(Server.MapPath("~/Uploads/Images"), uniqueFileName);
+
+                 
+                    // Save the file
+                    upload.SaveAs(uploadPath);
+
+                    // Generate the URL to the saved file
+                    var imageUrl = Url.Content($"~/Uploads/Images/{uniqueFileName}");
+
+                    // Return JSON response with the uploaded image's URL.
+                    return Json(new { uploaded = true, url = imageUrl });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { uploaded = false, error = new { message = ex.Message } });
+                }
+            }
+
+            return Json(new { uploaded = false, error = new { message = "No file was uploaded." } });
+        }
+
+        public byte[] GeneratePdf(string htmlContent)
+        {
+            // Setup iTextSharp document and writer
+            using (var stream = new MemoryStream())
+            {
+                var document = new Document(PageSize.A4, 25, 25, 30, 30);
+                PdfWriter writer = PdfWriter.GetInstance(document, stream);
                 document.Open();
 
-                // Add the text input to the PDF
-                if (!string.IsNullOrEmpty(userText))
+                // Parse the HTML content with XMLWorkerHelper
+                using (var htmlStream = new StringReader(htmlContent))
                 {
-                    var font = FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.BLACK);
-                    var paragraph = new Paragraph(userText, font);
-                    paragraph.SpacingAfter = 20f; // Add spacing after the text
-                    document.Add(paragraph);
-                }
-
-                // Add the image to the PDF, if an image stream is provided
-                if (imageStream != null)
-                {
-                    var image = iTextSharp.text.Image.GetInstance(imageStream);
-                    image.ScaleToFit(PageSize.A4.Width - 50, PageSize.A4.Height / 2); // Scale image to fit
-                    image.Alignment = Element.ALIGN_CENTER;
-                    document.Add(image);
+                    XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, htmlStream);
                 }
 
                 document.Close();
-                return pdfStream.ToArray();
+                byte[] pdfData = stream.ToArray();
+
+                // Return the PDF as a downloadable file
+                return pdfData;
             }
         }
-
 
 
         // POST: DocumentMetadatas/AddDocument
@@ -127,12 +152,24 @@ namespace Group13_iCAREAPP.Controllers
             System.Diagnostics.Debug.WriteLine("Attempoting to add document");
 
             try
-            { 
-
-                byte[] fileData = CreatePdfWithImageAndText(payload.FileData.InputStream, payload.text);
+            {
 
 
-                System.Diagnostics.Debug.WriteLine($"FileByteString: {fileData}");
+                byte[] fileData;
+
+                ////using (var memoryStream = new MemoryStream())
+                ////{
+                ////    payload.FileData.InputStream.CopyTo(memoryStream);
+                ////    fileData = memoryStream.ToArray();
+
+                ////}
+
+
+                //System.Diagnostics.Debug.WriteLine($"FileByteString: {payload.FileData}");
+
+                System.Diagnostics.Debug.WriteLine(payload.htmlContent);
+
+                fileData = GeneratePdf(payload.htmlContent);
 
                 string newId = Guid.NewGuid().ToString();
 
@@ -170,11 +207,21 @@ namespace Group13_iCAREAPP.Controllers
                         throw new Exception("Failed transaction");
                     }
                 }
+
+                if (Directory.Exists(Server.MapPath("~/Uploads/Images"))){
+                    // Clean up image files embedded in the doc
+                    var imageFiles = Directory.GetFiles(Server.MapPath("~/Uploads/Images"));
+                    foreach (var file in imageFiles)
+                    {
+                        System.IO.File.Delete(file);
+                    }
+                }
+
                 return Json(new { status = 200 });
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error adding user: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error adding documents: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
                 return Json(new { status = 400, error = "Failed to add user" });
             }

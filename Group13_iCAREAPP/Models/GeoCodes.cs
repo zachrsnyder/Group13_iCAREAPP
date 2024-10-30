@@ -12,30 +12,21 @@ namespace Group13_iCAREAPP.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class PatientRecord
+    public partial class GeoCodes
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PatientRecord()
+        public GeoCodes()
         {
-            this.DocumentMetadata = new HashSet<DocumentMetadata>();
-            this.TreatmentRecord = new HashSet<TreatmentRecord>();
+            this.iCAREUser = new HashSet<iCAREUser>();
+            this.PatientRecord = new HashSet<PatientRecord>();
         }
     
         public string ID { get; set; }
-        public string name { get; set; }
-        public string address { get; set; }
-        public System.DateTime dateOfBirth { get; set; }
-        public double height { get; set; }
-        public double weight { get; set; }
-        public string bloodGroup { get; set; }
-        public string bedID { get; set; }
-        public string treatmentArea { get; set; }
-        public string patientGeoID { get; set; }
+        public string description { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocumentMetadata> DocumentMetadata { get; set; }
-        public virtual GeoCodes GeoCodes { get; set; }
+        public virtual ICollection<iCAREUser> iCAREUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TreatmentRecord> TreatmentRecord { get; set; }
+        public virtual ICollection<PatientRecord> PatientRecord { get; set; }
     }
 }
