@@ -1,8 +1,29 @@
-﻿import React from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
 
 export default function WorkerNavBar({ setIsAuthenticated }) {
     const navigate = useNavigate();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [userInfo, setUserInfo] = useState(null);
+
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const response = await fetch('/Account/GetUserInfo', {
+                    credentials: 'include',
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserInfo(data);
+                }
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        };
+
+        fetchUserInfo();
+    }, []);
 
     const handleLogout = async () => {
         try {
@@ -23,8 +44,20 @@ export default function WorkerNavBar({ setIsAuthenticated }) {
         }
     };
 
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (isDropdownOpen && !event.target.closest('.dropdown-container')) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, [isDropdownOpen]);
+
     return (
-        <nav className="bg-white shadow-xl border-b border-gray-200">
+        <nav className="bg-white shadow-xl border-b border-gray-200 relative z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     <div className="flex items-center">
@@ -76,12 +109,47 @@ export default function WorkerNavBar({ setIsAuthenticated }) {
                         >
                             MyPalette
                         </button>
-                        <button
-                            onClick={handleLogout}
-                            className="ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors"
-                        >
-                            Sign Out
-                        </button>
+
+                        <div className="relative dropdown-container">
+                            <button
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                className="flex items-center space-x-2 px-4 py-2 rounded-md bg-gray-100 border border-gray-200 text-gray-700 hover:bg-gray-200 hover:border-gray-300 transition-all shadow-sm"
+                            >
+                                <span>{userInfo?.roles?.[0]} - {userInfo?.name}</span>
+                                <ChevronDown className="w-4 h-4" />
+                            </button>
+
+                            {isDropdownOpen && (
+                                <div className="absolute right-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 z-50">
+                                    <div className="px-4 py-3">
+                                        <p className="text-sm text-gray-700">
+                                            <span className="font-semibold block">Username:</span>
+                                            {userInfo?.name}
+                                        </p>
+                                    </div>
+                                    <div className="px-4 py-3">
+                                        <p className="text-sm text-gray-700">
+                                            <span className="font-semibold block">Role:</span>
+                                            {userInfo?.roles?.[0]}
+                                        </p>
+                                    </div>
+                                    <div className="px-4 py-3">
+                                        <p className="text-sm text-gray-700">
+                                            <span className="font-semibold block">GeoCode:</span>
+                                            {userInfo?.geoCode}
+                                        </p>
+                                    </div>
+                                    <div className="px-4 py-3">
+                                        <button
+                                            onClick={handleLogout}
+                                            className="w-full text-left px-3 py-2 text-sm font-medium text-rose-600 hover:bg-gray-50 rounded-md"
+                                        >
+                                            Sign Out
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
