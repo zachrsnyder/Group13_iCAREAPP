@@ -306,22 +306,22 @@ const Dashboard = () => {
                             onChange={(e) => setNewPatient({ ...newPatient, treatmentArea: e.target.value })}
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Assign to User</label>
-                        <select
-                            required
-                            className="w-full p-2 border rounded"
-                            value={newPatient.assignedUserID}
-                            onChange={(e) => setNewPatient({ ...newPatient, assignedUserID: e.target.value })}
-                        >
-                            <option value="">Select User</option>
-                            {users.map(user => (
-                                <option key={user.ID} value={user.ID}>
-                                    {user.name} ({user.profession})
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    {/*<div>*/}
+                    {/*    <label className="block text-sm font-medium mb-1">Assign to User</label>*/}
+                    {/*    <select*/}
+                    {/*        required*/}
+                    {/*        className="w-full p-2 border rounded"*/}
+                    {/*        value={newPatient.assignedUserID}*/}
+                    {/*        onChange={(e) => setNewPatient({ ...newPatient, assignedUserID: e.target.value })}*/}
+                    {/*    >*/}
+                    {/*        <option value="">Select User</option>*/}
+                    {/*        {users.map(user => (*/}
+                    {/*            <option key={user.ID} value={user.ID}>*/}
+                    {/*                {user.name} ({user.profession})*/}
+                    {/*            </option>*/}
+                    {/*        ))}*/}
+                    {/*    </select>*/}
+                    {/*</div>*/}
                     <div className="col-span-2">
                         <button
                             type="submit"
