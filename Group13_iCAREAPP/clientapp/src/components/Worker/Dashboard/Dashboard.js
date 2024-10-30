@@ -151,107 +151,125 @@ const Dashboard = () => {
         setSelectedPatient(null);
     };
 
-    const PatientDetails = ({ patient }) => (
-        <div className="space-y-6">
-            {/* Header */}
-            <div className="flex justify-between items-center border-b border-gray-200 pb-4">
-                <div>
-                    <h2 className="text-2xl font-bold text-gray-900">{patient.name}</h2>
-                    <p className="text-sm text-gray-500 mt-1">Patient ID: {patient.ID}</p>
-                </div>
-                <button
-                    onClick={closeModal}
-                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                >
-                    <X className="h-5 w-5 text-gray-500" />
-                </button>
-            </div>
+    const PatientDetails = ({ patient }) => {
+        // Helper function to safely parse and format dates
+        const formatDate = (dateString) => {
+            // Check if the date is in ISO format
+            if (typeof dateString === 'string' && dateString.includes('T')) {
+                return new Date(dateString).toLocaleDateString();
+            }
+            // Handle Microsoft JSON date format
+            if (typeof dateString === 'string' && dateString.includes('/Date(')) {
+                const timestamp = parseInt(dateString.replace(/[^0-9]/g, ''));
+                return new Date(timestamp).toLocaleDateString();
+            }
+            // Regular date string
+            const date = new Date(dateString);
+            return !isNaN(date.getTime()) ? date.toLocaleDateString() : 'Invalid Date';
+        };
 
-            {/* Main Content - Two Columns */}
-            <div className="grid grid-cols-2 gap-6">
-                {/* Personal Information */}
-                <div className="space-y-4">
+        return (
+            <div className="space-y-6">
+                {/* Header */}
+                <div className="flex justify-between items-center border-b border-gray-200 pb-4">
                     <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Personal Information</h3>
-                        <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                            <div>
-                                <span className="text-sm text-gray-500">Date of Birth</span>
-                                <p className="text-gray-900">{new Date(patient.dateOfBirth).toLocaleDateString()}</p>
+                        <h2 className="text-2xl font-bold text-gray-900">{patient.name}</h2>
+                        <p className="text-sm text-gray-500 mt-1">Patient ID: {patient.ID}</p>
+                    </div>
+                    <button
+                        onClick={closeModal}
+                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    >
+                        <X className="h-5 w-5 text-gray-500" />
+                    </button>
+                </div>
+
+                {/* Main Content - Two Columns */}
+                <div className="grid grid-cols-2 gap-6">
+                    {/* Personal Information */}
+                    <div className="space-y-4">
+                        <div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-3">Personal Information</h3>
+                            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                                <div>
+                                    <span className="text-sm text-gray-500">Date of Birth</span>
+                                    <p className="text-gray-900">{formatDate(patient.dateOfBirth)}</p>
+                                </div>
+                                <div>
+                                    <span className="text-sm text-gray-500">Address</span>
+                                    <p className="text-gray-900">{patient.address}</p>
+                                </div>
+                                <div>
+                                    <span className="text-sm text-gray-500">Blood Group</span>
+                                    <p className="text-gray-900 font-semibold">{patient.bloodGroup}</p>
+                                </div>
                             </div>
-                            <div>
-                                <span className="text-sm text-gray-500">Address</span>
-                                <p className="text-gray-900">{patient.address}</p>
-                            </div>
-                            <div>
-                                <span className="text-sm text-gray-500">Blood Group</span>
-                                <p className="text-gray-900 font-semibold">{patient.bloodGroup}</p>
+                        </div>
+
+                        <div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-3">Physical Details</h3>
+                            <div className="bg-gray-50 rounded-lg p-4 grid grid-cols-2 gap-4">
+                                <div>
+                                    <span className="text-sm text-gray-500">Height</span>
+                                    <p className="text-gray-900">{patient.height} cm</p>
+                                </div>
+                                <div>
+                                    <span className="text-sm text-gray-500">Weight</span>
+                                    <p className="text-gray-900">{patient.weight} kg</p>
+                                </div>
+                                <div className="col-span-2">
+                                    <span className="text-sm text-gray-500">BMI</span>
+                                    <p className="text-gray-900">
+                                        {((patient.weight / ((patient.height / 100) * (patient.height / 100))).toFixed(1))}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Physical Details</h3>
-                        <div className="bg-gray-50 rounded-lg p-4 grid grid-cols-2 gap-4">
-                            <div>
-                                <span className="text-sm text-gray-500">Height</span>
-                                <p className="text-gray-900">{patient.height} cm</p>
-                            </div>
-                            <div>
-                                <span className="text-sm text-gray-500">Weight</span>
-                                <p className="text-gray-900">{patient.weight} kg</p>
-                            </div>
-                            <div className="col-span-2">
-                                <span className="text-sm text-gray-500">BMI</span>
-                                <p className="text-gray-900">
-                                    {((patient.weight / ((patient.height / 100) * (patient.height / 100))).toFixed(1))}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Hospital Information */}
-                <div className="space-y-4">
-                    <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Hospital Details</h3>
-                        <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                            <div>
-                                <span className="text-sm text-gray-500">Treatment Area</span>
-                                <div className="mt-1">
-                                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-rose-100 text-rose-800">
-                                        {patient.treatmentArea}
-                                    </span>
+                    {/* Hospital Information */}
+                    <div className="space-y-4">
+                        <div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-3">Hospital Details</h3>
+                            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                                <div>
+                                    <span className="text-sm text-gray-500">Treatment Area</span>
+                                    <div className="mt-1">
+                                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-rose-100 text-rose-800">
+                                            {patient.treatmentArea}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <span className="text-sm text-gray-500">Location</span>
-                                <div className="mt-1">
-                                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        {patient.geoCode || 'Unassigned'}
-                                    </span>
+                                <div>
+                                    <span className="text-sm text-gray-500">Location</span>
+                                    <div className="mt-1">
+                                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            {patient.geoCode || 'Unassigned'}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <span className="text-sm text-gray-500">Bed ID</span>
-                                <p className="text-gray-900 font-mono">{patient.bedID}</p>
-                            </div>
-                            <div>
-                                <span className="text-sm text-gray-500">Assignment Status</span>
-                                <div className="mt-1">
-                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${patient.assignedUser
+                                <div>
+                                    <span className="text-sm text-gray-500">Bed ID</span>
+                                    <p className="text-gray-900 font-mono">{patient.bedID}</p>
+                                </div>
+                                <div>
+                                    <span className="text-sm text-gray-500">Assignment Status</span>
+                                    <div className="mt-1">
+                                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${patient.assignedUser
                                             ? 'bg-green-100 text-green-800'
                                             : 'bg-yellow-100 text-yellow-800'
-                                        }`}>
-                                        {patient.assignedUser ? 'Assigned' : 'Unassigned'}
-                                    </span>
+                                            }`}>
+                                            {patient.assignedUser ? 'Assigned' : 'Unassigned'}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    };
 
     const filteredPatients = patients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
