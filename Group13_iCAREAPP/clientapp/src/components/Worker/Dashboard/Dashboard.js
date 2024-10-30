@@ -481,130 +481,118 @@ const Dashboard = () => {
                         </button>
                     </div>
 
-                                {showCreateForm && (
-                                    <form onSubmit={handleCreatePatient} className="mb-6 grid grid-cols-2 gap-4 p-6 border border-gray-200 rounded-lg bg-gray-50">
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                                                value={newPatient.name}
-                                                onChange={(e) => setNewPatient({ ...newPatient, name: e.target.value })}
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                                                value={newPatient.address}
-                                                onChange={(e) => setNewPatient({ ...newPatient, address: e.target.value })}
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-                                            <input
-                                                type="date"
-                                                required
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                                                value={newPatient.dateOfBirth}
-                                                onChange={(e) => setNewPatient({ ...newPatient, dateOfBirth: e.target.value })}
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Height (cm)</label>
-                                            <input
-                                                type="number"
-                                                required
-                                                step="0.1"
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                                                value={newPatient.height}
-                                                onChange={(e) => setNewPatient({ ...newPatient, height: e.target.value })}
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
-                                            <input
-                                                type="number"
-                                                required
-                                                step="0.1"
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                                                value={newPatient.weight}
-                                                onChange={(e) => setNewPatient({ ...newPatient, weight: e.target.value })}
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Blood Group</label>
-                                            <select
-                                                required
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                                                value={newPatient.bloodGroup}
-                                                onChange={(e) => setNewPatient({ ...newPatient, bloodGroup: e.target.value })}
-                                            >
-                                                <option value="">Select Blood Group</option>
-                                                <option value="A+">A+</option>
-                                                <option value="A-">A-</option>
-                                                <option value="B+">B+</option>
-                                                <option value="B-">B-</option>
-                                                <option value="AB+">AB+</option>
-                                                <option value="AB-">AB-</option>
-                                                <option value="O+">O+</option>
-                                                <option value="O-">O-</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Bed ID</label>
-                                            <div className="flex items-center">
-                                                <span className="px-3 py-2 border border-r-0 border-gray-300 bg-gray-100 rounded-l-md text-gray-500">BED</span>
-                                                <input
-                                                    type="number"
-                                                    required
-                                                    className="w-full px-3 py-2 border border-gray-300 rounded-r-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                                                    value={newPatient.bedID}
-                                                    onChange={(e) => setNewPatient({ ...newPatient, bedID: e.target.value })}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Area</label>
-                                            <select
-                                                required
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                                                value={newPatient.treatmentArea}
-                                                onChange={(e) => setNewPatient({ ...newPatient, treatmentArea: e.target.value })}
-                                            >
-                                                <option value="">Select Treatment Area</option>
-                                                {treatmentAreas.map((area) => (
-                                                    <option key={area} value={area}>
-                                                        {area}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-span-2">
-                                            <button
-                                                type="submit"
-                                                className="w-full px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors"
-                                            >
-                                                Create Patient
-                                            </button>
-                                        </div>
-                                    </form>
-                                )}
-
-                                <div className="mb-6">
-                                    <div className="relative">
-                                        <input
-                                            type="text"
-                                            placeholder="Search patients..."
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                        />
-                                    </div>
-                                </div>
+                    <form onSubmit={handleCreatePatient} className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                            <input
+                                type="text"
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                value={newPatient.name}
+                                onChange={(e) => setNewPatient({ ...newPatient, name: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                            <input
+                                type="text"
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                value={newPatient.address}
+                                onChange={(e) => setNewPatient({ ...newPatient, address: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                            <input
+                                type="date"
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                value={newPatient.dateOfBirth}
+                                onChange={(e) => setNewPatient({ ...newPatient, dateOfBirth: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Height (cm)</label>
+                            <input
+                                type="number"
+                                required
+                                step="0.1"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                value={newPatient.height}
+                                onChange={(e) => setNewPatient({ ...newPatient, height: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
+                            <input
+                                type="number"
+                                required
+                                step="0.1"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                value={newPatient.weight}
+                                onChange={(e) => setNewPatient({ ...newPatient, weight: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Blood Group</label>
+                            <select
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                value={newPatient.bloodGroup}
+                                onChange={(e) => setNewPatient({ ...newPatient, bloodGroup: e.target.value })}
+                            >
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Bed ID</label>
+                            <div className="flex items-center">
+                                <span className="px-3 py-2 border border-r-0 border-gray-300 bg-gray-100 rounded-l-md text-gray-500">BED</span>
+                                <input
+                                    type="number"
+                                    required
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-r-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                    value={newPatient.bedID}
+                                    onChange={(e) => setNewPatient({ ...newPatient, bedID: e.target.value })}
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Area</label>
+                            <select
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                value={newPatient.treatmentArea}
+                                onChange={(e) => setNewPatient({ ...newPatient, treatmentArea: e.target.value })}
+                            >
+                                <option value="">Select Treatment Area</option>
+                                {treatmentAreas.map((area) => (
+                                    <option key={area} value={area}>
+                                        {area}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="col-span-2 mt-4">
+                            <button
+                                type="submit"
+                                className="w-full px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors"
+                            >
+                                Create Patient
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </Modal>
 
             {/* Patient Details Modal */}
             <Modal isOpen={isModalOpen} onClose={closeModal}>
