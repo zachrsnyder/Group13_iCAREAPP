@@ -138,7 +138,7 @@ const EditDocModal = ({ doc, isText, setShowAll, setShowEditor, setShowDoc}) => 
                         uploadUrl: 'docUrl', // You may need a backend to handle this
                     },
                     toolbar: [
-                        'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'blockQuote', 'insertTable', 'undo', 'redo'
+                        'heading', '|', 'bold', 'italic', 'bulletedList', 'numberedList', '|', 'blockQuote', 'undo', 'redo'
                     ],
                     }}
                     /> ) : (

@@ -65,18 +65,22 @@ const DocumentViewModal = ({ doc, showDoc, selectedDoc }) => {
   return (
     <div className='fixed inset-0 bg-opacity-50 bg-gray-400 flex justify-between align-center'>
           {showView && (<div className={`bg-white rounded-lg p-8 w-full max-w-md `}>
+            <div className="flex w-full align-middle justify-end">
+              <div className="flex justify-between w-16">
+                {!isLoading && (
+                  <>
+                    <button className="text-2xl text-gray-500 hover:text-red-500" onClick={() => { handleDelete() }}>Kill</button>
+                    <button className="text-2xl text-gray-600 hover:text-blue-500" onClick={() => { setEdit(true)}}>Edit</button>
+                  </>)}
+                  <button className="text-2xl text-gray-600 hover:text-red-500" onClick={() => { selectedDoc(null); showDoc(false) }}>X</button>
+              </div>
+            </div>
               {isLoading ? (
                   <div><h2>Loading...</h2></div>
               ) : (
 
                   <div>
-                    <div className="flex w-full align-middle justify-end">
-                              <div className="flex justify-between w-16">
-                                  <button className="text-2xl text-gray-500 hover:text-red-500" onClick={() => { handleDelete() }}>Kill</button>
-                                  <button className="text-2xl text-gray-600 hover:text-blue-500" onClick={() => { setEdit(true)}}>Edit</button>
-                                  <button className="text-2xl text-gray-600 hover:text-red-500" onClick={() => { selectedDoc(null); showDoc(false) }}>X</button>
-                              </div>
-                    </div>
+                    
                     <iframe src={pdfUrl} width="100%" height="600px" title="PDF Viewer"></iframe>
                   </div>
               )}

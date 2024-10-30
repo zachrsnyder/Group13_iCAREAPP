@@ -2,6 +2,7 @@ import {React, useEffect, useState, createElement, useRef} from 'react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import html2pdf from 'html2pdf.js'
+import { React } from 'react'
 //import { type } from 'whoops'
 
 
@@ -133,6 +134,7 @@ const AddDocumentModal = ({setShowAddModal}) => {
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                         required
                     >
+                        <option key='' value=''></option>
                         {patients.map((patient) => (
                             <option key={patient.ID} value={patient.ID}>{patient.name} Id: {patient.ID}</option>
                         ))}
@@ -166,8 +168,8 @@ const AddDocumentModal = ({setShowAddModal}) => {
                         onChange={handleEditorChange}
                         config={{
                         toolbar: [
-                            'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
-                            'blockQuote', 'insertTable', 'undo', 'redo'
+                            'heading', '|', 'bold', 'italic', 'bulletedList', 'numberedList', '|',
+                            'blockQuote', 'undo', 'redo'
                         ],
                         }}
                     />
