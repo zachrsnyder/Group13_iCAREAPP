@@ -1,33 +1,26 @@
-import {React, useEffect, useState, useRef} from 'react'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import { CKEditor } from '@ckeditor/ckeditor5-react'
+import React, { useEffect, useState, useRef } from 'react';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { X, Loader2 } from 'lucide-react';
 
-
-
-//TODO: Add box for failing to add doc.
-//TODO:
-
-const AddDocumentModal = ({setShowAddModal}) => {
-  
+const AddDocumentModal = ({ setShowAddModal }) => {
     const [newDocument, setDocument] = useState({
         Name: "",
         patientID: "",
         htmlContent: "",
-    })
-    const [patients, setPatients] = useState([])
-    const [error, setError] = useState('')
-    const [loadingPatients, setLoadingPatients] = useState(true)
-
+    });
+    const [patients, setPatients] = useState([]);
+    const [error, setError] = useState('');
+    const [loadingPatients, setLoadingPatients] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const editorContent = useRef('');
 
     const handleEditorChange = (event, editor) => {
-      editorContent.current = editor.getData(); // Store editor content
+        editorContent.current = editor.getData();
     };
 
     const fetchPatients = async () => {
         try {
-
-            //TODO: CHange back to MyPAtiennts
             const response = await fetch('/PatientRecords/GetAllPatients', {
                 credentials: 'include'
             });
@@ -46,155 +39,160 @@ const AddDocumentModal = ({setShowAddModal}) => {
     };
 
     useEffect(() => {
-        fetchPatients()
-    }, [])
+        fetchPatients();
+    }, []);
 
-
-
-    const handleAddDoc = async(e) => {
+    const handleAddDoc = async (e) => {
         e.preventDefault();
-        try{
-            console.log("New document data: ", newDocument);
+        setIsSubmitting(true);
 
-
-            if(newDocument.Name.endsWith("_Image")){
-                newDocument.Name.replaceAll("_Image", "_Text")
+        try {
+            if (newDocument.Name.endsWith("_Image")) {
+                newDocument.Name = newDocument.Name.replaceAll("_Image", "_Text");
             }
+
             const formData = new FormData();
-            formData.append("Name", newDocument.Name)
-            formData.append("PatientID", newDocument.patientID)
+            formData.append("Name", newDocument.Name);
+            formData.append("PatientID", newDocument.patientID);
 
-            ////TODO: clean doc
-            //// Create a temporary div to hold the content
-            //const tempDiv = document.createElement('div');
-            //tempDiv.innerHTML = editorContent.current;
-            //document.body.appendChild(tempDiv);
+            const content = editorContent.current;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const file = new File([blob], newDocument.Name, { type: 'text/plain' });
+            formData.append("File", file);
 
-            const content = editorContent.current; // Get the current content from your editor
-            const blob = new Blob([content], { type: 'text/plain' }); // Create a Blob from the content
-            const file = new File([blob], newDocument.Name,  { type: 'text/plain' });
-
-            formData.append("File", file)
-            
-
-            for (const [key, value] of formData.entries()) {
-                console.log(`${key}:`, value);
-            }
-
-            const url = 'DocumentMetadatas/AddDocument';
-            const requestData = {
+            const response = await fetch('DocumentMetadatas/AddDocument', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
-            };
+            });
 
-            const response = await fetch(url, requestData);
-
-            if (response.status == 400) {
+            if (response.status === 400) {
                 const errorText = await response.text();
-                console.error('Error response text:', errorText);
-                throw new Error(`Failed to create patient: ${errorText}`);
+                throw new Error(`Failed to create document: ${errorText}`);
             }
-        }catch(ex){
-            console.log("Failed to add document.")
-            console.log(ex);
-        }
-        setShowAddModal(false)
-    }
-  
-    return (
-    
-    <div className='fixed inset-0 bg-opacity-50 bg-gray-400 flex justify-center align-center'>
-        <div className="bg-white rounded-lg p-8 max-w-md w-full overvlow-y-scroll">
-            {loadingPatients ? (
-            <div>
-                <h2>Loading Info...</h2>
-            </div>
-            ) : error === '' ? (<>
-            <h2 className="text-2xl font-bold mb-4">Add New Document</h2>
-                        <form onSubmit={handleAddDoc} className="space-y-4" encType="multipart/form-data">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Name</label>
-                    <input
-                        type="text"
-                        value={newDocument.Name}
-                        onChange={(e) => setDocument({ ...newDocument, Name: e.target.value })}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Corresponding Patient</label>
-                    <select
-                        value={newDocument.patientID}
-                        onChange={(e) => setDocument({ ...newDocument, patientID: e.target.value })}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                        required
-                    >
-                        <option key='' value=''></option>
-                        {patients.map((patient) => (
-                            <option key={patient.ID} value={patient.ID}>{patient.name} Id: {patient.ID}</option>
-                        ))}
-                    </select>
-                </div>
-                {/*<div>
-                    <label htmlFor="fileUpload">Upload Document:</label>
-                    <input type="file" id="fileUpload" onChange={(e) => setDocument({...newDocument, FileData: e.target.files[0]})} />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Document Text</label>
-                    <textarea
-                        value={newDocument.text}
-                        onChange={(e) => setDocument({ ...newDocument, text: e.target.value })}
-                        crows="10"
-                        cols="50"
-                        style={{
-                            width: "100%",
-                            height: "200px",
-                            padding: "10px",
-                            fontSize: "16px",
-                            resize: "vertical",
-                        }}
-                        required
-                    />
-                </div>*/}
-                <div>
-                    <CKEditor
-                        editor={ClassicEditor}
-                        data="<p>Start typing here...</p>"
-                        onChange={handleEditorChange}
-                        config={{
-                        toolbar: [
-                            'heading', '|', 'bold', 'italic', 'bulletedList', 'numberedList', '|',
-                            'blockQuote', 'undo', 'redo'
-                        ],
-                        }}
-                    />
-                </div>
-                <div className="flex justify-end space-x-4 mt-6">
-                    <button
-                        type="button"
-                        onClick={() => setShowAddModal(false)}
-                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                        Add Document
-                    </button>
-                </div>
-            </form>
-            </>) : (
-                <div>
-                    <h2>Couldn't get necessary info.</h2>
-                </div>
-            )}
-        </div>
-    </div>    
-  )
-}
 
-export default AddDocumentModal
+            setShowAddModal(false);
+        } catch (ex) {
+            console.error("Failed to add document:", ex);
+            setError(ex.message);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl h-[90vh] flex flex-col">
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b">
+                    <h2 className="text-xl font-semibold text-gray-800">Add New Document</h2>
+                    <button
+                        onClick={() => setShowAddModal(false)}
+                        className="p-2 text-gray-600 hover:text-gray-800 transition-colors"
+                        title="Close"
+                    >
+                        <X className="h-5 w-5" />
+                    </button>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 overflow-y-auto p-6">
+                    {loadingPatients ? (
+                        <div className="flex items-center justify-center h-full">
+                            <Loader2 className="h-8 w-8 animate-spin text-gray-600" />
+                            <span className="ml-2 text-gray-600">Loading patient information...</span>
+                        </div>
+                    ) : error ? (
+                        <div className="text-center p-4 bg-red-50 rounded-lg">
+                            <p className="text-red-600">{error}</p>
+                            <button
+                                onClick={() => setShowAddModal(false)}
+                                className="mt-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    ) : (
+                        <form onSubmit={handleAddDoc} className="space-y-6" encType="multipart/form-data">
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Document Name</label>
+                                    <input
+                                        type="text"
+                                        value={newDocument.Name}
+                                        onChange={(e) => setDocument({ ...newDocument, Name: e.target.value })}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-colors"
+                                        placeholder="Enter document name"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Select Patient</label>
+                                    <select
+                                        value={newDocument.patientID}
+                                        onChange={(e) => setDocument({ ...newDocument, patientID: e.target.value })}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-colors"
+                                        required
+                                    >
+                                        <option value="">Select a patient</option>
+                                        {patients.map((patient) => (
+                                            <option key={patient.ID} value={patient.ID}>
+                                                {patient.name} (ID: {patient.ID})
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Document Content</label>
+                                    <div className="border border-gray-300 rounded-lg">
+                                        <CKEditor
+                                            editor={ClassicEditor}
+                                            data="<p>Start typing here...</p>"
+                                            onChange={handleEditorChange}
+                                            config={{
+                                                toolbar: [
+                                                    'heading', '|', 'bold', 'italic', 'bulletedList', 'numberedList', '|',
+                                                    'blockQuote', 'undo', 'redo'
+                                                ],
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Footer */}
+                            <div className="flex justify-end space-x-3 pt-6 border-t">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowAddModal(false)}
+                                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                                    disabled={isSubmitting}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 transition-colors disabled:opacity-50"
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? (
+                                        <span className="flex items-center">
+                                            <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4" />
+                                            Adding...
+                                        </span>
+                                    ) : (
+                                        'Add Document'
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default AddDocumentModal;

@@ -1,30 +1,21 @@
-import {React, useEffect, useState, createElement, useRef} from 'react'
-//import { type } from 'whoops'
+import React, { useState, useEffect, useCallback } from 'react';
+import { X, Upload, Image, Loader2 } from 'lucide-react';
 
-
-
-
-//TODO: Add box for failing to add doc.
-//TODO:
-
-const AddImageModal = ({setShowAddModal}) => {
-  
+const AddImageModal = ({ setShowAddModal }) => {
     const [newDocument, setDocument] = useState({
         Name: "",
         patientID: "",
-        file: ""
-    })
-    const [patients, setPatients] = useState([])
-    const [error, setError] = useState('')
-    const [loadingPatients, setLoadingPatients] = useState(true)
+        file: null
+    });
+    const [patients, setPatients] = useState([]);
+    const [error, setError] = useState('');
+    const [loadingPatients, setLoadingPatients] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [preview, setPreview] = useState(null);
+    const [isDragging, setIsDragging] = useState(false);
 
-    
-
-    
     const fetchPatients = async () => {
         try {
-
-            //TODO: CHange back to MyPAtiennts
             const response = await fetch('/PatientRecords/GetAllPatients', {
                 credentials: 'include'
             });
@@ -35,127 +26,225 @@ const AddImageModal = ({setShowAddModal}) => {
 
             const data = await response.json();
             setPatients(data);
-            setLoadingPatients(false);
         } catch (err) {
             setError(err.message);
+        } finally {
             setLoadingPatients(false);
         }
     };
 
     useEffect(() => {
-        fetchPatients()
-    }, [])
+        fetchPatients();
+    }, []);
 
+    // Create preview when file is selected
+    useEffect(() => {
+        if (!newDocument.file) {
+            setPreview(null);
+            return;
+        }
 
+        const objectUrl = URL.createObjectURL(newDocument.file);
+        setPreview(objectUrl);
 
-    const handleAddDoc = async(e) => {
+        return () => URL.revokeObjectURL(objectUrl);
+    }, [newDocument.file]);
+
+    const handleDragOver = useCallback((e) => {
         e.preventDefault();
-        try{
-            console.log("New document data: ", newDocument);
+        setIsDragging(true);
+    }, []);
 
-            const formData = new FormData();
-            formData.append("Name", newDocument.Name + "_Image")
-            formData.append("PatientID", newDocument.patientID)
-            formData.append("File", newDocument.file);
-            
+    const handleDragLeave = useCallback((e) => {
+        e.preventDefault();
+        setIsDragging(false);
+    }, []);
 
-            for (const [key, value] of formData.entries()) {
-                console.log(`${key}:`, value);
+    const handleDrop = useCallback((e) => {
+        e.preventDefault();
+        setIsDragging(false);
+
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            const file = e.dataTransfer.files[0];
+            if (file.type.startsWith('image/')) {
+                setDocument(prev => ({ ...prev, file }));
+            } else {
+                setError('Please upload an image file');
             }
+        }
+    }, []);
 
-            const url = 'DocumentMetadatas/AddDocument';
-            const requestData = {
+    const handleFileChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            setDocument(prev => ({ ...prev, file: e.target.files[0] }));
+        }
+    };
+
+    const handleAddDoc = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setError('');
+
+        try {
+            const formData = new FormData();
+            formData.append("Name", newDocument.Name + "_Image");
+            formData.append("PatientID", newDocument.patientID);
+            formData.append("File", newDocument.file);
+
+            const response = await fetch('DocumentMetadatas/AddDocument', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
-            };
+            });
 
-            const response = await fetch(url, requestData);
-
-            if (response.status == 400) {
+            if (response.status === 400) {
                 const errorText = await response.text();
-                console.error('Error response text:', errorText);
-                throw new Error(`Failed to create patient: ${errorText}`);
+                throw new Error(errorText);
             }
-        }catch(ex){
-            console.log("Failed to add document.")
-            console.log(ex);
+
+            setShowAddModal(false);
+        } catch (ex) {
+            setError(ex.message || 'Failed to add document');
+        } finally {
+            setIsSubmitting(false);
         }
-        setShowAddModal(false)
-    }
-  
+    };
+
     return (
-    
-    <div className='fixed inset-0 bg-opacity-50 bg-gray-400 flex justify-center align-center'>
-        <div className="bg-white rounded-lg p-8 max-w-md w-full overflow-y-scroll">
-            {loadingPatients ? (
-            <div>
-                <h2>Loading Info...</h2>
-            </div>
-            ) : error === '' ? (<>
-            <h2 className="text-2xl font-bold mb-4">Add New Document</h2>
-                        <form onSubmit={handleAddDoc} className="space-y-4" encType="multipart/form-data">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Name</label>
-                    <input
-                        type="text"
-                        value={newDocument.Name}
-                        onChange={(e) => setDocument({ ...newDocument, Name: e.target.value })}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Corresponding Patient</label>
-                    <select
-                        value={newDocument.patientID}
-                        onChange={(e) => setDocument({ ...newDocument, patientID: e.target.value })}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                        required
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl h-[90vh] flex flex-col">
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b">
+                    <h2 className="text-xl font-semibold text-gray-800">Upload Image Document</h2>
+                    <button
+                        onClick={() => setShowAddModal(false)}
+                        className="p-2 text-gray-600 hover:text-gray-800 transition-colors"
+                        title="Close"
                     >
-                        <option key='' value=''></option>
-                        {patients.map((patient) => (
-                            <option key={patient.ID} value={patient.ID}>{patient.name} Id: {patient.ID}</option>
-                        ))}
-                    </select>
+                        <X className="h-5 w-5" />
+                    </button>
                 </div>
-                <div>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setDocument({ ...newDocument, file: e.target.files[0]})}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                    />
-                    {/* {newDocument.file && (
-                        <div className="mt-2 text-sm text-gray-700">
-                            Selected file: {imageFile.name}
+
+                {/* Content */}
+                <div className="flex-1 overflow-y-auto p-6">
+                    {loadingPatients ? (
+                        <div className="flex items-center justify-center h-full">
+                            <Loader2 className="h-8 w-8 animate-spin text-gray-600" />
+                            <span className="ml-2 text-gray-600">Loading patient information...</span>
                         </div>
-                    )} */}
+                    ) : (
+                        <form onSubmit={handleAddDoc} className="space-y-6">
+                            {error && (
+                                <div className="p-4 bg-red-50 rounded-lg text-red-600 text-sm">
+                                    {error}
+                                </div>
+                            )}
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Document Name</label>
+                                <input
+                                    type="text"
+                                    value={newDocument.Name}
+                                    onChange={(e) => setDocument({ ...newDocument, Name: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-colors"
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Select Patient</label>
+                                <select
+                                    value={newDocument.patientID}
+                                    onChange={(e) => setDocument({ ...newDocument, patientID: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-colors"
+                                    required
+                                >
+                                    <option value="">Select a patient</option>
+                                    {patients.map((patient) => (
+                                        <option key={patient.ID} value={patient.ID}>
+                                            {patient.name} (ID: {patient.ID})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Upload Image</label>
+                                <div
+                                    className={`border-2 border-dashed rounded-lg p-8 text-center ${isDragging ? 'border-rose-500 bg-rose-50' : 'border-gray-300'
+                                        }`}
+                                    onDragOver={handleDragOver}
+                                    onDragLeave={handleDragLeave}
+                                    onDrop={handleDrop}
+                                >
+                                    {preview ? (
+                                        <div className="space-y-4">
+                                            <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-lg" />
+                                            <button
+                                                type="button"
+                                                onClick={() => setDocument(prev => ({ ...prev, file: null }))}
+                                                className="text-sm text-red-600 hover:text-red-700"
+                                            >
+                                                Remove image
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            <Image className="h-12 w-12 mx-auto text-gray-400" />
+                                            <div className="text-gray-600">
+                                                Drag and drop your image here, or
+                                                <label className="ml-1 text-rose-600 hover:text-rose-700 cursor-pointer">
+                                                    browse
+                                                    <input
+                                                        type="file"
+                                                        className="hidden"
+                                                        accept="image/*"
+                                                        onChange={handleFileChange}
+                                                    />
+                                                </label>
+                                            </div>
+                                            <p className="text-sm text-gray-500">
+                                                Supports: JPG, PNG, GIF (max 10MB)
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </form>
+                    )}
                 </div>
-                <div className="flex justify-end space-x-4 mt-6">
+
+                {/* Footer */}
+                <div className="flex justify-end space-x-3 px-6 py-4 border-t">
                     <button
                         type="button"
                         onClick={() => setShowAddModal(false)}
-                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                        className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                        disabled={isSubmitting}
                     >
                         Cancel
                     </button>
                     <button
-                        type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        onClick={handleAddDoc}
+                        disabled={isSubmitting || !newDocument.file}
+                        className="flex items-center px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 transition-colors disabled:opacity-50"
                     >
-                        Add Document
+                        {isSubmitting ? (
+                            <>
+                                <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4" />
+                                Uploading...
+                            </>
+                        ) : (
+                            <>
+                                <Upload className="h-4 w-4 mr-2" />
+                                Upload Image
+                            </>
+                        )}
                     </button>
                 </div>
-            </form>
-            </>) : (
-                <div>
-                    <h2>Couldn't get necessary info.</h2>
-                </div>
-            )}
+            </div>
         </div>
-    </div>    
-  )
-}
+    );
+};
 
 export default AddImageModal;
