@@ -47,7 +47,7 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed top-[5vh] left-[75%] h-[90vh] w-96 bg-white rounded-lg shadow-xl z-50 flex flex-col">
+        <div className="fixed top-[5vh] left-[74%] h-[90vh] w-90 bg-white rounded-lg shadow-xl z-50 flex flex-col">
             <div className="flex-none px-6 py-4 border-b">
                 <h2 className="text-xl font-semibold text-gray-800">Drug Information</h2>
                 <button
