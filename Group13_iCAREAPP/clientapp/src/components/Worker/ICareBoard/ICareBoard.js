@@ -175,8 +175,10 @@ const ICareBoard = () => {
                                                 return (
                                                     <tr key={patient.ID} className="hover:bg-gray-50">
                                                         <td className="px-6 py-4 whitespace-nowrap">
-                                                            {patient.fullyAssigned ? (
-                                                                <span className="text-gray-500">Fully Assigned</span>
+                                                            {patient.alreadyAssigned ? (
+                                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Your Patient</span>
+                                                            ) : patient.fullyAssigned ? (
+                                                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Fully Assigned</span>
                                                             ) : (
                                                                 <input
                                                                     type="checkbox"
@@ -192,6 +194,8 @@ const ICareBoard = () => {
                                                                 />
                                                             )}
                                                         </td>
+
+
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.ID}</td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.name}</td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
