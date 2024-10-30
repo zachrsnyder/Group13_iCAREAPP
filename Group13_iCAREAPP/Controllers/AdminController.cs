@@ -200,20 +200,12 @@ namespace Group13_iCAREAPP.Controllers
 
             if (string.IsNullOrEmpty(id))
             {
-                return new JsonResult
-                {
-                    Data = new { success = false, error = "Invalid user ID" },
-                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
-                };
+                return Json(new { success = false, error = "Invalid user ID" }, JsonRequestBehavior.AllowGet);
             }
 
             if (!IsAdmin())
             {
-                return new JsonResult
-                {
-                    Data = new { success = false, error = "Unauthorized access" },
-                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
-                };
+                return Json(new { success = false, error = "Unauthorized access" }, JsonRequestBehavior.AllowGet);
             }
 
             try
@@ -222,71 +214,59 @@ namespace Group13_iCAREAPP.Controllers
                 {
                     try
                     {
-                        // 1. First delete DocumentMetadata records
+                        // 1. Delete DocumentMetadata records
                         var docResult = db.Database.ExecuteSqlCommand(
                             "DELETE FROM DocumentMetadata WHERE userID = @p0", id);
-                        System.Diagnostics.Debug.WriteLine($"Deleted {docResult} document metadata records");
 
                         // 2. Delete TreatmentRecord records
                         var treatmentResult = db.Database.ExecuteSqlCommand(
                             "DELETE FROM TreatmentRecord WHERE userID = @p0", id);
-                        System.Diagnostics.Debug.WriteLine($"Deleted {treatmentResult} treatment records");
 
                         // 3. Delete role assignments
                         var roleResult = db.Database.ExecuteSqlCommand(
                             "DELETE FROM UserRoleAssignment WHERE userID = @p0", id);
-                        System.Diagnostics.Debug.WriteLine($"Deleted {roleResult} role assignments");
 
-                        // 4. Delete password
+                        // 4. Delete WorkerGeoCode records
+                        var workerGeoResult = db.Database.ExecuteSqlCommand(
+                            "DELETE FROM WorkerGeoCode WHERE workerID = @p0", id);
+
+                        // 5. Delete password
                         var passwordResult = db.Database.ExecuteSqlCommand(
                             "DELETE FROM UserPassword WHERE ID = @p0", id);
-                        System.Diagnostics.Debug.WriteLine($"Deleted {passwordResult} password records");
 
-                        // 5. Finally delete the user
+                        // 6. Finally delete the user
                         var userResult = db.Database.ExecuteSqlCommand(
                             "DELETE FROM iCAREUser WHERE ID = @p0", id);
-                        System.Diagnostics.Debug.WriteLine($"Deleted {userResult} user records");
 
                         transaction.Commit();
 
-                        return new JsonResult
+                        return Json(new
                         {
-                            Data = new
+                            success = true,
+                            message = "User deleted successfully",
+                            details = new
                             {
-                                success = true,
-                                message = "User deleted successfully",
-                                details = new
-                                {
-                                    documentsDeleted = docResult,
-                                    treatmentsDeleted = treatmentResult,
-                                    rolesDeleted = roleResult,
-                                    passwordsDeleted = passwordResult,
-                                    usersDeleted = userResult
-                                }
-                            },
-                            JsonRequestBehavior = JsonRequestBehavior.AllowGet
-                        };
+                                documentsDeleted = docResult,
+                                treatmentsDeleted = treatmentResult,
+                                rolesDeleted = roleResult,
+                                workerGeoDeleted = workerGeoResult,
+                                passwordsDeleted = passwordResult,
+                                usersDeleted = userResult
+                            }
+                        }, JsonRequestBehavior.AllowGet);
                     }
                     catch (Exception ex)
                     {
                         transaction.Rollback();
                         System.Diagnostics.Debug.WriteLine($"Delete transaction failed: {ex.Message}");
-                        return new JsonResult
-                        {
-                            Data = new { success = false, error = ex.Message },
-                            JsonRequestBehavior = JsonRequestBehavior.AllowGet
-                        };
+                        return Json(new { success = false, error = ex.Message }, JsonRequestBehavior.AllowGet);
                     }
                 }
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Delete operation failed: {ex.Message}");
-                return new JsonResult
-                {
-                    Data = new { success = false, error = ex.Message },
-                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
-                };
+                return Json(new { success = false, error = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 

@@ -315,18 +315,98 @@ const MyBoard = () => {
                                         onChange={(e) => setEditPatient({ ...editPatient, name: e.target.value })}
                                     />
                                 </div>
-                                {/* ... other form fields with the same styling ... */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                        value={editPatient.address}
+                                        onChange={(e) => setEditPatient({ ...editPatient, address: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                                    <input
+                                        type="date"
+                                        required
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                        value={editPatient.dateOfBirth}
+                                        onChange={(e) => setEditPatient({ ...editPatient, dateOfBirth: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Height (cm)</label>
+                                    <input
+                                        type="number"
+                                        required
+                                        step="0.1"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                        value={editPatient.height}
+                                        onChange={(e) => setEditPatient({ ...editPatient, height: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
+                                    <input
+                                        type="number"
+                                        required
+                                        step="0.1"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                        value={editPatient.weight}
+                                        onChange={(e) => setEditPatient({ ...editPatient, weight: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Blood Group</label>
+                                    <select
+                                        required
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                        value={editPatient.bloodGroup}
+                                        onChange={(e) => setEditPatient({ ...editPatient, bloodGroup: e.target.value })}
+                                    >
+                                        <option value="">Blood Type</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Bed ID</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                        value={editPatient.bedID}
+                                        onChange={(e) => setEditPatient({ ...editPatient, bedID: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Area</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                        value={editPatient.treatmentArea}
+                                        onChange={(e) => setEditPatient({ ...editPatient, treatmentArea: e.target.value })}
+                                    />
+                                </div>
                                 <div className="col-span-2 flex space-x-3 mt-4">
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+                                        className="flex-1 px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors"
                                     >
                                         Save Changes
                                     </button>
                                     <button
                                         type="button"
                                         onClick={closeEditModal}
-                                        className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                                        className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
                                     >
                                         Cancel
                                     </button>
