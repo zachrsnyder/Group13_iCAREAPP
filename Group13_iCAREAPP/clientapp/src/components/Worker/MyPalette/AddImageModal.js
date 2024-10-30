@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { X, Upload, Image, Loader2 } from 'lucide-react';
+import { X, Upload, Image, Loader2, AlertCircle } from 'lucide-react';
 
 const AddImageModal = ({ setShowAddModal }) => {
     const [newDocument, setDocument] = useState({
@@ -13,6 +13,12 @@ const AddImageModal = ({ setShowAddModal }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [preview, setPreview] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [touched, setTouched] = useState({
+        patientID: false,
+        Name: false
+    });
+
+    const isFormValid = newDocument.patientID && newDocument.Name && newDocument.file;
 
     const fetchPatients = async () => {
         try {
@@ -37,7 +43,6 @@ const AddImageModal = ({ setShowAddModal }) => {
         fetchPatients();
     }, []);
 
-    // Create preview when file is selected
     useEffect(() => {
         if (!newDocument.file) {
             setPreview(null);
@@ -80,8 +85,23 @@ const AddImageModal = ({ setShowAddModal }) => {
         }
     };
 
+    const handleBlur = (field) => {
+        setTouched(prev => ({ ...prev, [field]: true }));
+    };
+
     const handleAddDoc = async (e) => {
         e.preventDefault();
+
+        // Set all fields as touched when attempting to submit
+        setTouched({
+            patientID: true,
+            Name: true
+        });
+
+        if (!isFormValid) {
+            return;
+        }
+
         setIsSubmitting(true);
         setError('');
 
@@ -110,6 +130,19 @@ const AddImageModal = ({ setShowAddModal }) => {
         }
     };
 
+    const getFieldError = (field) => {
+        if (!touched[field]) return null;
+
+        switch (field) {
+            case 'patientID':
+                return !newDocument.patientID ? 'Please select a patient' : null;
+            case 'Name':
+                return !newDocument.Name ? 'Please enter a document name' : null;
+            default:
+                return null;
+        }
+    };
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl h-[90vh] flex flex-col">
@@ -135,28 +168,40 @@ const AddImageModal = ({ setShowAddModal }) => {
                     ) : (
                         <form onSubmit={handleAddDoc} className="space-y-6">
                             {error && (
-                                <div className="p-4 bg-red-50 rounded-lg text-red-600 text-sm">
+                                <div className="p-4 bg-red-50 rounded-lg flex items-center text-red-600 text-sm">
+                                    <AlertCircle className="h-4 w-4 mr-2" />
                                     {error}
                                 </div>
                             )}
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Document Name</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Document Name <span className="text-red-500">*</span>
+                                </label>
                                 <input
                                     type="text"
                                     value={newDocument.Name}
                                     onChange={(e) => setDocument({ ...newDocument, Name: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-colors"
+                                    onBlur={() => handleBlur('Name')}
+                                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-colors ${getFieldError('Name') ? 'border-red-500' : 'border-gray-300'
+                                        }`}
                                     required
                                 />
+                                {getFieldError('Name') && (
+                                    <p className="mt-1 text-sm text-red-500">{getFieldError('Name')}</p>
+                                )}
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Select Patient</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Select Patient <span className="text-red-500">*</span>
+                                </label>
                                 <select
                                     value={newDocument.patientID}
                                     onChange={(e) => setDocument({ ...newDocument, patientID: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-colors"
+                                    onBlur={() => handleBlur('patientID')}
+                                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-colors ${getFieldError('patientID') ? 'border-red-500' : 'border-gray-300'
+                                        }`}
                                     required
                                 >
                                     <option value="">Select a patient</option>
@@ -166,10 +211,15 @@ const AddImageModal = ({ setShowAddModal }) => {
                                         </option>
                                     ))}
                                 </select>
+                                {getFieldError('patientID') && (
+                                    <p className="mt-1 text-sm text-red-500">{getFieldError('patientID')}</p>
+                                )}
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Upload Image</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Upload Image <span className="text-red-500">*</span>
+                                </label>
                                 <div
                                     className={`border-2 border-dashed rounded-lg p-8 text-center ${isDragging ? 'border-rose-500 bg-rose-50' : 'border-gray-300'
                                         }`}
@@ -209,6 +259,9 @@ const AddImageModal = ({ setShowAddModal }) => {
                                         </div>
                                     )}
                                 </div>
+                                {touched.patientID && !newDocument.file && (
+                                    <p className="mt-1 text-sm text-red-500">Please upload an image</p>
+                                )}
                             </div>
                         </form>
                     )}
@@ -226,7 +279,7 @@ const AddImageModal = ({ setShowAddModal }) => {
                     </button>
                     <button
                         onClick={handleAddDoc}
-                        disabled={isSubmitting || !newDocument.file}
+                        disabled={isSubmitting || !isFormValid}
                         className="flex items-center px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 transition-colors disabled:opacity-50"
                     >
                         {isSubmitting ? (
