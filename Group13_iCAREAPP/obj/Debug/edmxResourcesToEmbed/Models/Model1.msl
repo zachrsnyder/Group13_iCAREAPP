@@ -20,9 +20,18 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="GeoCodes">
+      <EntityTypeMapping TypeName="Group13_iCAREDBModel.GeoCodes">
+        <MappingFragment StoreEntitySet="GeoCodes">
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="iCAREUser">
       <EntityTypeMapping TypeName="Group13_iCAREDBModel.iCAREUser">
         <MappingFragment StoreEntitySet="iCAREUser">
+          <ScalarProperty Name="userGeoID" ColumnName="userGeoID" />
           <ScalarProperty Name="dateFinished" ColumnName="dateFinished" />
           <ScalarProperty Name="dateHired" ColumnName="dateHired" />
           <ScalarProperty Name="adminEmail" ColumnName="adminEmail" />
@@ -41,17 +50,10 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="PatientGeoCode">
-      <EntityTypeMapping TypeName="Group13_iCAREDBModel.PatientGeoCode">
-        <MappingFragment StoreEntitySet="PatientGeoCode">
-          <ScalarProperty Name="patientID" ColumnName="patientID" />
-          <ScalarProperty Name="geoID" ColumnName="geoID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="PatientRecord">
       <EntityTypeMapping TypeName="Group13_iCAREDBModel.PatientRecord">
         <MappingFragment StoreEntitySet="PatientRecord">
+          <ScalarProperty Name="patientGeoID" ColumnName="patientGeoID" />
           <ScalarProperty Name="treatmentArea" ColumnName="treatmentArea" />
           <ScalarProperty Name="bedID" ColumnName="bedID" />
           <ScalarProperty Name="bloodGroup" ColumnName="bloodGroup" />
@@ -61,6 +63,17 @@
           <ScalarProperty Name="address" ColumnName="address" />
           <ScalarProperty Name="name" ColumnName="name" />
           <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="Group13_iCAREDBModel.sysdiagrams">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="definition" ColumnName="definition" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -91,14 +104,6 @@
         <MappingFragment StoreEntitySet="UserRole">
           <ScalarProperty Name="roleName" ColumnName="roleName" />
           <ScalarProperty Name="ID" ColumnName="ID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="WorkerGeoCode">
-      <EntityTypeMapping TypeName="Group13_iCAREDBModel.WorkerGeoCode">
-        <MappingFragment StoreEntitySet="WorkerGeoCode">
-          <ScalarProperty Name="workerID" ColumnName="workerID" />
-          <ScalarProperty Name="geoID" ColumnName="geoID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
