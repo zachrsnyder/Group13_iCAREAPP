@@ -235,6 +235,7 @@
     <Content Include="clientapp\src\components\Login\LoginForm.js" />
     <Content Include="clientapp\src\components\Worker\Dashboard\Dashboard.js" />
     <Content Include="clientapp\src\components\Worker\ICareBoard\ICareBoard.js" />
+    <Content Include="clientapp\src\components\Worker\ICareBoard\NotificationModal.js" />
     <Content Include="clientapp\src\components\Worker\MyBoard\MyBoard.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\AddDocumentModal.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\AddImageModal.js" />
