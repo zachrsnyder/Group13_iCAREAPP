@@ -1,5 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { Search, Eye, X } from 'lucide-react';
+import HistoryIconButton from '../../buttons/HistoryIconButton.js';
+
 
 const MyBoard = () => {
     const [patients, setPatients] = useState([]);
@@ -220,14 +222,25 @@ const MyBoard = () => {
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.bedID}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.bloodGroup}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                                    <button
-                                                        onClick={() => openModal(patient)}
-                                                        className="text-rose-600 hover:text-rose-900 font-medium transition-colors inline-flex items-center"
-                                                    >
-                                                        <Eye className="h-4 w-4 mr-1" />
-                                                        View Record
-                                                    </button>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm flex items-center space-x-1">
+                                                    <div className="group relative">
+                                                        <button
+                                                            onClick={() => openModal(patient)}
+                                                            className="text-rose-600 hover:text-rose-900 hover:bg-rose-200 px-2 py-1 rounded-md font-medium transition-colors inline-flex items-center space-x-1"
+                                                        >
+                                                            <Eye className="h-6 w-6" />
+                                                        </button>
+                                                        <div className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                            View Record
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="group relative">
+                                                        <HistoryIconButton />
+                                                        <div className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                            View Change History
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}
