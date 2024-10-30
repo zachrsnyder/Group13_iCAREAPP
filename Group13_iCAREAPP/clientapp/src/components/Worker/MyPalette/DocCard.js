@@ -17,6 +17,8 @@ const DocCard = ({ doc, setShowDoc, setSelectedDoc }) => {
     useEffect(()=>{
         if (doc.documentTitle.endsWith("_Image")) {
             setTitle(doc.documentTitle.slice(0, -6)); // Remove the last 6 characters ("_Image")
+        }else{
+            setTitle(doc.documentTitle)
         }
     }, [])
 
@@ -30,7 +32,7 @@ const DocCard = ({ doc, setShowDoc, setSelectedDoc }) => {
                     onClick={() => onRowClick(doc)}
                     className="w-full text-left py-2 flex justify-between items-center"
                 >
-                    <span className="px-4 w-1/5">{doc.documentTitle}</span>
+                    <span className="px-4 w-1/5">{title}</span>
                     <span className="px-4 w-1/5">{doc.documentDate}</span>
                     <span className="px-4 w-1/5">{doc.patientName}</span>
                     <span className="px-4 w-1/5">{doc.userName}</span>
