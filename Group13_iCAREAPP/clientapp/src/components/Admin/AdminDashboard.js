@@ -196,11 +196,13 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
         }
     };
 
+    // ... keep all imports and state/functions the same ...
+
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
             <div className="hidden md:flex md:flex-col md:w-64 bg-white shadow-xl">
-                <div className="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto">
+                <div className="flex flex-col flex-grow pt-5 pb-4">
                     <div className="flex items-center justify-center flex-shrink-0 px-4 mb-5">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -241,13 +243,13 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col h-full overflow-hidden">
                 {/* Top Navigation */}
                 <nav className="bg-white shadow-sm z-10">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex justify-between h-16">
                             <div className="flex items-center">
-                                <h1 className="text-2xl font-bold text-gray-900 ">User Management</h1>
+                                <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
                             </div>
                             <div className="flex items-center">
                                 <button
@@ -263,7 +265,7 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
                 </nav>
 
                 {/* Main Content Area */}
-                <main className="flex-1 overflow-y-auto bg-gray-100 p-6">
+                <main className="flex-1 p-6">
                     {error && (
                         <div className="mb-4 bg-red-50 text-red-700 p-4 rounded-md border border-red-200 text-sm">
                             {error}
@@ -275,49 +277,51 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
                             <div className="text-gray-600">Loading users...</div>
                         </div>
                     ) : (
-                        <div className="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {users.map((user) => (
-                                        <tr key={user.id} className="hover:bg-gray-50">
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.name}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.userName}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-rose-100 text-rose-800">
-                                                    {user.roleName}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.adminEmail}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                <button
-                                                    onClick={() => handleDeleteUser(user.id)}
-                                                    className="text-rose-600 hover:text-rose-900 inline-flex items-center"
-                                                >
-                                                    <Trash2 className="h-4 w-4 mr-1" />
-                                                    Delete
-                                                </button>
-                                            </td>
+                        <div className="bg-white rounded-lg shadow-xl border border-gray-200 h-[calc(100vh-11rem)] flex flex-col">
+                            <div className="overflow-auto">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead className="bg-gray-50 sticky top-0">
+                                        <tr>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {users.map((user) => (
+                                            <tr key={user.id} className="hover:bg-gray-50">
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.name}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.userName}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-rose-100 text-rose-800">
+                                                        {user.roleName}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.adminEmail}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    <button
+                                                        onClick={() => handleDeleteUser(user.id)}
+                                                        className="text-rose-600 hover:text-rose-900 inline-flex items-center"
+                                                    >
+                                                        <Trash2 className="h-4 w-4 mr-1" />
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     )}
                 </main>
             </div>
 
-            {/* Add User Modal - Remains exactly the same as before */}
+            {/* Add User Modal */}
             {showAddModal && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
                         <h2 className="text-2xl font-bold mb-6 text-gray-800">Add New User</h2>
                         <form onSubmit={handleAddUser} className="space-y-4">

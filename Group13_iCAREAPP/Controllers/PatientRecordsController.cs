@@ -41,6 +41,9 @@ namespace Group13_iCAREAPP.Controllers
                         p.bloodGroup,
                         p.bedID,
                         p.treatmentArea,
+                        geoCode = db.GeoCodes.Where(g => g.ID == p.patientGeoID)
+                                           .Select(g => g.description)
+                                           .FirstOrDefault() ?? "Unassigned",
                         assignedUser = p.TreatmentRecord
                             .OrderByDescending(tr => tr.treatmentDate)
                             .Select(tr => new
@@ -159,7 +162,7 @@ namespace Group13_iCAREAPP.Controllers
                         {
                             docID = "DOC" + DateTime.Now.Ticks.ToString().Substring(0, 8),
                             docName = "Initial Assignment",
-                            dateOfCreation = DateTime.Now.ToString("yyyy-MM-dd"),
+                            dateOfCreation = DateTime.Now.ToString(),
                             patientID = patientId,
                             userID = Session["UserID"].ToString()
                         };

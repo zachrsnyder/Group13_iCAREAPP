@@ -148,12 +148,18 @@ namespace Group13_iCAREAPP.Controllers
                                          .Select(ur => ur.roleName)
                                          .ToList();
 
+                var geoCode = db.GeoCodes
+                               .Where(g => g.ID == user.userGeoID)
+                               .Select(g => g.description)
+                               .FirstOrDefault();
+
                 return Json(new
                 {
                     id = user.ID,
                     name = user.name,
                     profession = user.profession,
-                    roles = userRoles
+                    roles = userRoles,
+                    geoCode = geoCode ?? "No GeoCode Assigned"
                 }, JsonRequestBehavior.AllowGet);
             }
 
@@ -161,7 +167,7 @@ namespace Group13_iCAREAPP.Controllers
         }
 
         // GET: Account/Logout
-       
+
         public ActionResult Logout()
         {
             try
