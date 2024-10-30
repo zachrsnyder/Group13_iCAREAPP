@@ -277,6 +277,8 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
+
+
         [HttpGet]
         [Route("Document/html/{id}")]
         public ActionResult GetHtml(string id){
@@ -449,15 +451,25 @@ namespace Group13_iCAREAPP.Controllers
             return View(documentMetadata);
         }
 
-        // POST: DocumentMetadatas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
+
+        public class DeletePayload{
+            public string Id {get; set;}
+        }
+        
+        [HttpPost]
+        [Route("Document/Delete")]
+        public ActionResult DeleteConfirmed(DeletePayload payload)
         {
-            DocumentMetadata documentMetadata = db.DocumentMetadata.Find(id);
-            db.DocumentMetadata.Remove(documentMetadata);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try{
+                DocumentMetadata documentMetadata = db.DocumentMetadata.Find(payload.Id);
+                db.DocumentMetadata.Remove(documentMetadata);
+                db.SaveChanges();
+                return Json(new {status=200, message=$"Document of payload.Id: {payload.Id} deleted"});
+            }catch(Exception ex){
+                System.Diagnostics.Debug.WriteLine($"Error deleting from the database: {ex.StackTrace}");
+                return Json(new {status=404, error=ex.StackTrace});
+            }
+            
         }
 
         protected override void Dispose(bool disposing)

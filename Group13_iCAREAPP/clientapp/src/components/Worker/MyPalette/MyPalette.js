@@ -41,7 +41,7 @@ const MyPalette = () => {
 
     useEffect(() => {
         fetchDocs();
-    }, [showDoc, renderModal]);
+    }, [showDoc, renderModal, renderImageModal]);
 
     const filteredDocuments = documents.filter(doc =>
         doc.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -108,7 +108,7 @@ const MyPalette = () => {
                                     <div className="text-xl text-gray-600">Loading documents...</div>
                                 </div>
                             ) : (
-                                <div className="overflow-x-auto">
+                                <div className="overflow-x-auto overflow-y-auto">
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead className="bg-gray-50">
                                             <tr>
@@ -140,7 +140,7 @@ const MyPalette = () => {
                         </div>
                     </div>
                 </div>
-
+                
                 {/* Modals */}
                 {renderModal && !isLoading && (
                     <AddDocumentModal setShowAddModal={updateAddModal} />

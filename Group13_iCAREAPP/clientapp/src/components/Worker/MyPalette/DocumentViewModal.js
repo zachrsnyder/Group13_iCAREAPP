@@ -40,6 +40,24 @@ const DocumentViewModal = ({ doc, showDoc, selectedDoc }) => {
         console.log(pdfBlob)
     }
 
+  const handleDelete = async() => {
+    var url = "Document/Delete"
+    const formData = new FormData()
+    formData.append("Id", doc.documentID)
+    var query = await fetch(url, {
+      method: "POST",
+      credentials: "include",
+      body: formData
+    })
+
+    const response = await query.json()
+
+    console.log(response)
+
+    selectedDoc(null)
+    showDoc(false)
+  }
+
   useEffect(() => {
     fetchDocument()
   }, [])
@@ -54,6 +72,7 @@ const DocumentViewModal = ({ doc, showDoc, selectedDoc }) => {
                   <div>
                     <div className="flex w-full align-middle justify-end">
                               <div className="flex justify-between w-16">
+                                  <button className="text-2xl text-gray-500 hover:text-red-500" onClick={() => { handleDelete() }}>Kill</button>
                                   <button className="text-2xl text-gray-600 hover:text-blue-500" onClick={() => { setEdit(true)}}>Edit</button>
                                   <button className="text-2xl text-gray-600 hover:text-red-500" onClick={() => { selectedDoc(null); showDoc(false) }}>X</button>
                               </div>
@@ -63,7 +82,7 @@ const DocumentViewModal = ({ doc, showDoc, selectedDoc }) => {
               )}
         </div>)}
         {edit && !isLoading && (
-          <div className='bg-white rounded-lg w-full'>
+          <div className='bg-white rounded-lg w-full max-w-md p-8 overflow-y-auto'>
                   <EditDocModal doc={doc} isText={isText} setShowAll={showDoc} setShowEditor={setEdit} setShowDoc={setShowView}/>
 
           </div>

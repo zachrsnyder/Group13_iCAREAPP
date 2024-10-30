@@ -1,6 +1,6 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
-import React, {createElement, useRef, useEffect, useState} from 'react'
+import React, { useRef, useEffect, useState} from 'react'
 
 
 const EditDocModal = ({ doc, isText, setShowAll, setShowEditor, setShowDoc}) => {
@@ -113,9 +113,9 @@ const EditDocModal = ({ doc, isText, setShowAll, setShowEditor, setShowDoc}) => 
     }
   
     return (
-    <div>
-        <h2>Document Editor</h2>
-        {!isLoading ? (
+        <>
+            <h2>Document Editor</h2>
+            {!isLoading ? (
             <>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Name</label>
@@ -157,13 +157,12 @@ const EditDocModal = ({ doc, isText, setShowAll, setShowEditor, setShowDoc}) => 
                     Save Changes
                 </button>
             </>
-        ) : (
+            ) : (
             <div>
                 <h2>Loading...</h2>
             </div>
-        )}
-        
-    </div>
+            )}
+        </> 
   )
 }
 
