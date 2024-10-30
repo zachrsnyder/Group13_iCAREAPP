@@ -172,8 +172,8 @@ const Dashboard = () => {
                     <p>{patient.bedID}</p>
                 </div>
                 <div>
-                    <h4 className="font-medium text-sm text-gray-500">Assigned To</h4>
-                    <p>{patient.assignedUser?.name || '     N/A'}</p>
+                    <h4 className="font-medium text-sm text-gray-500">Assignment Status</h4>
+                    <p>{patient.assignedUser ? '✅' : '❌'}</p>
                 </div>
             </div>
         </div>
@@ -352,7 +352,7 @@ const Dashboard = () => {
                             <th className="p-4 text-left font-medium text-gray-600">Treatment Area</th>
                             <th className="p-4 text-left font-medium text-gray-600">Bed ID</th>
                             <th className="p-4 text-left font-medium text-gray-600">Blood Group</th>
-                            <th className="p-4 text-left font-medium text-gray-600">Assigned To</th>
+                            <th className="p-4 text-left font-medium text-gray-600">Assignment Status</th>
                             <th className="p-4 text-left font-medium text-gray-600">Actions</th>
                         </tr>
                     </thead>
@@ -364,7 +364,7 @@ const Dashboard = () => {
                                 <td className="p-4">{patient.treatmentArea}</td>
                                 <td className="p-4">{patient.bedID}</td>
                                 <td className="p-4">{patient.bloodGroup}</td>
-                                <td className="p-4">{patient.assignedUser?.name || '    N/A'}</td>
+                                <td className="p-4">{patient.assignedUser ? '✅' : '❌'}</td>
                                 <td className="p-4">
                                     <button
                                         onClick={() => openPatientDetails(patient)}
