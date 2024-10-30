@@ -1,9 +1,6 @@
-import {React, useEffect, useState, createElement, useRef} from 'react'
+import {React, useEffect, useState, useRef} from 'react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
-import html2pdf from 'html2pdf.js'
-import { React } from 'react'
-//import { type } from 'whoops'
 
 
 
