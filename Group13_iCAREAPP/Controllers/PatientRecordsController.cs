@@ -131,16 +131,16 @@ namespace Group13_iCAREAPP.Controllers
                         db.PatientRecord.Add(patient);
 
                         // Create document metadata
-                        //var docMeta = new DocumentMetadata
-                        //{
-                        //    docID = "DOC" + DateTime.Now.Ticks.ToString().Substring(0, 8),
-                        //    docName = "Initial Assignment",
-                        //    dateOfCreation = DateTime.Now.ToString("yyyy-MM-dd"),
-                        //    patientID = patientId,
-                        //    userID = data.assignedUserID
-                        //};
+                        var docMeta = new DocumentMetadata
+                        {
+                            docID = "DOC" + DateTime.Now.Ticks.ToString().Substring(0, 8),
+                            docName = "Initial Assignment",
+                            dateOfCreation = DateTime.Now.ToString("yyyy-MM-dd"),
+                            patientID = patientId,
+                            userID = Session["UserID"].ToString()
+                        };
 
-                        //db.DocumentMetadata.Add(docMeta);
+                        db.DocumentMetadata.Add(docMeta);
                         db.SaveChanges();
                         transaction.Commit();
 

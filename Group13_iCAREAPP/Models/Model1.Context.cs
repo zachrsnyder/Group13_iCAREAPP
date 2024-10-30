@@ -25,15 +25,15 @@ namespace Group13_iCAREAPP.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<DocumentMetadata> DocumentMetadata { get; set; }
         public virtual DbSet<DocumentStorage> DocumentStorage { get; set; }
         public virtual DbSet<GeoCodes> GeoCodes { get; set; }
         public virtual DbSet<iCAREUser> iCAREUser { get; set; }
-        public virtual DbSet<ModificationHistory> ModificationHistory { get; set; }
         public virtual DbSet<PatientRecord> PatientRecord { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<TreatmentRecord> TreatmentRecord { get; set; }
         public virtual DbSet<UserPassword> UserPassword { get; set; }
         public virtual DbSet<UserRole> UserRole { get; set; }
+        public virtual DbSet<DocumentMetadata> DocumentMetadata { get; set; }
+        public virtual DbSet<ModificationHistory> ModificationHistory { get; set; }
     }
 }

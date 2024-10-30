@@ -14,6 +14,12 @@ namespace Group13_iCAREAPP.Models
     
     public partial class DocumentMetadata
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public DocumentMetadata()
+        {
+            this.ModificationHistory = new HashSet<ModificationHistory>();
+        }
+    
         public string docID { get; set; }
         public string docName { get; set; }
         public string dateOfCreation { get; set; }
@@ -23,5 +29,7 @@ namespace Group13_iCAREAPP.Models
         public virtual DocumentStorage DocumentStorage { get; set; }
         public virtual iCAREUser iCAREUser { get; set; }
         public virtual PatientRecord PatientRecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ModificationHistory> ModificationHistory { get; set; }
     }
 }

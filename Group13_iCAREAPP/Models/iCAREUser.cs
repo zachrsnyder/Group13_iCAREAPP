@@ -17,9 +17,9 @@ namespace Group13_iCAREAPP.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public iCAREUser()
         {
-            this.DocumentMetadata = new HashSet<DocumentMetadata>();
             this.TreatmentRecord = new HashSet<TreatmentRecord>();
             this.UserRole = new HashSet<UserRole>();
+            this.DocumentMetadata = new HashSet<DocumentMetadata>();
         }
     
         public string ID { get; set; }
@@ -30,8 +30,6 @@ namespace Group13_iCAREAPP.Models
         public Nullable<System.DateTime> dateFinished { get; set; }
         public string userGeoID { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocumentMetadata> DocumentMetadata { get; set; }
         public virtual GeoCodes GeoCodes { get; set; }
         public virtual iCAREUser iCAREUser1 { get; set; }
         public virtual iCAREUser iCAREUser2 { get; set; }
@@ -40,5 +38,7 @@ namespace Group13_iCAREAPP.Models
         public virtual UserPassword UserPassword { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserRole> UserRole { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocumentMetadata> DocumentMetadata { get; set; }
     }
 }

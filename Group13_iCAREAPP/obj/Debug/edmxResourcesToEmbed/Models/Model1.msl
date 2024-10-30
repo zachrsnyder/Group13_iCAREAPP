@@ -1,17 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="Group13_iCAREDBModelStoreContainer" CdmEntityContainer="Group13_iCAREDBEntities">
-    <EntitySetMapping Name="DocumentMetadata">
-      <EntityTypeMapping TypeName="Group13_iCAREDBModel.DocumentMetadata">
-        <MappingFragment StoreEntitySet="DocumentMetadata">
-          <ScalarProperty Name="userID" ColumnName="userID" />
-          <ScalarProperty Name="patientID" ColumnName="patientID" />
-          <ScalarProperty Name="dateOfCreation" ColumnName="dateOfCreation" />
-          <ScalarProperty Name="docName" ColumnName="docName" />
-          <ScalarProperty Name="docID" ColumnName="docID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="DocumentStorage">
       <EntityTypeMapping TypeName="Group13_iCAREDBModel.DocumentStorage">
         <MappingFragment StoreEntitySet="DocumentStorage">
@@ -38,15 +27,6 @@
           <ScalarProperty Name="profession" ColumnName="profession" />
           <ScalarProperty Name="name" ColumnName="name" />
           <ScalarProperty Name="ID" ColumnName="ID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ModificationHistory">
-      <EntityTypeMapping TypeName="Group13_iCAREDBModel.ModificationHistory">
-        <MappingFragment StoreEntitySet="ModificationHistory">
-          <ScalarProperty Name="descrption" ColumnName="descrption" />
-          <ScalarProperty Name="dateOfModification" ColumnName="dateOfModification" />
-          <ScalarProperty Name="docID" ColumnName="docID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -115,5 +95,26 @@
         <ScalarProperty Name="ID" ColumnName="userID" />
       </EndProperty>
     </AssociationSetMapping>
+    <EntitySetMapping Name="DocumentMetadata">
+      <EntityTypeMapping TypeName="Group13_iCAREDBModel.DocumentMetadata">
+        <MappingFragment StoreEntitySet="DocumentMetadata">
+          <ScalarProperty Name="userID" ColumnName="userID" />
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="dateOfCreation" ColumnName="dateOfCreation" />
+          <ScalarProperty Name="docName" ColumnName="docName" />
+          <ScalarProperty Name="docID" ColumnName="docID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ModificationHistory">
+      <EntityTypeMapping TypeName="Group13_iCAREDBModel.ModificationHistory">
+        <MappingFragment StoreEntitySet="ModificationHistory">
+          <ScalarProperty Name="modificationNum" ColumnName="modificationNum" />
+          <ScalarProperty Name="descrption" ColumnName="descrption" />
+          <ScalarProperty Name="dateOfModification" ColumnName="dateOfModification" />
+          <ScalarProperty Name="docID" ColumnName="docID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

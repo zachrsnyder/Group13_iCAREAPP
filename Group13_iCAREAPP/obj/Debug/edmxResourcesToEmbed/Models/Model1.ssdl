@@ -38,11 +38,12 @@
   </EntityType>
   <EntityType Name="ModificationHistory">
     <Key>
-      <PropertyRef Name="docID" />
+      <PropertyRef Name="modificationNum" />
     </Key>
     <Property Name="docID" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="dateOfModification" Type="date" Nullable="false" />
     <Property Name="descrption" Type="varchar(max)" Nullable="false" />
+    <Property Name="modificationNum" Type="varchar" MaxLength="50" Nullable="false" />
   </EntityType>
   <EntityType Name="PatientRecord">
     <Key>
@@ -166,6 +167,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_ModificationHistory_DocumentMetadata">
+    <End Role="DocumentMetadata" Type="Self.DocumentMetadata" Multiplicity="1" />
+    <End Role="ModificationHistory" Type="Self.ModificationHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocumentMetadata">
+        <PropertyRef Name="docID" />
+      </Principal>
+      <Dependent Role="ModificationHistory">
+        <PropertyRef Name="docID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_PatientRecord_GeoCodes">
     <End Role="GeoCodes" Type="Self.GeoCodes" Multiplicity="0..1" />
     <End Role="PatientRecord" Type="Self.PatientRecord" Multiplicity="*" />
@@ -269,6 +282,10 @@
     <AssociationSet Name="FK_iCAREUser_iCAREUser" Association="Self.FK_iCAREUser_iCAREUser">
       <End Role="iCAREUser" EntitySet="iCAREUser" />
       <End Role="iCAREUser1" EntitySet="iCAREUser" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ModificationHistory_DocumentMetadata" Association="Self.FK_ModificationHistory_DocumentMetadata">
+      <End Role="DocumentMetadata" EntitySet="DocumentMetadata" />
+      <End Role="ModificationHistory" EntitySet="ModificationHistory" />
     </AssociationSet>
     <AssociationSet Name="FK_PatientRecord_GeoCodes" Association="Self.FK_PatientRecord_GeoCodes">
       <End Role="GeoCodes" EntitySet="GeoCodes" />

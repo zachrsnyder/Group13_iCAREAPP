@@ -17,5 +17,8 @@ namespace Group13_iCAREAPP.Models
         public string docID { get; set; }
         public System.DateTime dateOfModification { get; set; }
         public string descrption { get; set; }
+        public string modificationNum { get; set; }
+    
+        public virtual DocumentMetadata DocumentMetadata { get; set; }
     }
 }
