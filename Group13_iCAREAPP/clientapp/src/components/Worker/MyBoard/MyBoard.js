@@ -21,33 +21,33 @@ const MyBoard = () => {
         bloodGroup: '',
         bedID: '',
         treatmentArea: '',
+        description: ''
     });
 
-
     useEffect(() => {
-        const fetchPatients = async () => {
-            try {
-                // Update the URL to match your MVC route pattern
-                const response = await fetch('/PatientRecords/MyPatients', {
-                    credentials: 'include'
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch patients');
-                }
-
-                const data = await response.json();
-                setPatients(data);
-                console.log(data);
-                setLoading(false);
-            } catch (err) {
-                setError(err.message);
-                setLoading(false);
-            }
-        };
-
         fetchPatients();
     }, []);
+
+    const fetchPatients = async () => {
+        try {
+            // Update the URL to match your MVC route pattern
+            const response = await fetch('/PatientRecords/MyPatients', {
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch patients');
+            }
+
+            const data = await response.json();
+            setPatients(data);
+            console.log(data);
+            setLoading(false);
+        } catch (err) {
+            setError(err.message);
+            setLoading(false);
+        }
+    };
 
     const filteredPatients = patients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -61,12 +61,22 @@ const MyBoard = () => {
     };
 
     const openEditModal = () => {
-        setSelectedPatient(selectedPatient);
-        setEditPatient({ ...editPatient, ID: selectedPatient.ID });
+        // Properly copy ALL fields from selectedPatient
+        setEditPatient({
+            ID: selectedPatient.ID,
+            name: selectedPatient.name,
+            address: selectedPatient.address,
+            dateOfBirth: selectedPatient.dateOfBirth,
+            height: selectedPatient.height.toString(),  // Convert float to string
+            weight: selectedPatient.weight.toString(),  // Convert float to string
+            bloodGroup: selectedPatient.bloodGroup,
+            bedID: selectedPatient.bedID,
+            treatmentArea: selectedPatient.treatmentArea,
+            description: ''
+        });
         setIsModalOpen(false);
         setIsEditModalOpen(true);
     };
-
     const openDescModal = () => {
         setIsEditModalOpen(false);
         setIsDescModalOpen(true);
@@ -78,7 +88,6 @@ const MyBoard = () => {
     };
 
     const closeEditModal = () => {
-        setSelectedPatient(null);
         setIsEditModalOpen(false);
     };
 
@@ -89,13 +98,22 @@ const MyBoard = () => {
 
     const handleEditPatient = async (e) => {
         e.preventDefault();
+        openDescModal();
+    };
+
+    const handleEditHistory = async (e) => {
+        e.preventDefault();
         try {
-            const response = await fetch('/MyBoard/EditPatient', {
+            const finalPatientData = {
+                ...editPatient,
+                description: description // Add the description from the description state
+            };
+            const response = await fetch('/MyBoard/handleEditHistory', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(editPatient),
+                body: JSON.stringify(finalPatientData),
                 credentials: 'include'
             });
 
@@ -114,35 +132,11 @@ const MyBoard = () => {
                 bloodGroup: '',
                 bedID: '',
                 treatmentArea: '',
-                assignedUserID: ''
+                assignedUserID: '',
+                description
             });
-            closeEditModal();
-            openDescModal();
-
-        } catch (err) {
-            setError(err.message);
-        }
-    };
-
-    const handleEditHistory = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch('/MyBoard/EditHistory', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(description),
-                credentials: 'include'
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Failed to edit history: ${errorText}`);
-            }
-
-            setEditPatient('');
             closeDescModal();
+            fetchPatients();
         } catch (err) {
             setError(err.message);
         }
@@ -202,7 +196,7 @@ const MyBoard = () => {
                             </div>
 
                             {/* Table */}
-                            <div className="overflow-x-auto">
+                            <div className="overflow-x-auto rounded-lg">
                                 <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
                                         <tr>
