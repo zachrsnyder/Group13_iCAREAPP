@@ -91,6 +91,7 @@ namespace Group13_iCAREAPP.Controllers
             public string bedID { get; set; }
             public string treatmentArea { get; set; }
             public string assignedUserID { get; set; }
+            public string pateintGeoID { get; set; }
         }
 
         [HttpPost]
@@ -114,6 +115,13 @@ namespace Group13_iCAREAPP.Controllers
                         // Generate a new ID for the patient
                         string patientId = "PAT" + DateTime.Now.Ticks.ToString().Substring(0, 8);
 
+                        var currentUserID = Session["UserID"]?.ToString();
+                        var geocode = db.iCAREUser
+                            .Where(u => u.ID == currentUserID)
+                            .Select(u => u.userGeoID)
+                            .FirstOrDefault();
+
+
                         // Create new patient record
                         var patient = new PatientRecord
                         {
@@ -125,7 +133,8 @@ namespace Group13_iCAREAPP.Controllers
                             weight = float.Parse(data.weight),
                             bloodGroup = data.bloodGroup,
                             bedID = data.bedID,
-                            treatmentArea = data.treatmentArea
+                            treatmentArea = data.treatmentArea,
+                            patientGeoID = geocode
                         };
 
                         db.PatientRecord.Add(patient);
@@ -174,7 +183,7 @@ namespace Group13_iCAREAPP.Controllers
                 System.Diagnostics.Debug.WriteLine($"Current User ID: {currentUserID}");
 
                 // Get patients associated with the current user through DocumentMetadata
-                var patientRecords = db.DocumentMetadata
+                var patientRecords = db.TreatmentRecord
                     .Where(d => d.userID == currentUserID)
                     .Select(d => new {
                         ID = d.PatientRecord.ID,
@@ -185,7 +194,8 @@ namespace Group13_iCAREAPP.Controllers
                         weight = d.PatientRecord.weight,
                         bloodGroup = d.PatientRecord.bloodGroup,
                         bedID = d.PatientRecord.bedID,
-                        treatmentArea = d.PatientRecord.treatmentArea
+                        treatmentArea = d.PatientRecord.treatmentArea,
+                        patientGeoID = d.PatientRecord.patientGeoID
                     })
                     .Distinct()
                     .ToList();
