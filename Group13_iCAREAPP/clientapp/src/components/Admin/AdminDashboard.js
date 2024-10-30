@@ -247,7 +247,7 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex justify-between h-16">
                             <div className="flex items-center">
-                                <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
+                                <h1 className="text-2xl font-bold text-gray-900 ">User Management</h1>
                             </div>
                             <div className="flex items-center">
                                 <button
@@ -366,6 +366,7 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
                                 )}
                             </div>
                             <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
                                 <select
                                     value={newUser.userGeoID}
                                     onChange={(e) => setNewUser({ ...newUser, userGeoID: e.target.value })}

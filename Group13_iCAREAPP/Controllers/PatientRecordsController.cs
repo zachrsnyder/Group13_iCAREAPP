@@ -41,9 +41,13 @@ namespace Group13_iCAREAPP.Controllers
                         p.bloodGroup,
                         p.bedID,
                         p.treatmentArea,
-                        assignedUser = p.DocumentMetadata
-                            .OrderByDescending(d => d.dateOfCreation)
-                            .Select(d => new { d.iCAREUser.ID, d.iCAREUser.name })
+                        assignedUser = p.TreatmentRecord
+                            .OrderByDescending(tr => tr.treatmentDate)
+                            .Select(tr => new
+                            {
+                                tr.iCAREUser.ID,
+                                tr.iCAREUser.name
+                            })
                             .FirstOrDefault()
                     })
                     .ToList();

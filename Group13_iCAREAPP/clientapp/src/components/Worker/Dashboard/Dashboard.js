@@ -173,7 +173,7 @@ const Dashboard = () => {
                 </div>
                 <div>
                     <h4 className="font-medium text-sm text-gray-500">Assigned To</h4>
-                    <p>{patient.assignedUser?.name || 'Unassigned'}</p>
+                    <p>{patient.assignedUser?.name || '--------'}</p>
                 </div>
             </div>
         </div>
