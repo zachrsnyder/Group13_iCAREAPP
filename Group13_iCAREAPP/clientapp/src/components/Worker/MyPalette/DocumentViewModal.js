@@ -1,4 +1,4 @@
-﻿import {React, useEffect, useState} from 'react'
+﻿import { React, useEffect, useState } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import html2pdf from 'html2pdf.js';
@@ -88,13 +88,15 @@ const DocumentViewModal = ({ doc, showDoc, selectedDoc }) => {
                                 >
                                     <Download className="h-5 w-5" />
                                 </button>
-                                <button
-                                    onClick={() => setEdit(true)}
-                                    className="p-2 text-gray-600 hover:text-blue-600 transition-colors"
-                                    title="Edit"
-                                >
-                                    <Edit2 className="h-5 w-5" />
-                                </button>
+                                {isText && (
+                                    <button
+                                        onClick={() => setEdit(true)}
+                                        className="p-2 text-gray-600 hover:text-blue-600 transition-colors"
+                                        title="Edit"
+                                    >
+                                        <Edit2 className="h-5 w-5" />
+                                    </button>
+                                )}
                                 <button
                                     onClick={handleDelete}
                                     className="p-2 text-gray-600 hover:text-red-600 transition-colors"

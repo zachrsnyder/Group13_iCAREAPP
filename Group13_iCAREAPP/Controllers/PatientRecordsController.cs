@@ -161,7 +161,7 @@ namespace Group13_iCAREAPP.Controllers
                         var docMeta = new DocumentMetadata
                         {
                             docID = "DOC" + DateTime.Now.Ticks.ToString().Substring(0, 8),
-                            docName = "Initial Assignment",
+                            docName = "Created Patient",
                             dateOfCreation = DateTime.Now.ToString(),
                             patientID = patientId,
                             userID = Session["UserID"].ToString()
