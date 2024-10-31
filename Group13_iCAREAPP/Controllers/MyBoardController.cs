@@ -28,94 +28,29 @@ namespace Group13_iCAREAPP.Controllers
             public string description { get; set; }
         }
 
-        // POST: MyBoard/handleEditHistory
-        //[HttpPost]
-        //public ActionResult handleEditHistory(PatientEdit patient)
-        //{
-        //    try
-        //    {
-        //        if (patient != null)
-        //        {
-        //            var existingPatient = db.PatientRecord.Find(patient.ID);
+        //GET: MyBoard/GetChangeHistory
+        public ActionResult GetChangeHistory(string patientID)
+        {
+            var modificationList = (from m in db.ModificationHistory
+                                    join md in db.DocumentMetadata
+                                    on m.docID equals md.docID
+                                    where md.patientID == patientID
+                                    select new
+                                    {
+                                        docID = m.docID,
+                                        modDate = m.dateOfModification.ToString().Replace("/Date(", "").Replace(")/", ""),
+                                        description = m.descrption
+                                    })
+                                   .Distinct()
+                                   .ToList();
 
-        //            if (existingPatient == null)
-        //            {
-        //                return HttpNotFound("Patient not found.");
-        //            }
+            System.Diagnostics.Debug.WriteLine($"Found {modificationList.Count} records for patientID {patientID}");
+            return Json(modificationList, JsonRequestBehavior.AllowGet);
+        }
 
-        //            existingPatient.name = patient.name;
-        //            existingPatient.address = patient.address;
-        //            existingPatient.dateOfBirth = DateTime.Parse(patient.dateOfBirth);
-        //            existingPatient.height = float.Parse(patient.height);
-        //            existingPatient.weight = float.Parse(patient.weight);
-        //            existingPatient.bloodGroup = patient.bloodGroup;
-        //            existingPatient.bedID = patient.bedID;
-        //            existingPatient.treatmentArea = patient.treatmentArea;
-
-        //            var documents = db.DocumentMetadata
-        //            .FirstOrDefault(d => d.userID == Session["UserID"].ToString() &&
-        //                  d.patientID == patient.ID);
-
-        //            var docId = db.DocumentMetadata
-        //            .Where(d => d.userID == Session["UserID"].ToString() && d.patientID == patient.ID)
-        //            .Select(d => d.docID)
-        //            .FirstOrDefault();
-
-        //            if (docId == null)
-        //            {
-        //                return Json(false);
-        //            }
-
-        //            documents.docName = "Patient Record Updated";
-
-        //            var lastMod = db.ModificationHistory
-        //                   .Where(m => m.docID == docId)
-        //                   .OrderByDescending(m => m.modificationNum)
-        //                   .FirstOrDefault();
-
-        //            string newModNum;
-        //            if (lastMod == null)
-        //            {
-        //                // If this is the first modification, start at 1
-        //                newModNum = "1";
-        //            }
-        //            else
-        //            {
-        //                // Increment the last modification number
-        //                if (int.TryParse(lastMod.modificationNum, out int lastNum))
-        //                {
-        //                    newModNum = (lastNum + 1).ToString();
-        //                }
-        //                else
-        //                {
-        //                    // Fallback if parsing fails
-        //                    newModNum = "1";
-        //                }
-        //            }
-
-        //            var modHistory = new ModificationHistory
-        //            {
-        //                docID = docId,
-        //                dateOfModification = DateTime.Now,
-        //                descrption = patient.description.ToString(),
-        //                modificationNum = newModNum
-        //            };
-
-        //            db.ModificationHistory.Add(modHistory);
-
-        //            db.SaveChanges();
-        //            return Json(true);
-        //        }
-        //        return Json(false);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(false);
-        //    }
-        //}
 
         //POST: MyBoard/handleEditHistory
-       [HttpPost]
+        [HttpPost]
         public ActionResult HandleEditHistory([ModelBinder(typeof(JsonModelBinder))] PatientEdit patient)
         {
             using (var transaction = db.Database.BeginTransaction())
@@ -184,7 +119,6 @@ namespace Group13_iCAREAPP.Controllers
 
                     // Handle modification history
                     var lastMod = db.ModificationHistory
-                        .Where(m => m.docID == document.docID)
                         .ToList() // Bring data into memory first
                         .OrderByDescending(m => int.Parse(m.modificationNum))
                         .FirstOrDefault();
