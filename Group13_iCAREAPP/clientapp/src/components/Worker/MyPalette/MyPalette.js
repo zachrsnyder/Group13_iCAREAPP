@@ -108,7 +108,7 @@ const MyPalette = () => {
                                     <div className="text-xl text-gray-600">Loading documents...</div>
                                 </div>
                             ) : (
-                                <div className="overflow-x-auto overflow-y-auto">
+                                    <div className="overflow-x-auto overflow-y-auto rounded-lg">
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead className="bg-gray-50">
                                             <tr>
