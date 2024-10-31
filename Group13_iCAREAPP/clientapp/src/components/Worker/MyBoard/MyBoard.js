@@ -25,6 +25,9 @@ const MyBoard = () => {
         treatmentArea: '',
         description: ''
     });
+    const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+    const [selectedPatientHistory, setSelectedPatientHistory] = useState([]);
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
     useEffect(() => {
         fetchPatients();
@@ -144,6 +147,33 @@ const MyBoard = () => {
         }
     }
 
+    const openHistoryModal = async (patient) => {
+        setSelectedPatient(patient);
+        try {
+            const response = await fetch(`/MyBoard/GetChangeHistory?patientID=${patient.ID}`, {
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch Change History');
+            }
+
+            const data = await response.json();
+            setSelectedPatientHistory(data);
+            console.log(data);
+            setLoading(false);
+        } catch (err) {
+            setError(err.message);
+            setLoading(false);
+        }
+        setIsHistoryModalOpen(true);
+    }
+
+    const closeHistoryModal = async() => {
+        setIsHistoryModalOpen(false);
+        setSelectedPatient(null);
+    }
+
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
@@ -236,7 +266,7 @@ const MyBoard = () => {
                                                     </div>
 
                                                     <div className="group relative">
-                                                        <HistoryIconButton />
+                                                        <HistoryIconButton onClick={() => openHistoryModal(patient)} />
                                                         <div className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                                                             View Change History
                                                         </div>
@@ -255,6 +285,44 @@ const MyBoard = () => {
                         </div>
                     </div>
                 </div>
+
+                {isHistoryModalOpen && selectedPatient && (
+                    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+                        <div className="bg-white rounded-lg shadow-xl w-1/2 h-1/2 mx-4 overflow-hidden pb-14">
+                            <div className="flex justify-between items-center mb-4 p-4">
+                                <h2 className="text-xl font-bold text-gray-900">Document Change History</h2>
+                                <button
+                                    onClick={closeHistoryModal}
+                                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                >
+                                    <X className="h-5 w-5" />
+                                </button>
+                            </div>
+                            <div className="overflow-y-auto h-full p-4">
+                                <div className="min-w-full">
+                                    {selectedPatientHistory.map((history) => (
+                                        <div key={history.docID} className="mb-4 border border-gray-200 rounded-lg bg-white shadow-sm">
+                                            <table className="w-full">
+                                                <tr className="bg-gray-50 hover:bg-gray-100 rounded-t-lg">
+                                                    <td className="px-4 py-2 font-medium">{history.docID}</td>
+                                                    <td className="px-4 py-2">{history.modDate}</td>
+                                                </tr>
+                                                <tr className="border-t border-gray-100">
+                                                    <td colSpan="2" className="px-4 py-2 text-gray-600">
+                                                        {"Details: " + history.description}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+
+
 
                 {/* View Modal */}
                 {isModalOpen && selectedPatient && (
