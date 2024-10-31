@@ -3,6 +3,8 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { X, Save, Loader2 } from 'lucide-react';
 
+//TODO: Add drug facts to this page if editing a text document.
+
 const EditDocModal = ({ doc, isText, setShowAll, setShowEditor, setShowDoc }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
