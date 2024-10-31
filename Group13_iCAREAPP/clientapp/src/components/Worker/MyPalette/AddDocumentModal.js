@@ -44,11 +44,11 @@ const DOCUMENT_TEMPLATES = {
             <h2>Prescription</h2>
             <p><strong>Date:</strong> [Current Date]</p>
             
-            <p><strong>Medication:</strong> _____________</p>
-            <p><strong>Dosage:</strong> _____________</p>
-            <p><strong>Frequency:</strong> _____________</p>
-            <p><strong>Duration:</strong> _____________</p>
-            <p><strong>Quantity:</strong> _____________</p>
+            <p><strong>Medication:</strong> [MEDICATION]</p>
+            <p><strong>Dosage:</strong> [DOSAGE]</p>
+            <p><strong>Frequency:</strong> [FREQUENCY]</p>
+            <p><strong>Duration:</strong> [DURATION]</p>
+            <p><strong>Quantity:</strong> [QUANTITY]</p>
             
             <p><strong>Special Instructions:</strong></p>
             <p>_____________</p>
@@ -124,10 +124,21 @@ const AddDocumentModal = ({ setShowAddModal }) => {
         }
     };
 
-    const handleDrugSelect = (drugName) => {
-        if (editorInstance) {
-            const currentContent = editorInstance.getData();
-            editorInstance.setData(currentContent + ' ' + drugName);
+    const handleDrugSelect = (prescriptionData) => {
+        if (editorInstance && selectedTemplate === "prescription") {
+            const currentDate = new Date().toLocaleDateString();
+            let content = DOCUMENT_TEMPLATES.prescription.content;
+
+            // Replace placeholders with prescription data
+            content = content
+                .replace("[Current Date]", currentDate)
+                .replace("[MEDICATION]", prescriptionData.medication)
+                .replace("[DOSAGE]", prescriptionData.dosage)
+                .replace("[FREQUENCY]", prescriptionData.frequency)
+                .replace("[DURATION]", prescriptionData.duration)
+                .replace("[QUANTITY]", prescriptionData.quantity);
+
+            editorInstance.setData(content);
         }
     };
 
