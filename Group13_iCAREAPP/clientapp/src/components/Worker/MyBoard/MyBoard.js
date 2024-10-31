@@ -1,5 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { Search, Eye, X } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import HistoryIconButton from '../../buttons/HistoryIconButton.js';
 
 
@@ -25,9 +26,19 @@ const MyBoard = () => {
         treatmentArea: '',
         description: ''
     });
+    const [editTreatment, setEditTreatment] = useState({
+        treatmentID: '',
+        description: '',
+        patientID: '',
+        editDescription: ''
+    });
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [selectedPatientHistory, setSelectedPatientHistory] = useState([]);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [isTreatmentModalOpen, setIsTreatmentModalOpen] = useState(false);
+    const [treatment, setTreatment] = useState(null);
+    const [isEditTreatmentModalOpen, setIsEditTreatmentModalOpen] = useState(false);
+    const [isTreatment, setIsTreatment] = useState(false);
 
     useEffect(() => {
         fetchPatients();
@@ -82,8 +93,33 @@ const MyBoard = () => {
         setIsModalOpen(false);
         setIsEditModalOpen(true);
     };
+
+    const openTreatmentModal = async (patient) => {
+        setSelectedPatient(patient);
+        try {
+            const patientID = patient.ID;
+            const response = await fetch(`/MyBoard/GetTreatment?patientID=${patient.ID}`, {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Failed to fetch treatment record: ${errorText}`);
+            }
+            setTreatment(await response.json());
+            setIsTreatment(true);
+            setIsTreatmentModalOpen(true);
+        } catch (err) {
+            setError(err.message);
+            setLoading(false);
+        }
+    }
+
+
     const openDescModal = () => {
         setIsEditModalOpen(false);
+        setIsEditTreatmentModalOpen(false);
         setIsDescModalOpen(true);
     }
 
@@ -95,6 +131,27 @@ const MyBoard = () => {
     const closeEditModal = () => {
         setIsEditModalOpen(false);
     };
+
+    const closeTreatmentModal = () => {
+        setIsTreatmentModalOpen(false);
+    }
+
+    const openEditTreatmentModal = () => {
+        setIsTreatmentModalOpen(false);
+        setEditTreatment({
+            treatmentID: treatment.treatmentID,
+            description: treatment.description,
+            patientID: selectedPatient.ID,
+            editDescription: ''
+        })
+        setIsEditTreatmentModalOpen(true);
+    }
+
+    const closeEditTreatmentModal = () => {
+        setIsEditTreatmentModalOpen(false);
+        setIsDescModalOpen(true);
+        setSelectedPatient(null);
+    }
 
     const closeDescModal = () => {
         setIsDescModalOpen(false);
@@ -138,7 +195,46 @@ const MyBoard = () => {
                 bedID: '',
                 treatmentArea: '',
                 assignedUserID: '',
-                description
+                description: ''
+            });
+            closeDescModal();
+            fetchPatients();
+        } catch (err) {
+            setError(err.message);
+        }
+    }
+
+    const handleEditTreatment = () => {
+        setIsDescModalOpen(true);
+        setIsEditTreatmentModalOpen(false);
+    }
+
+    const handleTreatmentHistory = async (e) => {
+        e.preventDefault();
+        try {
+            const finalEditTreatment = {
+                ...editTreatment,
+                editDescription: description
+            }
+            const response = await fetch('/MyBoard/HandleTreatmentHistory', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(finalEditTreatment),
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Failed to edit treatment: ${errorText}`);
+            }
+
+            setEditTreatment({
+                treatmentID: '',
+                description: '',
+                patientID: '',
+                editDescription: ''
             });
             closeDescModal();
             fetchPatients();
@@ -258,7 +354,7 @@ const MyBoard = () => {
                                                             onClick={() => openModal(patient)}
                                                             className="text-rose-600 hover:text-rose-900 hover:bg-rose-200 px-2 py-1 rounded-md font-medium transition-colors inline-flex items-center space-x-1"
                                                         >
-                                                            <Eye className="h-6 w-6" />
+                                                        <Eye className="h-6 w-6" />
                                                         </button>
                                                         <div className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                                                             View Record
@@ -269,6 +365,17 @@ const MyBoard = () => {
                                                         <HistoryIconButton onClick={() => openHistoryModal(patient)} />
                                                         <div className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                                                             View Change History
+                                                        </div>
+                                                    </div>
+                                                    <div className="group relative">
+                                                        <button
+                                                            onClick={() => openTreatmentModal(patient)}
+                                                            className="text-rose-600 hover:text-rose-900 hover:bg-rose-200 px-2 py-1 rounded-md font-medium transition-colors inline-flex items-center space-x-1"
+                                                        >
+                                                            <FileText className="w-6 h-6" />
+                                                        </button>
+                                                        <div className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                            View Treatment Record
                                                         </div>
                                                     </div>
                                                 </td>
@@ -365,6 +472,98 @@ const MyBoard = () => {
                         </div>
                     </div>
                 )}
+
+                {/* Treatment Modal */}
+                {isTreatmentModalOpen && treatment && (
+                    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+                        <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-xl font-bold text-gray-900">Treatment Record</h2>
+                                <button
+                                    onClick={closeTreatmentModal}
+                                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                >
+                                    <X className="h-5 w-5" />
+                                </button>
+                            </div>
+                            <div className="space-y-4">
+                                <div><strong>Treatment ID:</strong> {treatment.treatmentID}</div>
+                                <div><strong>Patient ID:</strong> {treatment.patientID}</div>
+                                <div><strong>Treatment Date:</strong> {treatment.treatmentDate}</div>
+                                <div><strong>Description:</strong> {treatment.description}</div>
+                            </div>
+                            <div className="mt-6 flex space-x-3">
+                                <button
+                                    onClick={openEditTreatmentModal}
+                                    className="flex-1 px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={closeTreatmentModal}
+                                    className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Edit Modal */}
+                {isEditTreatmentModalOpen && selectedPatient && (
+                    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+                        <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 p-6">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-xl font-bold text-gray-900">Edit Treatment Record</h2>
+                                <button
+                                    onClick={closeEditTreatmentModal}
+                                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                >
+                                    <X className="h-5 w-5" />
+                                </button>
+                            </div>
+                            <form onSubmit={handleEditTreatment} className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Date</label>
+                                    <input
+                                        type="date"
+                                        required
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                        value={editTreatment.treatmentDate}
+                                        onChange={(e) => setEditTreatment({ ...editTreatment, treatmentDate: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Description</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                                        value={editTreatment.description}
+                                        onChange={(e) => setEditTreatment({ ...editTreatment, description: e.target.value })}
+                                    />
+                                </div>
+                                <div className="col-span-2 flex space-x-3 mt-4">
+                                    <button
+                                        type="submit"
+                                        className="flex-1 px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors"
+                                    >
+                                        Save Changes
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={closeEditTreatmentModal}
+                                        className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+
 
                 {/* Edit Modal */}
                 {isEditModalOpen && selectedPatient && (
@@ -504,7 +703,10 @@ const MyBoard = () => {
                                     <X className="h-5 w-5" />
                                 </button>
                             </div>
-                            <form onSubmit={handleEditHistory}>
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+                                isTreatment ? handleTreatmentHistory(e) : handleEditHistory(e);
+                            }}>
                                 <div className="mb-4">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Description of Changes</label>
                                     <textarea

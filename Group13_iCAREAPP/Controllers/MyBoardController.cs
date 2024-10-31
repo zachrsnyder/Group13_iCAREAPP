@@ -48,6 +48,131 @@ namespace Group13_iCAREAPP.Controllers
             return Json(modificationList, JsonRequestBehavior.AllowGet);
         }
 
+        //GET: MyBoard/GetTreatment
+        public ActionResult GetTreatment(string patientID)
+        {
+            var userID = Session["UserID"]?.ToString();
+            var treatment = db.TreatmentRecord
+                .Where(t => t.userID == userID && t.patientID == patientID)
+                .Select(t => new
+                {
+                    treatmentID = t.treatmentID,
+                    patientID = t.patientID,
+                    treatmentDate = t.treatmentDate.ToString().Replace("/Date(", "").Replace(")/", ""),
+                    description = t.description
+                })
+                .FirstOrDefault();
+            System.Diagnostics.Debug.WriteLine(treatment.treatmentID);
+
+
+
+            if (treatment == null)
+            {
+                return HttpNotFound(); // Or handle the case when no record is found
+            }
+
+            return Json(treatment, JsonRequestBehavior.AllowGet);
+        }
+
+        public class TreatmentEdit
+        {
+            public string treatmentID { get; set; }
+            public string patientID { get; set; }
+            public string description { get; set; }
+            public string editDescription { get; set; }
+            public string treatmentDate { get; set; }
+        }
+
+        [HttpPost]
+        public ActionResult HandleTreatmentHistory([ModelBinder(typeof(JsonModelBinder))] TreatmentEdit treatment)
+        {
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (treatment == null)
+                    {
+                        return Json(new { success = false, message = "Invalid treatment data" });
+                    }
+
+                    // Get UserID from session
+                    var userId = Session["UserID"]?.ToString();
+                    if (userId == null)
+                    {
+                        return Json(new { success = false, message = "User session not found" });
+                    }
+
+                    // Find existing treatment record
+                    var existingTreatment = db.TreatmentRecord.FirstOrDefault(t =>
+                        t.treatmentID == treatment.treatmentID &&
+                        t.userID == userId &&
+                        t.patientID == treatment.patientID);
+
+                    if (existingTreatment == null)
+                    {
+                        return Json(new { success = false, message = "Treatment record not found" });
+                    }
+
+                    // Update treatment record
+                    try
+                    {
+                        existingTreatment.description = treatment.description;
+                        existingTreatment.treatmentDate = DateTime.Parse(treatment.treatmentDate);  // Added this line
+                    }
+                    catch (FormatException ex)
+                    {
+                        return Json(new { success = false, message = "Invalid data format" });
+                    }
+
+                    // Get document metadata
+                    var document = db.DocumentMetadata
+                        .FirstOrDefault(d => d.userID == userId && d.patientID == treatment.patientID);
+
+                    if (document == null)
+                    {
+                        return Json(new { success = false, message = "Document not found" });
+                    }
+
+                    // Update document name
+                    document.docName = "Treatment Record Updated";
+
+                    // Handle modification history
+                    var lastMod = db.ModificationHistory
+                        .ToList()
+                        .OrderByDescending(m => int.Parse(m.modificationNum))
+                        .FirstOrDefault();
+
+                    string newModNum = "1";
+                    if (lastMod != null)
+                    {
+                        int currentNum = int.Parse(lastMod.modificationNum);
+                        newModNum = (currentNum + 1).ToString();
+                    }
+
+                    // Create new modification history entry
+                    var modHistory = new ModificationHistory
+                    {
+                        docID = document.docID,
+                        dateOfModification = DateTime.Now,
+                        descrption = treatment.editDescription ?? "Treatment record updated",
+                        modificationNum = newModNum
+                    };
+
+                    db.ModificationHistory.Add(modHistory);
+                    db.SaveChanges();
+                    transaction.Commit();
+
+                    return Json(new { success = true, message = "Treatment update successful" });
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception details here
+                    System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
+                    return Json(new { success = false, message = "An error occurred" });
+                }
+            }
+        }
+
 
         //POST: MyBoard/handleEditHistory
         [HttpPost]

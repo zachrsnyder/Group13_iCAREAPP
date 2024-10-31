@@ -242,6 +242,7 @@
     <Content Include="clientapp\src\components\Worker\MyPalette\AddImageModal.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\DocCard.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\DocumentViewModal.js" />
+    <Content Include="clientapp\src\components\Worker\MyPalette\drugData.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\DrugInfoModal.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\EditDocModal.js" />
     <Content Include="clientapp\src\components\Worker\MyPalette\MyPalette.js" />
