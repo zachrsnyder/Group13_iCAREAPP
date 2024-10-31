@@ -154,6 +154,7 @@ const MyBoard = () => {
     }
 
     const closeDescModal = () => {
+        setDescription("");
         setIsDescModalOpen(false);
         setSelectedPatient(null);
     }
@@ -449,8 +450,8 @@ const MyBoard = () => {
                                 <div><strong>Name:</strong> {selectedPatient.name}</div>
                                 <div><strong>Address:</strong> {selectedPatient.address}</div>
                                 <div><strong>Date of Birth:</strong> {selectedPatient.dateOfBirth}</div>
-                                <div><strong>Height:</strong> {selectedPatient.height}</div>
-                                <div><strong>Weight:</strong> {selectedPatient.weight}</div>
+                                <div><strong>Height:</strong> {selectedPatient.height} cm</div>
+                                <div><strong>Weight:</strong> {selectedPatient.weight} kg</div>
                                 <div><strong>Blood Group:</strong> {selectedPatient.bloodGroup}</div>
                                 <div><strong>Bed ID:</strong> {selectedPatient.bedID}</div>
                                 <div><strong>Treatment Area:</strong> {selectedPatient.treatmentArea}</div>
@@ -715,7 +716,7 @@ const MyBoard = () => {
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
-                                        placeholder="Describe the changes made to the patient record..."
+                                        placeholder="Describe the changes made to the document"
                                     />
                                 </div>
                                 <div className="flex space-x-3">
