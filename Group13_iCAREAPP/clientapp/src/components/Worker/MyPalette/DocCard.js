@@ -1,9 +1,5 @@
 import {React, useEffect, useState} from 'react'
 
-
-
-
-
 const DocCard = ({ doc, setShowDoc, setSelectedDoc }) => {
 
     const [title, setTitle] = useState('')

@@ -34,6 +34,8 @@ const MyBoard = () => {
     });
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [selectedPatientHistory, setSelectedPatientHistory] = useState([]);
+    //TODO
+    //determine if we need this useState
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [isTreatmentModalOpen, setIsTreatmentModalOpen] = useState(false);
     const [treatment, setTreatment] = useState(null);
@@ -83,8 +85,8 @@ const MyBoard = () => {
             name: selectedPatient.name,
             address: selectedPatient.address,
             dateOfBirth: selectedPatient.dateOfBirth,
-            height: selectedPatient.height.toString(),  // Convert float to string
-            weight: selectedPatient.weight.toString(),  // Convert float to string
+            height: selectedPatient.height.toString(),
+            weight: selectedPatient.weight.toString(), 
             bloodGroup: selectedPatient.bloodGroup,
             bedID: selectedPatient.bedID,
             treatmentArea: selectedPatient.treatmentArea,
@@ -97,7 +99,7 @@ const MyBoard = () => {
     const openTreatmentModal = async (patient) => {
         setSelectedPatient(patient);
         try {
-            const patientID = patient.ID;
+            //const patientID = patient.ID;
             const response = await fetch(`/MyBoard/GetTreatment?patientID=${patient.ID}`, {
                 method: 'GET',
                 credentials: 'include'
@@ -167,9 +169,10 @@ const MyBoard = () => {
     const handleEditHistory = async (e) => {
         e.preventDefault();
         try {
+            // Add the description from the description state
             const finalPatientData = {
                 ...editPatient,
-                description: description // Add the description from the description state
+                description: description
             };
             const response = await fetch('/MyBoard/handleEditHistory', {
                 method: 'POST',

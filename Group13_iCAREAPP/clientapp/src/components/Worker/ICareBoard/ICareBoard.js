@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Search, Eye, UserPlus } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import NotificationModal from './NotificationModal'; 
 
 const ICareBoard = () => {

@@ -1,6 +1,5 @@
 ﻿import React from 'react';
 
-// You can add PropTypes for type checking
 const HistoryIconButton = ({ onClick, className = "" }) => {
     return (
         <button
