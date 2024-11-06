@@ -10,17 +10,12 @@ namespace Group13_iCAREAPP.Controllers
 {
     public class AccountController : Controller
     {
+        // Database context
         private Group13_iCAREDBEntities db = new Group13_iCAREDBEntities();
 
-        // GET: Account/Login
-        public ActionResult Login()
-        {
-            return View();
-        }
-
-        // POST: Account/Login
+        // Vallidates login based on the user that is logging in
         [HttpPost]
-        [ValidateInput(false)] // Add this to allow JSON in the request body
+        [ValidateInput(false)]
         public ActionResult ValidateLogin()
         {
             try
@@ -34,19 +29,17 @@ namespace Group13_iCAREAPP.Controllers
                 var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 var model = serializer.Deserialize<LoginViewModel>(jsonString);
 
-                // Debug logging
                 System.Diagnostics.Debug.WriteLine($"Login attempt - Username: {model?.UserName}");
 
-                // Validation
+                // Validation, checks if a password and username is entered
                 if (model == null || string.IsNullOrEmpty(model.UserName) || string.IsNullOrEmpty(model.Password))
                 {
                     return Json(new { success = false, error = "Username and password are required." });
                 }
 
-                // Find the user - using explicit query
+                // Find user by username
                 var userPassword = db.UserPassword.Where(up => up.userName == model.UserName).FirstOrDefault();
 
-                // Debug logging
                 var allUsers = db.UserPassword.ToList();
                 System.Diagnostics.Debug.WriteLine($"Total users in database: {allUsers.Count}");
                 foreach (var u in allUsers)
@@ -61,13 +54,7 @@ namespace Group13_iCAREAPP.Controllers
                     return Json(new { success = false, error = "Invalid username or password." });
                 }
 
-                // Check password
-                //if (userPassword.encryptedPassword != model.Password)
-                //{
-                //    System.Diagnostics.Debug.WriteLine("Password mismatch for user: " + model.UserName);
-                //    return Json(new { success = false, error = "Invalid username or password." });
-                //}
-
+                // Checks if password matches BCrypt hash
                 if (!BCrypt.Net.BCrypt.Verify(model.Password, userPassword.encryptedPassword))
                 {
                     System.Diagnostics.Debug.WriteLine("Password mismatch for user: " + model.UserName);
@@ -81,6 +68,7 @@ namespace Group13_iCAREAPP.Controllers
                     return Json(new { success = false, error = "Your account has expired." });
                 }
 
+                // Get user details by ID
                 var user = db.iCAREUser.Find(userPassword.ID);
                 if (user == null)
                 {
@@ -92,7 +80,7 @@ namespace Group13_iCAREAPP.Controllers
                 var userRoles = db.UserRole.Where(ur => ur.iCAREUser.Any(u => u.ID == user.ID))
                                          .Select(ur => ur.roleName)
                                          .ToList();
-
+                // Check if user has roles
                 if (!userRoles.Any())
                 {
                     System.Diagnostics.Debug.WriteLine("No roles found for user: " + model.UserName);
@@ -114,6 +102,7 @@ namespace Group13_iCAREAPP.Controllers
                     System.Diagnostics.Debug.WriteLine($"Role: {role}");
                 }
 
+                // Return user details
                 return Json(new
                 {
                     success = true,
@@ -133,26 +122,32 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
+        // Grabs the user info based on the currently logged in user
         public ActionResult GetUserInfo()
         {
+            //Sets userId to the session variable as a string
             var userId = Session["UserID"] as string;
             if (string.IsNullOrEmpty(userId))
             {
                 return Json(new { error = "Not authenticated" }, JsonRequestBehavior.AllowGet);
             }
 
+            //Grabs user based on userId
             var user = db.iCAREUser.Find(userId);
             if (user != null)
             {
+                //Grabs user roles based on userId
                 var userRoles = db.UserRole.Where(ur => ur.iCAREUser.Any(u => u.ID == userId))
                                          .Select(ur => ur.roleName)
                                          .ToList();
 
+                //Grabs user geoCode based on userGeoID
                 var geoCode = db.GeoCodes
                                .Where(g => g.ID == user.userGeoID)
                                .Select(g => g.description)
                                .FirstOrDefault();
 
+                //Returns user details as well as geoCode if it exists
                 return Json(new
                 {
                     id = user.ID,
@@ -167,9 +162,9 @@ namespace Group13_iCAREAPP.Controllers
         }
 
         // GET: Account/Logout
-
         public ActionResult Logout()
         {
+            // Clear session and authentication cookies
             try
             {
                 FormsAuthentication.SignOut();

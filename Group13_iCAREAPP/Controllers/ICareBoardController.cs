@@ -19,22 +19,19 @@ namespace Group13_iCAREAPP.Controllers
 {
     public class ICareBoardController : Controller
     {
+        // Database context
         private Group13_iCAREDBEntities db = new Group13_iCAREDBEntities();
 
-        // GET: ICareBoard
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: ICareBoard/HospitalPatients
+        // Grabs all patients in the same geoCode as the logged in user and returns them as a list
         public ActionResult HospitalPatients()
         {
             try
             {
+                // Grabs id and profession from session
                 var currentUserID = Session["UserID"].ToString();
                 var userProfession = Session["UserProfession"]?.ToString();
 
+                // Grabs geoCode corrosponding to logged in user from database
                 var workerGeoCode = db.iCAREUser.FirstOrDefault(wg => wg.ID == currentUserID);
                 if (workerGeoCode == null)
                 {
@@ -43,6 +40,7 @@ namespace Group13_iCAREAPP.Controllers
 
                 var geoID = workerGeoCode.userGeoID;
 
+                // Grabs all patient records from database which match the geoCode of the logged in user
                 var patientRecords = (from p in db.PatientRecord
                                       where p.patientGeoID == geoID
                                       select new
@@ -60,6 +58,7 @@ namespace Group13_iCAREAPP.Controllers
                                       .Distinct()
                                       .ToList();
 
+                // Checks if grabbed patients are fully assigned, already assigned or has a nurse assigned
                 var patientRecordsWithAssignment = patientRecords.Select(p => new
                 {
                     p.ID,
@@ -77,6 +76,7 @@ namespace Group13_iCAREAPP.Controllers
                     userProfession = Session["UserProfession"]?.ToString()
                 }).ToList();
 
+                // Returns the pateint records with their assignments
                 return Json(patientRecordsWithAssignment, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -87,7 +87,7 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
-        // GET: ICareBoard/Details
+        // Grabs patient details based on the patient ID
         public ActionResult Details(string id)
         {
             if (id == null)
@@ -102,25 +102,29 @@ namespace Group13_iCAREAPP.Controllers
             return View(patientRecord);
         }
 
-        // POST: ICareBoard/AssignPatients
+        // Assigns a given patient(s) to the logged in user
         [HttpPost]
         public ActionResult AssignPatients(AssignPatientsRequest request)
         {
+            // Checks if any patient IDs are provided in the request body
             if (request.SelectedIDs == null || !request.SelectedIDs.Any())
             {
                 return Json(new { success = false, message = "No patient IDs provided." });
             }
 
+
+            // Grabs the current userID from the session and debug code
             var currentUserID = Session["UserID"].ToString();
             var successfulAssignments = new List<string>();
             var failedAssignments = new List<string>();
 
+            // Loops through the provided patient IDs and assigns them to the logged in user
             foreach (var patientId in request.SelectedIDs)
             {
                 System.Diagnostics.Debug.WriteLine($"Processing patient {patientId}");
 
+                // Must reset assignment to null in each iteration to avoid reusing the same object
                 TreatmentRecord assignment = null;
-
                 try
                 {
                     // Check if the patient exists
@@ -161,6 +165,7 @@ namespace Group13_iCAREAPP.Controllers
                     successfulAssignments.Add(patientId);
                     System.Diagnostics.Debug.WriteLine($"Successfully assigned patient {patientId}");
                 }
+                // Catch any validation errors and log them
                 catch (DbEntityValidationException ex)
                 {
                     foreach (var validationErrors in ex.EntityValidationErrors)
@@ -208,16 +213,21 @@ namespace Group13_iCAREAPP.Controllers
                 message = $"Successfully assigned {successfulAssignments.Count} patients."
             });
         }
+
+        // Class definition
         public class AssignPatientsRequest
         {
             public List<string> SelectedIDs { get; set; }
         }
 
+        // Helper function to check if a patient is fully assigned
         private bool CheckIfFullyAssigned(string patientID)
         {
+            // Get the user profession from the session
             var userProfession = Session["UserProfession"]?.ToString();
             System.Diagnostics.Debug.WriteLine("current user profession: " + userProfession);
 
+            // Check for both Nurses and Doctors
             if (userProfession == "Doctor")
             {
                 var doctorCount = db.TreatmentRecord
@@ -245,8 +255,11 @@ namespace Group13_iCAREAPP.Controllers
 
             return false;
         }
+
+        // Helper function if a patient is already assigned
         private bool CheckIfAlreadyAssigned(string patientID)
         {
+            // Get the user profession and ID from the session
             var userProfession = Session["UserProfession"]?.ToString();
             var currentUserID = Session["UserID"].ToString();
 
@@ -264,6 +277,8 @@ namespace Group13_iCAREAPP.Controllers
             }
             return false;
         }
+
+        // Helper function to check if a nurse is already assigned to a given patient
         private bool HasNurseAssigned(string patientID)
         {
             return db.TreatmentRecord
