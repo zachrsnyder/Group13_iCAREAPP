@@ -10,6 +10,18 @@ const ICareBoard = () => {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [selectAll, setSelectAll] = useState(false);
+
+    useEffect(() => {
+        if (filteredPatients.length > 0) {
+            setSelectedPatients(prevPatients =>
+                prevPatients.map(patient => ({
+                    ...patient,
+                    selected: selectAll && !patient.alreadyAssigned && !patient.fullyAssigned
+                }))
+            );
+        }
+    }, [selectAll]);
 
     useEffect(() => {
         const fetchPatients = async () => {
@@ -31,11 +43,19 @@ const ICareBoard = () => {
         fetchPatients();
     }, []);
 
+        
+
     const filteredPatients = selectedPatients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.ID.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.treatmentArea.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const availablePatients = filteredPatients.filter(
+        patient => !patient.alreadyAssigned && !patient.fullyAssigned
+    );
+    const allAvailableSelected = availablePatients.length > 0 &&
+        availablePatients.every(patient => patient.selected);
 
     const openModal = (patient) => {
         setSelectedPatient(patient);
@@ -89,6 +109,7 @@ const ICareBoard = () => {
 
             const updatedData = await updatedResponse.json();
             setSelectedPatients(updatedData);
+            setSelectAll(false);
 
         } catch (error) {
             setNotificationData({
@@ -161,7 +182,18 @@ const ICareBoard = () => {
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead className="bg-gray-50">
                                             <tr>
-                                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Select</th>
+                                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    <div className="flex items-center justify-center space-x-2">
+                                                        <span>Select</span>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={allAvailableSelected}
+                                                            onChange={() => setSelectAll(!selectAll)}
+                                                            className="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded"
+                                                            title="Select all unassigned patients"
+                                                        />
+                                                    </div>
+                                                </th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Treatment Area</th>
