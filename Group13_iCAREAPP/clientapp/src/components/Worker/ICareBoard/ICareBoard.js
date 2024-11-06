@@ -184,7 +184,6 @@ const ICareBoard = () => {
                                             <tr>
                                                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     <div className="flex items-center justify-center space-x-2">
-                                                        <span>Select</span>
                                                         <input
                                                             type="checkbox"
                                                             checked={allAvailableSelected}
@@ -192,6 +191,7 @@ const ICareBoard = () => {
                                                             className="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded"
                                                             title="Select all unassigned patients"
                                                         />
+                                                        <span>Select</span>
                                                     </div>
                                                 </th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
