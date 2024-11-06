@@ -2,6 +2,12 @@
 import { X, Search, ChevronLeft } from 'lucide-react';
 import { drugData } from './drugData';
 
+
+
+/// <summary>
+/// Modal that appears when the user clicks to view drug information.
+/// Facilitates the search of drugs, the selection of a drug from the tables, and allows the user to set dosage, frequency, duration, and quantity for a perscription
+/// </summary>
 const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedDrug, setSelectedDrug] = useState(null);
@@ -12,6 +18,7 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
         quantity: ''
     });
 
+    
     const filteredDrugs = searchTerm
         ? drugData.categories.map(category => ({
             ...category,

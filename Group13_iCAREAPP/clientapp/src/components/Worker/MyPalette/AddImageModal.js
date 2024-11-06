@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { X, Upload, Image, Loader2, AlertCircle } from 'lucide-react';
 
+
+/// <summary>
+/// Modal to add an Image document to the db. Allows the user to assign it to a patient, add an Image, and a title.
+/// </summary
 const AddImageModal = ({ setShowAddModal }) => {
     const [newDocument, setDocument] = useState({
         Name: "",
@@ -18,8 +22,10 @@ const AddImageModal = ({ setShowAddModal }) => {
         Name: false
     });
 
+    // simple boolean to test if all fields are populated
     const isFormValid = newDocument.patientID && newDocument.Name && newDocument.file;
 
+    // fetches all patients from the db same as done in AddDocumentModal.js
     const fetchPatients = async () => {
         try {
             const response = await fetch('/PatientRecords/GetAllPatients', {
@@ -39,10 +45,13 @@ const AddImageModal = ({ setShowAddModal }) => {
         }
     };
 
+
+    // Fetch all patients in mount
     useEffect(() => {
         fetchPatients();
     }, []);
 
+    // Sets preview to the entered image if the image exists. Occurs whenever the file entry changes.
     useEffect(() => {
         if (!newDocument.file) {
             setPreview(null);
@@ -55,6 +64,8 @@ const AddImageModal = ({ setShowAddModal }) => {
         return () => URL.revokeObjectURL(objectUrl);
     }, [newDocument.file]);
 
+
+    /*Start of dragging image functionality */
     const handleDragOver = useCallback((e) => {
         e.preventDefault();
         setIsDragging(true);
@@ -78,17 +89,22 @@ const AddImageModal = ({ setShowAddModal }) => {
             }
         }
     }, []);
+    /* End of dragging image handling */ 
 
+
+    // handles user file entry. Only accepts first file in array of entered files.
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files[0]) {
             setDocument(prev => ({ ...prev, file: e.target.files[0] }));
         }
     };
 
+
     const handleBlur = (field) => {
         setTouched(prev => ({ ...prev, [field]: true }));
     };
 
+    // handles form submission. 
     const handleAddDoc = async (e) => {
         e.preventDefault();
 
@@ -105,6 +121,7 @@ const AddImageModal = ({ setShowAddModal }) => {
         setIsSubmitting(true);
         setError('');
 
+        //creates a FormData object to send to the backend with the given form data.
         try {
             const formData = new FormData();
             formData.append("Name", newDocument.Name + "_Image");
@@ -130,6 +147,7 @@ const AddImageModal = ({ setShowAddModal }) => {
         }
     };
 
+    
     const getFieldError = (field) => {
         if (!touched[field]) return null;
 

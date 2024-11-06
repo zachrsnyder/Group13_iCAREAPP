@@ -1,4 +1,4 @@
-﻿// drugData.js
+﻿// Contains the "Hard coded" drug facts.
 export const drugData = {
     "categories": [
         {

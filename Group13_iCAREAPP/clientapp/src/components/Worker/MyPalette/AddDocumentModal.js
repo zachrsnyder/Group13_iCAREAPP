@@ -4,6 +4,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { X, Loader2, Pill } from 'lucide-react';
 import DrugInfoModal from './DrugInfoModal';
 
+
+/*Start of template html for document templates */
 const DOCUMENT_TEMPLATES = {
     "": {
         name: "Custom Document",
@@ -19,7 +21,7 @@ const DOCUMENT_TEMPLATES = {
             <ul>
                 <li>Blood Pressure: ___/___</li>
                 <li>Heart Rate: ___ bpm</li>
-                <li>Temperature: ___°F</li>
+                <li>Temperature: ___ï¿½F</li>
                 <li>Respiratory Rate: ___ breaths/min</li>
                 <li>Height: ___</li>
                 <li>Weight: ___</li>
@@ -77,6 +79,13 @@ const DOCUMENT_TEMPLATES = {
             <p>Follow-up:</p>`
     }
 };
+/*End of html templates*/ 
+
+
+/// <summary>
+///  Modal that allows the user to add a text document. Opens up a CKEditor that allows for formatted text entries.
+///  Also provides the option to show drug info through a modal triggered by the showDrugInfo useState. 
+/// </summary
 
 const AddDocumentModal = ({ setShowAddModal }) => {
     const [showDrugInfo, setShowDrugInfo] = useState(false);
@@ -93,7 +102,9 @@ const AddDocumentModal = ({ setShowAddModal }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const editorContent = useRef('');
 
+    // handles changing the selected template.Takes a template ID that is used to query the template dictionary and return the desired html
     const handleTemplateChange = (templateId) => {
+        // set the content in the CKEditor to the template content
         setSelectedTemplate(templateId);
         if (editorInstance) {
             editorInstance.setData(DOCUMENT_TEMPLATES[templateId].content);
@@ -103,6 +114,7 @@ const AddDocumentModal = ({ setShowAddModal }) => {
             const patient = patients.find(p => p.ID === newDocument.patientID);
             const templateName = DOCUMENT_TEMPLATES[templateId].name;
             const date = new Date().toISOString().split('T')[0];
+            // Sets the name of the document to a formatted version that contains the purpose of documents of the given format.
             setDocument(prev => ({
                 ...prev,
                 Name: `${templateName} - ${patient.name} - ${date}`
@@ -110,6 +122,9 @@ const AddDocumentModal = ({ setShowAddModal }) => {
         }
     };
 
+
+    // Handles changing the patient which the document corresponds to by setting the Name attriute in the document object state.
+    // Also will result in a change to the name of the document given the change in patient.
     const handlePatientChange = (patientId) => {
         setDocument(prev => ({ ...prev, patientID: patientId }));
         // Update document name if template is selected
@@ -124,6 +139,7 @@ const AddDocumentModal = ({ setShowAddModal }) => {
         }
     };
 
+    // Allows the user to select a drug from the drug select modal. This is passed as a prop to the Drug Info Modal.
     const handleDrugSelect = (prescriptionData) => {
         if (editorInstance && selectedTemplate === "prescription") {
             const currentDate = new Date().toLocaleDateString();
@@ -142,10 +158,12 @@ const AddDocumentModal = ({ setShowAddModal }) => {
         }
     };
 
+    // Handles a chnage to the content within the ckeditor. Event can be anything from clicking one of the icons in the toolbar to keyboard inputs.
     const handleEditorChange = (event, editor) => {
         editorContent.current = editor.getData();
     };
 
+    //fetches all patient records from the db. Upon success sets the Patients array state to json response. Also toggles loading off and allows the patients selecter to show the patients
     const fetchPatients = async () => {
         try {
             const response = await fetch('/PatientRecords/GetAllPatients', {
@@ -165,6 +183,8 @@ const AddDocumentModal = ({ setShowAddModal }) => {
         }
     };
 
+
+    // setting the css for the styles used in the ckeditor 
     const editorStyles = `
         .ck-content h1 { font-size: 2em; margin-bottom: 0.5em; font-weight: bold; }
         .ck-content h2 { font-size: 1.5em; margin-bottom: 0.4em; font-weight: bold; }
@@ -176,18 +196,24 @@ const AddDocumentModal = ({ setShowAddModal }) => {
         .ck-content em { font-style: italic; }
     `;
 
+    // fetches all patients from db when the component mounts.
     useEffect(() => {
         fetchPatients();
     }, []);
 
+
+    // handles form submission. 
     const handleAddDoc = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
         try {
+
+            // Fixes doc title to disallow ending with _Image
             if (newDocument.Name.endsWith("_Image")) {
                 newDocument.Name = newDocument.Name.replaceAll("_Image", "_Text");
             }
+
 
             const formData = new FormData();
             formData.append("Name", newDocument.Name);
@@ -218,6 +244,7 @@ const AddDocumentModal = ({ setShowAddModal }) => {
         }
     };
 
+    // sets the style of the ckeditor and removes the styling when the component dismounts.
     useEffect(() => {
         // Add custom styles to the document
         const styleSheet = document.createElement('style');

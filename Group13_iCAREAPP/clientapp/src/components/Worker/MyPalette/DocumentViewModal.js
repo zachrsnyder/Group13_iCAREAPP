@@ -1,10 +1,12 @@
 ﻿import { React, useEffect, useState } from 'react'
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import html2pdf from 'html2pdf.js';
 import EditDocModal from './EditDocModal';
 import { X, Trash2, Edit2, Download } from 'lucide-react';
 
+
+/// <summary>
+/// Document view modal is what appears whenever the user presses on a doc card. It passed the doc that was selected as well as the control props, so that when the user
+/// closes out of this modal those props can be set back to null, false, etc.
+/// </summary
 const DocumentViewModal = ({ doc, showDoc, selectedDoc }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [pdfUrl, setPdfUrl] = useState(null);
@@ -12,6 +14,8 @@ const DocumentViewModal = ({ doc, showDoc, selectedDoc }) => {
     const [showView, setShowView] = useState(true);
     const isText = !doc.documentTitle.endsWith("_Image");
 
+
+    // fetches the extended document data from the db.
     const fetchDocument = async () => {
         try {
             const url = `Document/${doc.documentTitle}/${doc.documentID}`;
@@ -29,6 +33,8 @@ const DocumentViewModal = ({ doc, showDoc, selectedDoc }) => {
         }
     };
 
+
+    // hadnles when the user presses delete. 
     const handleDelete = async () => {
         if (window.confirm('Are you sure you want to delete this document?')) {
             try {
@@ -51,6 +57,7 @@ const DocumentViewModal = ({ doc, showDoc, selectedDoc }) => {
         }
     };
 
+    // handles when the user wants to download the provided file.
     const handleDownload = () => {
         const link = document.createElement('a');
         link.href = pdfUrl;
@@ -60,6 +67,7 @@ const DocumentViewModal = ({ doc, showDoc, selectedDoc }) => {
         document.body.removeChild(link);
     };
 
+    // fetches document on comp mount and revokes the url object upon dismount.
     useEffect(() => {
         fetchDocument();
         // Cleanup function to revoke object URL
