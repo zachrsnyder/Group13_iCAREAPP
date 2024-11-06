@@ -3,6 +3,7 @@ import { UserPlus, ChevronUp, ChevronDown } from 'lucide-react';
 import NotificationModal from './NotificationModal';
 
 const ICareBoard = () => {
+    // Initialize state variables
     const [selectedPatients, setSelectedPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -16,7 +17,7 @@ const ICareBoard = () => {
         direction: 'asc'
     });
 
-
+    // Update selectedPatients when selectAll changes
     useEffect(() => {
         if (filteredPatients.length > 0) {
             setSelectedPatients(prevPatients =>
@@ -28,6 +29,7 @@ const ICareBoard = () => {
         }
     }, [selectAll]);
 
+    // Fetch patients
     useEffect(() => {
         const fetchPatients = async () => {
             try {
@@ -48,20 +50,21 @@ const ICareBoard = () => {
         fetchPatients();
     }, []);
 
-
-
+    // Filter patients based on search term
     const filteredPatients = selectedPatients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.ID.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.treatmentArea.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Filter available patients
     const availablePatients = filteredPatients.filter(
         patient => !patient.alreadyAssigned && !patient.fullyAssigned
     );
     const allAvailableSelected = availablePatients.length > 0 &&
         availablePatients.every(patient => patient.selected);
 
+    //Modal functions
     const openModal = (patient) => {
         setSelectedPatient(patient);
         setIsModalOpen(true);
@@ -80,9 +83,11 @@ const ICareBoard = () => {
         setIsConfirmModalOpen(false);
     };
 
+    // Use states to show notification modal
     const [showNotification, setShowNotification] = useState(false);
     const [notificationData, setNotificationData] = useState({});
 
+    // Assign patients
     const assignPatients = async () => {
         const selectedIDs = selectedPatients
             .filter(patient => patient.selected)
@@ -126,6 +131,7 @@ const ICareBoard = () => {
         }
     };
 
+    // Loading and error states
     if (loading) return (
         <div className="flex items-center justify-center h-64">
             <div className="text-gray-600">Loading patients...</div>
@@ -138,6 +144,7 @@ const ICareBoard = () => {
         </div>
     );
 
+    // Patient sorting
     const handleSort = (key) => {
         let direction = 'asc';
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -146,6 +153,7 @@ const ICareBoard = () => {
         setSortConfig({ key, direction });
     };
 
+    // Get sorted patients
     const getSortedPatients = (patientsToSort) => {
         if (!sortConfig.key) return patientsToSort;
 
@@ -153,7 +161,6 @@ const ICareBoard = () => {
             let aValue = a[sortConfig.key];
             let bValue = b[sortConfig.key];
 
-            // Convert to lowercase if string
             if (typeof aValue === 'string') aValue = aValue.toLowerCase();
             if (typeof bValue === 'string') bValue = bValue.toLowerCase();
 
@@ -163,6 +170,7 @@ const ICareBoard = () => {
         });
     };
 
+    // Sort icon
     const SortIcon = ({ column }) => {
         if (sortConfig.key !== column) {
             return (
