@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { UserPlus } from 'lucide-react';
-import NotificationModal from './NotificationModal'; 
+import NotificationModal from './NotificationModal';
 
 const ICareBoard = () => {
     const [selectedPatients, setSelectedPatients] = useState([]);
@@ -43,7 +43,7 @@ const ICareBoard = () => {
         fetchPatients();
     }, []);
 
-        
+
 
     const filteredPatients = selectedPatients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -208,9 +208,17 @@ const ICareBoard = () => {
                                                     <tr key={patient.ID} className="hover:bg-gray-50">
                                                         <td className="text-center px-6 py-4 whitespace-nowrap">
                                                             {patient.alreadyAssigned ? (
-                                                                <span className="text-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Your Patient</span>
+                                                                <span className="text-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                                    Your Patient
+                                                                </span>
                                                             ) : patient.fullyAssigned ? (
-                                                                    <span className="text-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Fully Assigned</span>
+                                                                <span className="text-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                                    Fully Assigned
+                                                                </span>
+                                                            ) : patient.userProfession === 'Doctor' && !patient.hasNurseAssigned ? (
+                                                                <span className="text-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                                    No Nurse Assigned
+                                                                </span>
                                                             ) : (
                                                                 <input
                                                                     type="checkbox"
@@ -223,6 +231,7 @@ const ICareBoard = () => {
                                                                         ));
                                                                     }}
                                                                     className="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded"
+                                                                    disabled={patient.userProfession === 'Doctor' && !patient.hasNurseAssigned}
                                                                 />
                                                             )}
                                                         </td>

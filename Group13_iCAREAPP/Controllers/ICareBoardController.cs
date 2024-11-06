@@ -13,6 +13,7 @@ using Group13_iCAREAPP.ViewModels;
 using System.IO;
 using System.Data.Entity.Validation;
 using System.Data.Entity.Infrastructure;
+using static System.Data.Entity.Infrastructure.Design.Executor;
 
 namespace Group13_iCAREAPP.Controllers
 {
@@ -32,6 +33,7 @@ namespace Group13_iCAREAPP.Controllers
             try
             {
                 var currentUserID = Session["UserID"].ToString();
+                var userProfession = Session["UserProfession"]?.ToString();
 
                 var workerGeoCode = db.iCAREUser.FirstOrDefault(wg => wg.ID == currentUserID);
                 if (workerGeoCode == null)
@@ -70,10 +72,11 @@ namespace Group13_iCAREAPP.Controllers
                     p.bedID,
                     p.treatmentArea,
                     fullyAssigned = CheckIfFullyAssigned(p.ID),
-                    alreadyAssigned = CheckIfAlreadyAssigned(p.ID)
+                    alreadyAssigned = CheckIfAlreadyAssigned(p.ID),
+                    hasNurseAssigned = HasNurseAssigned(p.ID),
+                    userProfession = Session["UserProfession"]?.ToString()
                 }).ToList();
 
-                System.Diagnostics.Debug.WriteLine($"Found {patientRecordsWithAssignment.Count} patients");
                 return Json(patientRecordsWithAssignment, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -83,8 +86,6 @@ namespace Group13_iCAREAPP.Controllers
                 return Json(new { error = ex.Message });
             }
         }
-
-
 
         // GET: ICareBoard/Details
         public ActionResult Details(string id)
@@ -207,10 +208,6 @@ namespace Group13_iCAREAPP.Controllers
                 message = $"Successfully assigned {successfulAssignments.Count} patients."
             });
         }
-
-
-
-        // Request model for deserialization
         public class AssignPatientsRequest
         {
             public List<string> SelectedIDs { get; set; }
@@ -220,7 +217,7 @@ namespace Group13_iCAREAPP.Controllers
         {
             var userProfession = Session["UserProfession"]?.ToString();
             System.Diagnostics.Debug.WriteLine("current user profession: " + userProfession);
-            
+
             if (userProfession == "Doctor")
             {
                 var doctorCount = db.TreatmentRecord
@@ -253,18 +250,29 @@ namespace Group13_iCAREAPP.Controllers
             var userProfession = Session["UserProfession"]?.ToString();
             var currentUserID = Session["UserID"].ToString();
 
-            if (userProfession == "Nurse" && !string.IsNullOrEmpty(currentUserID))
+            // Check for both Nurses and Doctors
+            if ((userProfession == "Nurse" || userProfession == "Doctor") && !string.IsNullOrEmpty(currentUserID))
             {
                 bool isAlreadyAssigned = db.TreatmentRecord
                     .Any(tr => tr.patientID == patientID && tr.userID == currentUserID);
 
                 if (isAlreadyAssigned)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Nurse {currentUserID} is already assigned to patient {patientID}");
+                    System.Diagnostics.Debug.WriteLine($"{userProfession} {currentUserID} is already assigned to patient {patientID}");
                     return true;
                 }
             }
             return false;
+        }
+        private bool HasNurseAssigned(string patientID)
+        {
+            return db.TreatmentRecord
+                .Where(tr => tr.patientID == patientID)
+                .Join(db.iCAREUser,
+                      tr => tr.userID,
+                      u => u.ID,
+                      (tr, u) => u)
+                .Any(u => u.profession == "Nurse");
         }
     }
 }
