@@ -23,6 +23,7 @@ namespace Group13_iCAREAPP.Controllers
         private Group13_iCAREDBEntities db = new Group13_iCAREDBEntities();
 
         // Grabs all patients in the same geoCode as the logged in user and returns them as a list
+        // GET: ICareBoard/HospitalPatients
         public ActionResult HospitalPatients()
         {
             try
@@ -88,6 +89,7 @@ namespace Group13_iCAREAPP.Controllers
         }
 
         // Grabs patient details based on the patient ID
+        // GET: ICareBoard/Details/5
         public ActionResult Details(string id)
         {
             if (id == null)
@@ -103,6 +105,7 @@ namespace Group13_iCAREAPP.Controllers
         }
 
         // Assigns a given patient(s) to the logged in user
+        // POST: ICareBoard/AssignPatients
         [HttpPost]
         public ActionResult AssignPatients(AssignPatientsRequest request)
         {

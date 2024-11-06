@@ -10,9 +10,10 @@ namespace Group13_iCAREAPP.Controllers
 {
     public class MyBoardController : Controller
     {
+        // Database context
         private Group13_iCAREDBEntities db = new Group13_iCAREDBEntities();
 
-
+        // Class definition
         public class PatientEdit
         {
             public string ID { get; set; }
@@ -28,6 +29,7 @@ namespace Group13_iCAREAPP.Controllers
             public string description { get; set; }
         }
 
+        // Grabs the ModificationHistory for a specific patient by getting the docID from the DocumentMetadata
         //GET: MyBoard/GetChangeHistory
         public ActionResult GetChangeHistory(string patientID)
         {
@@ -44,14 +46,19 @@ namespace Group13_iCAREAPP.Controllers
                                    .Distinct()
                                    .ToList();
 
+            // Returns the modifictionHistory as a list
             System.Diagnostics.Debug.WriteLine($"Found {modificationList.Count} records for patientID {patientID}");
             return Json(modificationList, JsonRequestBehavior.AllowGet);
         }
 
+
+        // Grabs the TreatmentRecord for a specific patient based on a given patientID
         //GET: MyBoard/GetTreatment
         public ActionResult GetTreatment(string patientID)
         {
+            // Gets the UserID of the logged in user from session
             var userID = Session["UserID"]?.ToString();
+            // Grabs the treatment record of the patient based on the userID and patientID
             var treatment = db.TreatmentRecord
                 .Where(t => t.userID == userID && t.patientID == patientID)
                 .Select(t => new
@@ -71,9 +78,11 @@ namespace Group13_iCAREAPP.Controllers
                 return HttpNotFound(); // Or handle the case when no record is found
             }
 
+            // Returns the treatment record
             return Json(treatment, JsonRequestBehavior.AllowGet);
         }
 
+        // Class definiton
         public class TreatmentEdit
         {
             public string treatmentID { get; set; }
@@ -83,6 +92,8 @@ namespace Group13_iCAREAPP.Controllers
             public string treatmentDate { get; set; }
         }
 
+        // Updates the treatment record based on a given treatmentRecord given in the form of a TreatmentEdit object
+        //POST: MyBoard/handleTreatmentHistory
         [HttpPost]
         public ActionResult HandleTreatmentHistory([ModelBinder(typeof(JsonModelBinder))] TreatmentEdit treatment)
         {
@@ -95,14 +106,14 @@ namespace Group13_iCAREAPP.Controllers
                         return Json(new { success = false, message = "Invalid treatment data" });
                     }
 
-                    // Get UserID from session
+                    // Gets the UserID of the logged in user from session
                     var userId = Session["UserID"]?.ToString();
                     if (userId == null)
                     {
                         return Json(new { success = false, message = "User session not found" });
                     }
 
-                    // Find existing treatment record
+                    // Finds the existing treatment record
                     var existingTreatment = db.TreatmentRecord.FirstOrDefault(t =>
                         t.treatmentID == treatment.treatmentID &&
                         t.userID == userId &&
@@ -113,18 +124,18 @@ namespace Group13_iCAREAPP.Controllers
                         return Json(new { success = false, message = "Treatment record not found" });
                     }
 
-                    // Update treatment record
+                    // Updates the existing treatment record
                     try
                     {
                         existingTreatment.description = treatment.description;
-                        existingTreatment.treatmentDate = DateTime.Parse(treatment.treatmentDate);  // Added this line
+                        existingTreatment.treatmentDate = DateTime.Parse(treatment.treatmentDate);
                     }
                     catch (FormatException ex)
                     {
                         return Json(new { success = false, message = "Invalid data format" });
                     }
 
-                    // Get document metadata
+                    // Gets document metadata
                     var document = db.DocumentMetadata
                         .FirstOrDefault(d => d.userID == userId && d.patientID == treatment.patientID);
 
@@ -133,15 +144,17 @@ namespace Group13_iCAREAPP.Controllers
                         return Json(new { success = false, message = "Document not found" });
                     }
 
-                    // Update document name
+                    // Updates the document name
                     document.docName = "Treatment Record Updated";
 
-                    // Handle modification history
+                    // Grabs the most previous modification history record
                     var lastMod = db.ModificationHistory
                         .ToList()
                         .OrderByDescending(m => int.Parse(m.modificationNum))
                         .FirstOrDefault();
 
+                    // If there is no previous modification history record, set the new modification number to 1
+                    // Otherwise increment the modification number
                     string newModNum = "1";
                     if (lastMod != null)
                     {
@@ -149,7 +162,7 @@ namespace Group13_iCAREAPP.Controllers
                         newModNum = (currentNum + 1).ToString();
                     }
 
-                    // Create new modification history entry
+                    // Creates new modification history entry
                     var modHistory = new ModificationHistory
                     {
                         docID = document.docID,
@@ -158,6 +171,8 @@ namespace Group13_iCAREAPP.Controllers
                         modificationNum = newModNum
                     };
 
+                    // Adds the new modification history entry to the database
+                    // Saves the changes to the database and commits the transaction
                     db.ModificationHistory.Add(modHistory);
                     db.SaveChanges();
                     transaction.Commit();
@@ -166,7 +181,6 @@ namespace Group13_iCAREAPP.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception details here
                     System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
                     return Json(new { success = false, message = "An error occurred" });
                 }
@@ -174,6 +188,7 @@ namespace Group13_iCAREAPP.Controllers
         }
 
 
+        // Updates the patient record based on a given patientRecord given in the form of a PatientEdit object
         //POST: MyBoard/handleEditHistory
         [HttpPost]
         public ActionResult HandleEditHistory([ModelBinder(typeof(JsonModelBinder))] PatientEdit patient)
@@ -182,11 +197,12 @@ namespace Group13_iCAREAPP.Controllers
             {
                 try
                 {
-                    if (patient == null) // Add null check and validate ID
+                    if (patient == null)
                     {
                         return Json(new { success = false, message = "Invalid patient data" });
                     }
 
+                    // Finds the existing patient record
                     var existingPatient = db.PatientRecord.Find(patient.ID);
                     if (existingPatient == null)
                     {
@@ -194,7 +210,7 @@ namespace Group13_iCAREAPP.Controllers
                     }
 
 
-                    // Update patient record
+                    // Updates the existing patient record
                     try
                     {
                         existingPatient.name = patient.name;
@@ -211,59 +227,50 @@ namespace Group13_iCAREAPP.Controllers
                         return Json(new { success = false, message = "Invalid data format" });
                     }
 
-                    // Check if UserID exists in session
+                    // Checks if UserID exists in session
                     if (Session["UserID"] == null)
                     {
                         return Json(new { success = false, message = "User session not found" });
                     }
 
-                    // Get document metadata - using FirstOrDefault for both queries
                     System.Diagnostics.Debug.WriteLine(patient.ID.ToString());
                     System.Diagnostics.Debug.WriteLine(Session["UserID"]);
                     System.Diagnostics.Debug.WriteLine(patient.description);
+                    // Grabs the userID of the currently logged in user from the session
                     string userId = Session["UserID"]?.ToString();
                     string patientId = patient.ID;
 
-
+                    // Grabs the document metadata
                     var document = db.DocumentMetadata
                         .Where(d => d.userID == userId && d.patientID == patientId)
                         .FirstOrDefault();
-
-                    System.Diagnostics.Debug.WriteLine("HELLO");
-
 
                     if (document == null)
                     {
                         return Json(new { success = false, message = "Document not found" });
                     }
 
-                    // Update document name
+                    // Updates document name to show that the patient record has been updated
                     document.docName = "Patient Record Updated";
 
                     System.Diagnostics.Debug.WriteLine("HELLO");
 
-                    // Handle modification history
+                    // Grab the most recent modification history record
                     var lastMod = db.ModificationHistory
-                        .ToList() // Bring data into memory first
+                        .ToList()
                         .OrderByDescending(m => int.Parse(m.modificationNum))
                         .FirstOrDefault();
 
-
-                    System.Diagnostics.Debug.WriteLine(lastMod);
-                    System.Diagnostics.Debug.WriteLine("HELLO");
-
-
+                    // If there is no previous modification history record set the new modification number to 1
+                    // Otherwise increment the modification number
                     string newModNum = "1";
                     if (lastMod != null)
                     {
-                        // Simple increment
                         int currentNum = int.Parse(lastMod.modificationNum);
                         newModNum = (currentNum + 1).ToString();
                     }
 
-
-
-                    // Create new modification history entry
+                    // Creates new modification history entry
                     var modHistory = new ModificationHistory
                     {
                         docID = document.docID,
@@ -272,6 +279,8 @@ namespace Group13_iCAREAPP.Controllers
                         modificationNum = newModNum
                     };
 
+                    // Adds the new modification history entry to the database
+                    // Saves the changes to the database and commits the transaction
                     db.ModificationHistory.Add(modHistory);
                     db.SaveChanges();
                     transaction.Commit();
