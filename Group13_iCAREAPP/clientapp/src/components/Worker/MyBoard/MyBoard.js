@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Search, Eye, X, ChevronUp, ChevronDown } from 'lucide-react';
+import { Search, Eye, X } from 'lucide-react';
 import { FileText } from 'lucide-react';
 import HistoryIconButton from '../../buttons/HistoryIconButton.js';
 
@@ -31,10 +31,6 @@ const MyBoard = () => {
         description: '',
         patientID: '',
         editDescription: ''
-    });
-    const [sortConfig, setSortConfig] = useState({
-        key: null,
-        direction: 'asc'
     });
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [selectedPatientHistory, setSelectedPatientHistory] = useState([]);
@@ -292,56 +288,7 @@ const MyBoard = () => {
                 <div className="text-xl text-red-600">Error: {error}</div>
             </div>
         );
-    };
-
-    const handleSort = (key) => {
-        let direction = 'asc';
-        if (sortConfig.key === key && sortConfig.direction === 'asc') {
-            direction = 'desc';
-        }
-        setSortConfig({ key, direction });
-    };
-
-    const getSortedPatients = (patientsToSort) => {
-        if (!sortConfig.key) return patientsToSort;
-
-        return [...patientsToSort].sort((a, b) => {
-            let aValue = a[sortConfig.key];
-            let bValue = b[sortConfig.key];
-
-            // Convert to lowercase if string
-            if (typeof aValue === 'string') aValue = aValue.toLowerCase();
-            if (typeof bValue === 'string') bValue = bValue.toLowerCase();
-
-            if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
-            if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
-            return 0;
-        });
-    };
-
-    const SortIcon = ({ column }) => {
-        if (sortConfig.key !== column) {
-            return (
-                <ChevronUp className="h-4 w-4 text-gray-400" />
-            );
-        }
-        return sortConfig.direction === 'asc' ? (
-            <ChevronUp className="h-4 w-4 text-gray-700" />
-        ) : (
-            <ChevronDown className="h-4 w-4 text-gray-700" />
-        );
-    };
-
-    const columns = [
-        { key: 'ID', label: 'ID' },
-        { key: 'name', label: 'Name' },
-        { key: 'treatmentArea', label: 'Treatment Area' },
-        { key: 'bedID', label: 'Bed ID' },
-        { key: 'bloodGroup', label: 'Blood Group' }
-    ];
-
-    // Get sorted and filtered patients
-    const sortedAndFilteredPatients = getSortedPatients(filteredPatients);
+    }
 
     return (
         <div className="flex-1 flex flex-col">
@@ -385,27 +332,16 @@ const MyBoard = () => {
                                 <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
                                         <tr>
-                                            {columns.map((column) => (
-                                                <th
-                                                    key={column.key}
-                                                    onClick={() => handleSort(column.key)}
-                                                    className="group px-6 py-3 text-left cursor-pointer"
-                                                >
-                                                    <div className="flex items-center space-x-1">
-                                                        <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                            {column.label}
-                                                        </span>
-                                                        <SortIcon column={column.key} />
-                                                    </div>
-                                                </th>
-                                            ))}
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Actions
-                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Treatment Area</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bed ID</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Blood Group</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {sortedAndFilteredPatients.map((patient) => (
+                                        {filteredPatients.map((patient) => (
                                             <tr key={patient.ID} className="hover:bg-gray-50">
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.ID}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.name}</td>
@@ -417,13 +353,41 @@ const MyBoard = () => {
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.bedID}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.bloodGroup}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm flex items-center space-x-1">
-                                                    {/* ... (keep existing action buttons) ... */}
+                                                    <div className="group relative">
+                                                        <button
+                                                            onClick={() => openModal(patient)}
+                                                            className="text-rose-600 hover:text-rose-900 hover:bg-rose-200 px-2 py-1 rounded-md font-medium transition-colors inline-flex items-center space-x-1"
+                                                        >
+                                                        <Eye className="h-6 w-6" />
+                                                        </button>
+                                                        <div className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                            View Record
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="group relative">
+                                                        <HistoryIconButton onClick={() => openHistoryModal(patient)} />
+                                                        <div className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                            View Change History
+                                                        </div>
+                                                    </div>
+                                                    <div className="group relative">
+                                                        <button
+                                                            onClick={() => openTreatmentModal(patient)}
+                                                            className="text-rose-600 hover:text-rose-900 hover:bg-rose-200 px-2 py-1 rounded-md font-medium transition-colors inline-flex items-center space-x-1"
+                                                        >
+                                                            <FileText className="w-6 h-6" />
+                                                        </button>
+                                                        <div className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                            View Treatment Record
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
-                                {sortedAndFilteredPatients.length === 0 && (
+                                {filteredPatients.length === 0 && (
                                     <div className="text-center py-12 text-gray-500">
                                         No patients found
                                     </div>
