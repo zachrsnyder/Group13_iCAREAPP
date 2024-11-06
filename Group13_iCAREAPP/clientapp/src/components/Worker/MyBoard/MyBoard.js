@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Search, Eye, X } from 'lucide-react';
+import { Search, Eye, X, ChevronUp, ChevronDown } from 'lucide-react'; 
 import { FileText } from 'lucide-react';
 import HistoryIconButton from '../../buttons/HistoryIconButton.js';
 
@@ -41,6 +41,10 @@ const MyBoard = () => {
     const [treatment, setTreatment] = useState(null);
     const [isEditTreatmentModalOpen, setIsEditTreatmentModalOpen] = useState(false);
     const [isTreatment, setIsTreatment] = useState(false);
+    const [sortConfig, setSortConfig] = useState({
+        key: null,
+        direction: 'asc'
+    });
 
     useEffect(() => {
         fetchPatients();
@@ -290,6 +294,56 @@ const MyBoard = () => {
         );
     }
 
+    const handleSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const getSortedPatients = (patientsToSort) => {
+        if (!sortConfig.key) return patientsToSort;
+
+        return [...patientsToSort].sort((a, b) => {
+            let aValue = a[sortConfig.key];
+            let bValue = b[sortConfig.key];
+
+            // Convert to lowercase if string
+            if (typeof aValue === 'string') aValue = aValue.toLowerCase();
+            if (typeof bValue === 'string') bValue = bValue.toLowerCase();
+
+            if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    };
+
+    const SortIcon = ({ column }) => {
+        if (sortConfig.key !== column) {
+            return (
+                <ChevronUp className="h-4 w-4 text-gray-400" />
+            );
+        }
+        return sortConfig.direction === 'asc' ? (
+            <ChevronUp className="h-4 w-4 text-gray-700" />
+        ) : (
+            <ChevronDown className="h-4 w-4 text-gray-700" />
+        );
+    };
+
+    // Column configuration
+    const columns = [
+        { key: 'ID', label: 'ID' },
+        { key: 'name', label: 'Name' },
+        { key: 'treatmentArea', label: 'Treatment Area' },
+        { key: 'bedID', label: 'Bed ID' },
+        { key: 'bloodGroup', label: 'Blood Group' }
+    ];
+
+    // Get sorted and filtered patients
+    const sortedAndFilteredPatients = getSortedPatients(filteredPatients);
+
     return (
         <div className="flex-1 flex flex-col">
             <main className="flex-1 overflow-y-auto bg-gray-100 p-6">
@@ -332,16 +386,27 @@ const MyBoard = () => {
                                 <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
                                         <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Treatment Area</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bed ID</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Blood Group</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                            {columns.map((column) => (
+                                                <th
+                                                    key={column.key}
+                                                    onClick={() => handleSort(column.key)}
+                                                    className="group px-6 py-3 text-left cursor-pointer"
+                                                >
+                                                    <div className="flex items-center space-x-1">
+                                                        <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                            {column.label}
+                                                        </span>
+                                                        <SortIcon column={column.key} />
+                                                    </div>
+                                                </th>
+                                            ))}
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Actions
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {filteredPatients.map((patient) => (
+                                        {sortedAndFilteredPatients.map((patient) => (
                                             <tr key={patient.ID} className="hover:bg-gray-50">
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.ID}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.name}</td>
@@ -387,7 +452,7 @@ const MyBoard = () => {
                                         ))}
                                     </tbody>
                                 </table>
-                                {filteredPatients.length === 0 && (
+                                {sortedAndFilteredPatients.length === 0 && (
                                     <div className="text-center py-12 text-gray-500">
                                         No patients found
                                     </div>
