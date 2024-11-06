@@ -3,8 +3,8 @@ import { Search, Eye, X, ChevronUp, ChevronDown } from 'lucide-react';
 import { FileText } from 'lucide-react';
 import HistoryIconButton from '../../buttons/HistoryIconButton.js';
 
-
 const MyBoard = () => {
+    // State variables
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -34,9 +34,6 @@ const MyBoard = () => {
     });
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [selectedPatientHistory, setSelectedPatientHistory] = useState([]);
-    //TODO
-    //determine if we need this useState
-    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [isTreatmentModalOpen, setIsTreatmentModalOpen] = useState(false);
     const [treatment, setTreatment] = useState(null);
     const [isEditTreatmentModalOpen, setIsEditTreatmentModalOpen] = useState(false);
@@ -46,13 +43,14 @@ const MyBoard = () => {
         direction: 'asc'
     });
 
+    // Fetch patients on component mount
     useEffect(() => {
         fetchPatients();
     }, []);
 
+    // Fetch patients from the server
     const fetchPatients = async () => {
         try {
-            // Update the URL to match your MVC route pattern
             const response = await fetch('/PatientRecords/MyPatients', {
                 credentials: 'include'
             });
@@ -71,19 +69,21 @@ const MyBoard = () => {
         }
     };
 
+    // Filter patients based on search term
     const filteredPatients = patients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.ID.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.treatmentArea.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Open the modal and set the selected patient
     const openModal = (patient) => {
         setSelectedPatient(patient);
         setIsModalOpen(true);
     };
 
+    // Open the edit modal and set the selected patient
     const openEditModal = () => {
-        // Properly copy ALL fields from selectedPatient
         setEditPatient({
             ID: selectedPatient.ID,
             name: selectedPatient.name,
@@ -100,10 +100,10 @@ const MyBoard = () => {
         setIsEditModalOpen(true);
     };
 
+    // Open the treatment modal and set the selected patient
     const openTreatmentModal = async (patient) => {
         setSelectedPatient(patient);
         try {
-            //const patientID = patient.ID;
             const response = await fetch(`/MyBoard/GetTreatment?patientID=${patient.ID}`, {
                 method: 'GET',
                 credentials: 'include'
@@ -122,7 +122,7 @@ const MyBoard = () => {
         }
     }
 
-
+    // Modal functions
     const openDescModal = () => {
         setIsEditModalOpen(false);
         setIsEditTreatmentModalOpen(false);
@@ -170,6 +170,7 @@ const MyBoard = () => {
         openDescModal();
     };
 
+    // Handle the edit patient form submission
     const handleEditHistory = async (e) => {
         e.preventDefault();
         try {
@@ -192,6 +193,7 @@ const MyBoard = () => {
                 throw new Error(`Failed to edit patient: ${errorText}`);
             }
 
+            // Reset the form and close the modal
             setEditPatient({
                 ID: '',
                 name: '',
@@ -212,11 +214,13 @@ const MyBoard = () => {
         }
     }
 
+    // Handle the edit treatment form submission
     const handleEditTreatment = () => {
         setIsDescModalOpen(true);
         setIsEditTreatmentModalOpen(false);
     }
 
+    // Handle the edit treatment form submission
     const handleTreatmentHistory = async (e) => {
         e.preventDefault();
         try {
@@ -251,6 +255,7 @@ const MyBoard = () => {
         }
     }
 
+    // Open the history modal and set the selected patient
     const openHistoryModal = async (patient) => {
         setSelectedPatient(patient);
         try {
@@ -278,6 +283,7 @@ const MyBoard = () => {
         setSelectedPatient(null);
     }
 
+    // Loading and error states
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
@@ -294,6 +300,7 @@ const MyBoard = () => {
         );
     }
 
+    // Sorting functions
     const handleSort = (key) => {
         let direction = 'asc';
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -302,6 +309,7 @@ const MyBoard = () => {
         setSortConfig({ key, direction });
     };
 
+    // Get sorted patients
     const getSortedPatients = (patientsToSort) => {
         if (!sortConfig.key) return patientsToSort;
 
@@ -319,6 +327,7 @@ const MyBoard = () => {
         });
     };
 
+    // Sort icon component
     const SortIcon = ({ column }) => {
         if (sortConfig.key !== column) {
             return (

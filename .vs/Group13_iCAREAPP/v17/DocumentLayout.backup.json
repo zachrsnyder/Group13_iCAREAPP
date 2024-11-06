@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\CS4320\\iCare\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|C:\\CS4320\\iCare\\group13_icareapp\\clientapp\\src\\components\\worker\\myboard\\myboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\clientapp\\src\\components\\worker\\myboard\\myboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|c:\\cs4320\\icare\\group13_icareapp\\clientapp\\src\\components\\worker\\icareboard\\icareboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\clientapp\\src\\components\\worker\\icareboard\\icareboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|C:\\CS4320\\iCare\\group13_icareapp\\clientapp\\src\\components\\worker\\dashboard\\dashboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\clientapp\\src\\components\\worker\\dashboard\\dashboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|C:\\CS4320\\iCare\\group13_icareapp\\controllers\\icareboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\controllers\\icareboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|C:\\CS4320\\iCare\\group13_icareapp\\clientapp\\src\\components\\worker\\myboard\\myboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\clientapp\\src\\components\\worker\\myboard\\myboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|C:\\CS4320\\iCare\\group13_icareapp\\clientapp\\src\\components\\worker\\dashboard\\dashboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\clientapp\\src\\components\\worker\\dashboard\\dashboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|C:\\CS4320\\iCare\\group13_icareapp\\clientapp\\src\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
@@ -21,10 +25,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|C:\\CS4320\\iCare\\group13_icareapp\\controllers\\myboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\controllers\\myboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|C:\\CS4320\\iCare\\group13_icareapp\\controllers\\icareboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|solutionrelative:group13_icareapp\\controllers\\icareboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5B687363-B376-4DD0-8D67-00C141113CFA}|Group13_iCAREAPP\\Group13_iCAREAPP.csproj|C:\\CS4320\\iCare\\group13_icareapp\\clientapp\\src\\components\\worker\\workernavbar.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
@@ -50,7 +50,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -58,7 +58,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "MyBoardController.cs",
               "DocumentMoniker": "C:\\CS4320\\iCare\\Group13_iCAREAPP\\Controllers\\MyBoardController.cs",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\Controllers\\MyBoardController.cs",
@@ -71,20 +71,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "MyBoard.js",
               "DocumentMoniker": "C:\\CS4320\\iCare\\Group13_iCAREAPP\\clientapp\\src\\components\\Worker\\MyBoard\\MyBoard.js",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\clientapp\\src\\components\\Worker\\MyBoard\\MyBoard.js",
               "ToolTip": "C:\\CS4320\\iCare\\Group13_iCAREAPP\\clientapp\\src\\components\\Worker\\MyBoard\\MyBoard.js",
               "RelativeToolTip": "Group13_iCAREAPP\\clientapp\\src\\components\\Worker\\MyBoard\\MyBoard.js",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAACABAAASAAAAAAAAAA==",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAAAAEAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2024-10-30T14:24:07.671Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "App.js",
               "DocumentMoniker": "C:\\CS4320\\iCare\\Group13_iCAREAPP\\clientapp\\src\\App.js",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\clientapp\\src\\App.js",
@@ -97,33 +97,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "ICareBoard.js",
               "DocumentMoniker": "C:\\CS4320\\iCare\\Group13_iCAREAPP\\clientapp\\src\\components\\Worker\\ICareBoard\\ICareBoard.js",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\clientapp\\src\\components\\Worker\\ICareBoard\\ICareBoard.js",
               "ToolTip": "C:\\CS4320\\iCare\\Group13_iCAREAPP\\clientapp\\src\\components\\Worker\\ICareBoard\\ICareBoard.js",
               "RelativeToolTip": "Group13_iCAREAPP\\clientapp\\src\\components\\Worker\\ICareBoard\\ICareBoard.js",
-              "ViewState": "AgIAAIcBAAAAAAAAAAAUwKABAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAAAKUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2024-10-29T02:03:42.383Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "ICareBoardController.cs",
               "DocumentMoniker": "C:\\CS4320\\iCare\\Group13_iCAREAPP\\Controllers\\ICareBoardController.cs",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\Controllers\\ICareBoardController.cs",
               "ToolTip": "C:\\CS4320\\iCare\\Group13_iCAREAPP\\Controllers\\ICareBoardController.cs",
               "RelativeToolTip": "Group13_iCAREAPP\\Controllers\\ICareBoardController.cs",
-              "ViewState": "AgIAAOsAAAAAAAAAAAAAAAkBAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkBAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-29T02:31:52.958Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Dashboard.js",
               "DocumentMoniker": "C:\\CS4320\\iCare\\Group13_iCAREAPP\\clientapp\\src\\components\\Worker\\Dashboard\\Dashboard.js",
               "RelativeDocumentMoniker": "Group13_iCAREAPP\\clientapp\\src\\components\\Worker\\Dashboard\\Dashboard.js",
