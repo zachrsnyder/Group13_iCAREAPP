@@ -320,7 +320,7 @@ const Dashboard = () => {
     const SortIcon = ({ column }) => {
         if (sortConfig.key !== column) {
             return (
-                <ChevronUp className="h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-50" />
+                <ChevronUp className="h-4 w-4 text-gray-400 opacity-50 group-hover:opacity-100" />
             );
         }
         return sortConfig.direction === 'asc' ? (
