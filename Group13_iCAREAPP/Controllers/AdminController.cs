@@ -30,6 +30,7 @@ namespace Group13_iCAREAPP.Controllers
         }
 
         // Grabs all GeoCodes form the database
+        // GET: Admin/GetGeoCodes
         public ActionResult GetGeoCodes()
         {
             System.Diagnostics.Debug.WriteLine("GetUsers called");
@@ -72,6 +73,7 @@ namespace Group13_iCAREAPP.Controllers
         }
 
         // Grabs all users from the database
+        // GET: Admin/GetUsers
         public ActionResult GetUsers()
         {
             System.Diagnostics.Debug.WriteLine("GetUsers called");
@@ -121,6 +123,7 @@ namespace Group13_iCAREAPP.Controllers
 
 
         // Adds a new user to the database
+        // POST: Admin/AddUser
         [HttpPost]
         public ActionResult AddUser()
         {
@@ -210,6 +213,7 @@ namespace Group13_iCAREAPP.Controllers
 
 
         // Deletes a user in the database
+        // DELETE: Admin/DeleteUser
         [HttpDelete]
         public ActionResult DeleteUser(string id)
         {

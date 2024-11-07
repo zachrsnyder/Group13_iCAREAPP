@@ -14,6 +14,7 @@ namespace Group13_iCAREAPP.Controllers
         private Group13_iCAREDBEntities db = new Group13_iCAREDBEntities();
 
         // Vallidates login based on the user that is logging in
+        // POST: Account/ValidateLogin
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult ValidateLogin()
@@ -123,6 +124,7 @@ namespace Group13_iCAREAPP.Controllers
         }
 
         // Grabs the user info based on the currently logged in user
+        // GET: Account/GetUserInfo
         public ActionResult GetUserInfo()
         {
             //Sets userId to the session variable as a string
