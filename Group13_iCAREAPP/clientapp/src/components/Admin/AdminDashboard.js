@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Lock, Search, Plus, Trash2 } from 'lucide-react';
+import { Lock, Plus, Trash2 } from 'lucide-react';
 
 const AdminDashboard = ({ setIsAuthenticated }) => {
     const [users, setUsers] = useState([]);
@@ -99,9 +99,9 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
 
             if (response.ok || response.status === 302) {
                 console.log('Logout successful, clearing auth state...');
-                setIsAuthenticated(false, []); // Clear authentication state
+                setIsAuthenticated(false, []);
                 console.log('Navigating to login page...');
-                // Add a small delay to ensure state is cleared before navigation
+
                 setTimeout(() => {
                     navigate('/login', { replace: true });
                 }, 100);
@@ -142,7 +142,7 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
                     roleID: '',
                     userGeoID: ''
                 });
-                fetchUsers(); // Refresh user list
+                fetchUsers();
             } else {
                 setError(data.error || 'Failed to add user');
             }
@@ -196,7 +196,6 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
         }
     };
 
-    // ... keep all imports and state/functions the same ...
 
     return (
         <div className="flex h-screen bg-gray-100">

@@ -1,8 +1,9 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Search, Eye, UserPlus } from 'lucide-react';
-import NotificationModal from './NotificationModal'; 
+import { UserPlus, ChevronUp, ChevronDown } from 'lucide-react';
+import NotificationModal from './NotificationModal';
 
 const ICareBoard = () => {
+    // Initialize state variables
     const [selectedPatients, setSelectedPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -10,7 +11,25 @@ const ICareBoard = () => {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [selectAll, setSelectAll] = useState(false);
+    const [sortConfig, setSortConfig] = useState({
+        key: null,
+        direction: 'asc'
+    });
 
+    // Update selectedPatients when selectAll changes
+    useEffect(() => {
+        if (filteredPatients.length > 0) {
+            setSelectedPatients(prevPatients =>
+                prevPatients.map(patient => ({
+                    ...patient,
+                    selected: selectAll && !patient.alreadyAssigned && !patient.fullyAssigned
+                }))
+            );
+        }
+    }, [selectAll]);
+
+    // Fetch patients
     useEffect(() => {
         const fetchPatients = async () => {
             try {
@@ -31,12 +50,21 @@ const ICareBoard = () => {
         fetchPatients();
     }, []);
 
+    // Filter patients based on search term
     const filteredPatients = selectedPatients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.ID.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.treatmentArea.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Filter available patients
+    const availablePatients = filteredPatients.filter(
+        patient => !patient.alreadyAssigned && !patient.fullyAssigned
+    );
+    const allAvailableSelected = availablePatients.length > 0 &&
+        availablePatients.every(patient => patient.selected);
+
+    //Modal functions
     const openModal = (patient) => {
         setSelectedPatient(patient);
         setIsModalOpen(true);
@@ -55,9 +83,11 @@ const ICareBoard = () => {
         setIsConfirmModalOpen(false);
     };
 
+    // Use states to show notification modal
     const [showNotification, setShowNotification] = useState(false);
     const [notificationData, setNotificationData] = useState({});
 
+    // Assign patients
     const assignPatients = async () => {
         const selectedIDs = selectedPatients
             .filter(patient => patient.selected)
@@ -89,6 +119,7 @@ const ICareBoard = () => {
 
             const updatedData = await updatedResponse.json();
             setSelectedPatients(updatedData);
+            setSelectAll(false);
 
         } catch (error) {
             setNotificationData({
@@ -100,6 +131,7 @@ const ICareBoard = () => {
         }
     };
 
+    // Loading and error states
     if (loading) return (
         <div className="flex items-center justify-center h-64">
             <div className="text-gray-600">Loading patients...</div>
@@ -112,6 +144,57 @@ const ICareBoard = () => {
         </div>
     );
 
+    // Patient sorting
+    const handleSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    // Get sorted patients
+    const getSortedPatients = (patientsToSort) => {
+        if (!sortConfig.key) return patientsToSort;
+
+        return [...patientsToSort].sort((a, b) => {
+            let aValue = a[sortConfig.key];
+            let bValue = b[sortConfig.key];
+
+            if (typeof aValue === 'string') aValue = aValue.toLowerCase();
+            if (typeof bValue === 'string') bValue = bValue.toLowerCase();
+
+            if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    };
+
+    // Sort icon
+    const SortIcon = ({ column }) => {
+        if (sortConfig.key !== column) {
+            return (
+                <ChevronUp className="h-4 w-4 text-gray-400 opacity-50 group-hover:opacity-100" />
+            );
+        }
+        return sortConfig.direction === 'asc' ? (
+            <ChevronUp className="h-4 w-4 text-gray-700" />
+        ) : (
+            <ChevronDown className="h-4 w-4 text-gray-700" />
+        );
+    };
+
+    // Column configuration
+    const columns = [
+        { key: 'ID', label: 'ID' },
+        { key: 'name', label: 'Name' },
+        { key: 'treatmentArea', label: 'Treatment Area' },
+        { key: 'bedID', label: 'Bed ID' },
+        { key: 'bloodGroup', label: 'Blood Group' }
+    ];
+
+    // Get sorted patients
+    const sortedAndFilteredPatients = getSortedPatients(filteredPatients);
     return (
         <>
             <div className="flex-1 flex flex-col">
@@ -161,24 +244,55 @@ const ICareBoard = () => {
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead className="bg-gray-50">
                                             <tr>
-                                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Select</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Treatment Area</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bed ID</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Blood Group</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    <div className="flex items-center justify-center space-x-2">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={allAvailableSelected}
+                                                            onChange={() => setSelectAll(!selectAll)}
+                                                            className="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded"
+                                                            title="Select all unassigned patients"
+                                                        />
+                                                        <span>Select</span>
+                                                    </div>
+                                                </th>
+                                                {columns.map((column) => (
+                                                    <th
+                                                        key={column.key}
+                                                        className="group px-6 py-3 text-left"
+                                                        onClick={() => handleSort(column.key)}
+                                                        style={{ cursor: 'pointer' }}
+                                                    >
+                                                        <div className="flex items-center space-x-1">
+                                                            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                                {column.label}
+                                                            </span>
+                                                            <SortIcon column={column.key} />
+                                                        </div>
+                                                    </th>
+                                                ))}
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Actions
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white divide-y divide-gray-200">
-                                            {filteredPatients.map((patient) => {
+                                            {sortedAndFilteredPatients.map((patient) => {
                                                 return (
                                                     <tr key={patient.ID} className="hover:bg-gray-50">
                                                         <td className="text-center px-6 py-4 whitespace-nowrap">
                                                             {patient.alreadyAssigned ? (
-                                                                <span className="text-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Your Patient</span>
+                                                                <span className="text-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                                    Your Patient
+                                                                </span>
                                                             ) : patient.fullyAssigned ? (
-                                                                    <span className="text-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Fully Assigned</span>
+                                                                <span className="text-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                                    Fully Assigned
+                                                                </span>
+                                                            ) : patient.userProfession === 'Doctor' && !patient.hasNurseAssigned ? (
+                                                                <span className="text-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                                    No Nurse Assigned
+                                                                </span>
                                                             ) : (
                                                                 <input
                                                                     type="checkbox"
@@ -191,6 +305,7 @@ const ICareBoard = () => {
                                                                         ));
                                                                     }}
                                                                     className="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded"
+                                                                    disabled={patient.userProfession === 'Doctor' && !patient.hasNurseAssigned}
                                                                 />
                                                             )}
                                                         </td>
