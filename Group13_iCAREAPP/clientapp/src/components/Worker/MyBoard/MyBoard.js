@@ -1,10 +1,10 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Search, Eye, X, ChevronUp, ChevronDown } from 'lucide-react';
+import { Search, Eye, X, ChevronUp, ChevronDown } from 'lucide-react'; 
 import { FileText } from 'lucide-react';
 import HistoryIconButton from '../../buttons/HistoryIconButton.js';
 
-
 const MyBoard = () => {
+    // State variables
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -32,27 +32,25 @@ const MyBoard = () => {
         patientID: '',
         editDescription: ''
     });
-    const [sortConfig, setSortConfig] = useState({
-        key: null,
-        direction: 'asc'
-    });
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [selectedPatientHistory, setSelectedPatientHistory] = useState([]);
-    //TODO
-    //determine if we need this useState
-    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [isTreatmentModalOpen, setIsTreatmentModalOpen] = useState(false);
     const [treatment, setTreatment] = useState(null);
     const [isEditTreatmentModalOpen, setIsEditTreatmentModalOpen] = useState(false);
     const [isTreatment, setIsTreatment] = useState(false);
+    const [sortConfig, setSortConfig] = useState({
+        key: null,
+        direction: 'asc'
+    });
 
+    // Fetch patients on component mount
     useEffect(() => {
         fetchPatients();
     }, []);
 
+    // Fetch patients from the server
     const fetchPatients = async () => {
         try {
-            // Update the URL to match your MVC route pattern
             const response = await fetch('/PatientRecords/MyPatients', {
                 credentials: 'include'
             });
@@ -71,19 +69,22 @@ const MyBoard = () => {
         }
     };
 
+    // Filter patients based on search term
     const filteredPatients = patients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.ID.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.treatmentArea.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Open the modal and set the selected patient
     const openModal = (patient) => {
+        setIsTreatment(false);
         setSelectedPatient(patient);
         setIsModalOpen(true);
     };
 
+    // Open the edit modal and set the selected patient
     const openEditModal = () => {
-        // Properly copy ALL fields from selectedPatient
         setEditPatient({
             ID: selectedPatient.ID,
             name: selectedPatient.name,
@@ -100,10 +101,10 @@ const MyBoard = () => {
         setIsEditModalOpen(true);
     };
 
+    // Open the treatment modal and set the selected patient
     const openTreatmentModal = async (patient) => {
         setSelectedPatient(patient);
         try {
-            //const patientID = patient.ID;
             const response = await fetch(`/MyBoard/GetTreatment?patientID=${patient.ID}`, {
                 method: 'GET',
                 credentials: 'include'
@@ -122,7 +123,7 @@ const MyBoard = () => {
         }
     }
 
-
+    // Modal functions
     const openDescModal = () => {
         setIsEditModalOpen(false);
         setIsEditTreatmentModalOpen(false);
@@ -170,10 +171,10 @@ const MyBoard = () => {
         openDescModal();
     };
 
+    // Handle the edit patient form submission
     const handleEditHistory = async (e) => {
         e.preventDefault();
         try {
-            // Add the description from the description state
             const finalPatientData = {
                 ...editPatient,
                 description: description
@@ -192,6 +193,7 @@ const MyBoard = () => {
                 throw new Error(`Failed to edit patient: ${errorText}`);
             }
 
+            // Reset the form and close the modal
             setEditPatient({
                 ID: '',
                 name: '',
@@ -205,6 +207,7 @@ const MyBoard = () => {
                 assignedUserID: '',
                 description: ''
             });
+            setIsTreatment(false);
             closeDescModal();
             fetchPatients();
         } catch (err) {
@@ -212,11 +215,13 @@ const MyBoard = () => {
         }
     }
 
+    // Handle the edit treatment form submission
     const handleEditTreatment = () => {
         setIsDescModalOpen(true);
         setIsEditTreatmentModalOpen(false);
     }
 
+    // Handle the edit treatment form submission
     const handleTreatmentHistory = async (e) => {
         e.preventDefault();
         try {
@@ -244,6 +249,7 @@ const MyBoard = () => {
                 patientID: '',
                 editDescription: ''
             });
+            setIsTreatment(false);
             closeDescModal();
             fetchPatients();
         } catch (err) {
@@ -251,6 +257,7 @@ const MyBoard = () => {
         }
     }
 
+    // Open the history modal and set the selected patient
     const openHistoryModal = async (patient) => {
         setSelectedPatient(patient);
         try {
@@ -278,6 +285,7 @@ const MyBoard = () => {
         setSelectedPatient(null);
     }
 
+    // Loading and error states
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
@@ -292,8 +300,9 @@ const MyBoard = () => {
                 <div className="text-xl text-red-600">Error: {error}</div>
             </div>
         );
-    };
+    }
 
+    // Sorting functions
     const handleSort = (key) => {
         let direction = 'asc';
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -302,6 +311,7 @@ const MyBoard = () => {
         setSortConfig({ key, direction });
     };
 
+    // Get sorted patients
     const getSortedPatients = (patientsToSort) => {
         if (!sortConfig.key) return patientsToSort;
 
@@ -319,6 +329,7 @@ const MyBoard = () => {
         });
     };
 
+    // Sort icon component
     const SortIcon = ({ column }) => {
         if (sortConfig.key !== column) {
             return (
@@ -332,6 +343,7 @@ const MyBoard = () => {
         );
     };
 
+    // Column configuration
     const columns = [
         { key: 'ID', label: 'ID' },
         { key: 'name', label: 'Name' },
@@ -417,7 +429,35 @@ const MyBoard = () => {
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.bedID}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{patient.bloodGroup}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm flex items-center space-x-1">
-                                                    {/* ... (keep existing action buttons) ... */}
+                                                    <div className="group relative">
+                                                        <button
+                                                            onClick={() => openModal(patient)}
+                                                            className="text-rose-600 hover:text-rose-900 hover:bg-rose-200 px-2 py-1 rounded-md font-medium transition-colors inline-flex items-center space-x-1"
+                                                        >
+                                                        <Eye className="h-6 w-6" />
+                                                        </button>
+                                                        <div className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                            View Record
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="group relative">
+                                                        <HistoryIconButton onClick={() => openHistoryModal(patient)} />
+                                                        <div className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                            View Change History
+                                                        </div>
+                                                    </div>
+                                                    <div className="group relative">
+                                                        <button
+                                                            onClick={() => openTreatmentModal(patient)}
+                                                            className="text-rose-600 hover:text-rose-900 hover:bg-rose-200 px-2 py-1 rounded-md font-medium transition-colors inline-flex items-center space-x-1"
+                                                        >
+                                                            <FileText className="w-6 h-6" />
+                                                        </button>
+                                                        <div className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                            View Treatment Record
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}

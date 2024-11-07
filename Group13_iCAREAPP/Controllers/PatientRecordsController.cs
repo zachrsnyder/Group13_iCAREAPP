@@ -16,19 +16,21 @@ namespace Group13_iCAREAPP.Controllers
 {
     public class PatientRecordsController : Controller
     {
+        // Database context
         private Group13_iCAREDBEntities db = new Group13_iCAREDBEntities();
 
-        // GET: PatientRecords
         public ActionResult Index()
         {
             return View(db.PatientRecord.ToList());
         }
 
+        // Grabs all patient records from the database
         // GET: PatientRecords/GetAllPatients
         public ActionResult GetAllPatients()
         {
             try
             {
+                // Select all patient records from the database
                 var patients = db.PatientRecord
                     .Select(p => new
                     {
@@ -55,6 +57,7 @@ namespace Group13_iCAREAPP.Controllers
                     })
                     .ToList();
 
+                // Returns the patient records as a list
                 return Json(patients, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -64,15 +67,18 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
+        // Grabs all users from the database
         // GET: PatientRecords/GetAllUsers
         public ActionResult GetAllUsers()
         {
             try
             {
+                // Select all users from the database
                 var users = db.iCAREUser
                     .Select(u => new { u.ID, u.name, u.profession })
                     .ToList();
 
+                // Returns all users as a lit
                 return Json(users, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -82,7 +88,7 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
-        // Add this model class
+        // Class definition
         public class PatientCreateModel
         {
             public string name { get; set; }
@@ -97,6 +103,9 @@ namespace Group13_iCAREAPP.Controllers
             public string pateintGeoID { get; set; }
         }
 
+        // Creates a new patient record without an assignemnt, naming should be changed
+        // But would creaet too many conflicts with the frontend
+        // POST: PatientRecords/CreateWithAssignment
         [HttpPost]
         public ActionResult CreateWithAssignment([ModelBinder(typeof(JsonModelBinder))] PatientCreateModel data)
         {
@@ -122,7 +131,7 @@ namespace Group13_iCAREAPP.Controllers
                             .OrderByDescending(id => id)
                             .FirstOrDefault();
 
-                        // Generate the next patient ID
+                        // Generate the next patient ID based on the current highest one
                         string patientId;
                         if (lastPatientId == null)
                         {
@@ -134,6 +143,8 @@ namespace Group13_iCAREAPP.Controllers
                             patientId = $"PAT{(currentNumber + 1):D2}";
                         }
 
+                        // Get the current users userID from the session and uses it to 
+                        // get the userGeoID
                         var currentUserID = Session["UserID"]?.ToString();
                         var geocode = db.iCAREUser
                             .Where(u => u.ID == currentUserID)
@@ -155,9 +166,10 @@ namespace Group13_iCAREAPP.Controllers
                             patientGeoID = geocode
                         };
 
+                        // Add the new patient record to the database
                         db.PatientRecord.Add(patient);
 
-                        // Create document metadata
+                        // Create new document metadata
                         var docMeta = new DocumentMetadata
                         {
                             docID = "DOC" + DateTime.Now.Ticks.ToString().Substring(0, 8),
@@ -167,10 +179,12 @@ namespace Group13_iCAREAPP.Controllers
                             userID = Session["UserID"].ToString()
                         };
 
+                        // Add the new document metadata to the database
+                        // Saves and commits the transaction
                         db.DocumentMetadata.Add(docMeta);
                         db.SaveChanges();
                         transaction.Commit();
-
+                        
                         return Json(new { success = true, patientId = patientId });
                     }
                     catch (Exception ex)
@@ -188,12 +202,13 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
+        // Grabs all patient records based on the current user
         // GET: PatientRecords/MyPatients
         public ActionResult MyPatients()
         {
             try
             {
-                // Get current user ID from authentication
+                // Get current user ID from session
                 var currentUserID = Session["UserID"]?.ToString();
 
                 // Debug logging
@@ -220,6 +235,7 @@ namespace Group13_iCAREAPP.Controllers
                 // Debug logging
                 System.Diagnostics.Debug.WriteLine($"Found {patientRecords.Count} patients");
 
+                // Return the patient records as a list
                 return Json(patientRecords, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -230,9 +246,11 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
-        // GET: PatientRecords/Details/5
+        // Grabs all patient records based on the current user
+        // GET: PatientRecords/Details
         public ActionResult Details(string id)
         {
+            //Grabs the patient record based on the given id
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -252,12 +270,11 @@ namespace Group13_iCAREAPP.Controllers
         }
 
         // POST: PatientRecords/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,name,address,dateOfBirth,height,weight,bloodGroup,bedID,treatmentArea")] PatientRecord patientRecord)
         {
+            // Adds the patient record to the database and saves the changes
             if (ModelState.IsValid)
             {
                 db.PatientRecord.Add(patientRecord);
@@ -268,7 +285,7 @@ namespace Group13_iCAREAPP.Controllers
             return View(patientRecord);
         }
 
-        // GET: PatientRecords/Edit/5
+        // GET: PatientRecords/Edit
         public ActionResult Edit(string id)
         {
             if (id == null)
@@ -283,13 +300,12 @@ namespace Group13_iCAREAPP.Controllers
             return View(patientRecord);
         }
 
-        // POST: PatientRecords/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: PatientRecords/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,name,address,dateOfBirth,height,weight,bloodGroup,bedID,treatmentArea")] PatientRecord patientRecord)
         {
+            // Edits the patient record and saves the changes
             if (ModelState.IsValid)
             {
                 db.Entry(patientRecord).State = EntityState.Modified;
@@ -299,9 +315,10 @@ namespace Group13_iCAREAPP.Controllers
             return View(patientRecord);
         }
 
-        // GET: PatientRecords/Delete/5
+        // GET: PatientRecords/Delete
         public ActionResult Delete(string id)
         {
+            //Grabs the patient record based on the given id
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -314,11 +331,12 @@ namespace Group13_iCAREAPP.Controllers
             return View(patientRecord);
         }
 
-        // POST: PatientRecords/Delete/5
+        // POST: PatientRecords/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
+            //Deletes the patient record based on the given id
             PatientRecord patientRecord = db.PatientRecord.Find(id);
             db.PatientRecord.Remove(patientRecord);
             db.SaveChanges();

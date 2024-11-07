@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { X, ChevronUp, ChevronDown } from 'lucide-react';
 
+// Modal componenet for displaying patient details
 const Modal = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
 
@@ -23,6 +24,7 @@ const Modal = ({ isOpen, onClose, children }) => {
 };
 
 const Dashboard = () => {
+    // Use states
     const [patients, setPatients] = useState([]);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -47,6 +49,7 @@ const Dashboard = () => {
         assignedUserID: ''
     });
 
+    // Treatment areas for the dropdown
     const treatmentAreas = [
         "Emergency Department",
         "Intensive Care Unit (ICU)",
@@ -65,6 +68,7 @@ const Dashboard = () => {
         "Isolation Ward"
     ];
 
+    // Use effect to fetch all patients and users upon component mount
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -94,6 +98,7 @@ const Dashboard = () => {
         fetchData();
     }, []);
 
+    // Function to create a new patient
     const handleCreatePatient = async (e) => {
         e.preventDefault();
         try {
@@ -106,6 +111,7 @@ const Dashboard = () => {
                 bedID: fullBedID // Update the bedID with the new value
             };
 
+            // Send a POST request to the backend to create a new patient
             const response = await fetch('/PatientRecords/CreateWithAssignment', {
                 method: 'POST',
                 headers: {
@@ -145,6 +151,7 @@ const Dashboard = () => {
         }
     };
 
+    // Function for sorting of the table columns
     const handleSort = (key) => {
         let direction = 'asc';
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -153,6 +160,7 @@ const Dashboard = () => {
         setSortConfig({ key, direction });
     };
 
+    // Function to get the sorted patients
     const getSortedPatients = (patientsToSort) => {
         if (!sortConfig.key) return patientsToSort;
 
@@ -176,11 +184,13 @@ const Dashboard = () => {
         });
     };
 
+    // Function to open the patient details modal
     const openPatientDetails = (patient) => {
         setSelectedPatient(patient);
         setIsModalOpen(true);
     };
 
+    // Function to close the patient details modal
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedPatient(null);
@@ -317,6 +327,7 @@ const Dashboard = () => {
         { key: 'assignment', label: 'Assignment' },
     ];
 
+    // Sort Icon component
     const SortIcon = ({ column }) => {
         if (sortConfig.key !== column) {
             return (
@@ -330,12 +341,14 @@ const Dashboard = () => {
         );
     };
 
+    // Filter patients based on search term
     const filteredPatients = patients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.ID?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.treatmentArea?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Get sorted patients
     const sortedPatients = getSortedPatients(filteredPatients);
 
     if (loading) {

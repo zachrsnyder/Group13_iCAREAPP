@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import { CheckCircle, XCircle, X } from 'lucide-react';
 
+// modal to display successful assignment or failed assignment
 const NotificationModal = ({ message, type = 'success', failedItems = [], onClose }) => {
     return (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
