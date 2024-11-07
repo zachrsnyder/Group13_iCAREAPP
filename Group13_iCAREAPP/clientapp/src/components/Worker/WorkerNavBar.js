@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 
 export default function WorkerNavBar({ setIsAuthenticated }) {
+    // Use states for dropdown and user info
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [userInfo, setUserInfo] = useState(null);
 
+    // Fetch user info on component mount
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
@@ -25,13 +27,15 @@ export default function WorkerNavBar({ setIsAuthenticated }) {
         fetchUserInfo();
     }, []);
 
+    // Handle logout
     const handleLogout = async () => {
+        // Send logout request to server
         try {
             const response = await fetch('/Account/Logout', {
                 method: 'GET',
                 credentials: 'include',
             });
-
+            // If logout successful, redirect to login page
             if (response.ok || response.status === 302) {
                 setIsAuthenticated(false, []);
                 navigate('/login', { replace: true });
