@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 
+// Component for the history icon button
 const HistoryIconButton = ({ onClick, className = "" }) => {
     return (
         <button

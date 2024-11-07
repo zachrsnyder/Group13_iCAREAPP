@@ -78,6 +78,7 @@ const MyBoard = () => {
 
     // Open the modal and set the selected patient
     const openModal = (patient) => {
+        setIsTreatment(false);
         setSelectedPatient(patient);
         setIsModalOpen(true);
     };
@@ -174,7 +175,6 @@ const MyBoard = () => {
     const handleEditHistory = async (e) => {
         e.preventDefault();
         try {
-            // Add the description from the description state
             const finalPatientData = {
                 ...editPatient,
                 description: description
@@ -207,6 +207,7 @@ const MyBoard = () => {
                 assignedUserID: '',
                 description: ''
             });
+            setIsTreatment(false);
             closeDescModal();
             fetchPatients();
         } catch (err) {
@@ -248,6 +249,7 @@ const MyBoard = () => {
                 patientID: '',
                 editDescription: ''
             });
+            setIsTreatment(false);
             closeDescModal();
             fetchPatients();
         } catch (err) {

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Lock, User } from 'lucide-react';
 
 export default function LoginForm({ setIsAuthenticated }) {
+    // Use states
     const [formData, setFormData] = useState({
         userName: '',
         password: '',
@@ -12,6 +13,7 @@ export default function LoginForm({ setIsAuthenticated }) {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
+    // Function to handle form submission of a user logging in and validating them
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -48,6 +50,7 @@ export default function LoginForm({ setIsAuthenticated }) {
         }
     };
 
+    // Function to that changes the state of the form data when the input changes
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({

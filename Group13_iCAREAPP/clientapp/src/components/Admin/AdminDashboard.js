@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Lock, Plus, Trash2 } from 'lucide-react';
 
 const AdminDashboard = ({ setIsAuthenticated }) => {
+    // Use states
     const [users, setUsers] = useState([]);
     const [geoCodes, setGeoCodes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -20,14 +21,18 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
 
     const navigate = useNavigate();
 
+    // Use effect to fetch all users upon component mount 
     useEffect(() => {
         fetchUsers();
     }, []);
 
+
+    // USe effect to fetch all geoCodes upin component mount
     useEffect(() => {
         fetchGeoCodes();
     }, []);
 
+    // Function to fetch all geoCodes
     const fetchGeoCodes = async () => {
         try {
             const response = await fetch('/Admin/GetGeoCodes', {
@@ -55,7 +60,7 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
         }
     };
 
-
+    // Function to fetch all users
     const fetchUsers = async () => {
         try {
             const response = await fetch('/Admin/GetUsers', {
@@ -83,6 +88,7 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
         }
     };
 
+    // Function to logout user and clear the session
     const handleLogout = async () => {
         console.log('Admin logout clicked');
         try {
@@ -117,6 +123,7 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
         }
     };
 
+    // Function to add a new user based on given information
     const handleAddUser = async (e) => {
         e.preventDefault();
         try {
@@ -151,6 +158,7 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
         }
     };
 
+    // Function to delete a user based on the given user ID
     const handleDeleteUser = async (userId) => {
         if (!window.confirm('Are you sure you want to delete this user?')) {
             return;
