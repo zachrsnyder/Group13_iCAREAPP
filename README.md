@@ -14,7 +14,7 @@ To run the program, first open SQL Server Management Studio
 
 ![image](https://github.com/user-attachments/assets/8a2a9968-5ebf-464a-bd0f-32108629c1fe)
 
-##After this, open Visual Studio 2022 and select "Open a project or solution"
+### After this, open Visual Studio 2022 and select "Open a project or solution"
   ![VisualStudioSelect](https://github.com/user-attachments/assets/cc7fe230-8c92-49df-86cd-bbaf4434dfc8)
 
 Navigate to the exported zip file and then open "Group13_iCAREAPP.sln"
