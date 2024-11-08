@@ -51,14 +51,17 @@ const MyBoard = () => {
     // Fetch patients from the server
     const fetchPatients = async () => {
         try {
+            // Fetch patients from the server
             const response = await fetch('/PatientRecords/MyPatients', {
                 credentials: 'include'
             });
 
+            // Throw an error if the response is not ok
             if (!response.ok) {
                 throw new Error('Failed to fetch patients');
             }
 
+            // Set the patients state variable
             const data = await response.json();
             setPatients(data);
             console.log(data);
@@ -71,6 +74,7 @@ const MyBoard = () => {
 
     // Filter patients based on search term
     const filteredPatients = patients.filter(patient =>
+        // Check if the patient's name, ID, or treatment area includes the search term
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.ID.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.treatmentArea.toLowerCase().includes(searchTerm.toLowerCase())
@@ -78,6 +82,7 @@ const MyBoard = () => {
 
     // Open the modal and set the selected patient
     const openModal = (patient) => {
+        // Set the selected patient and open the modal
         setIsTreatment(false);
         setSelectedPatient(patient);
         setIsModalOpen(true);
@@ -85,6 +90,7 @@ const MyBoard = () => {
 
     // Open the edit modal and set the selected patient
     const openEditModal = () => {
+        // Set the edit patient state variable and open the edit modal
         setEditPatient({
             ID: selectedPatient.ID,
             name: selectedPatient.name,
@@ -105,15 +111,18 @@ const MyBoard = () => {
     const openTreatmentModal = async (patient) => {
         setSelectedPatient(patient);
         try {
+            // Fetch the treatment record for the selected patient
             const response = await fetch(`/MyBoard/GetTreatment?patientID=${patient.ID}`, {
                 method: 'GET',
                 credentials: 'include'
             });
 
+            // Throw an error if the response is not ok
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(`Failed to fetch treatment record: ${errorText}`);
             }
+            // Set the treatment state variable and open the treatment modal
             setTreatment(await response.json());
             setIsTreatment(true);
             setIsTreatmentModalOpen(true);
@@ -145,6 +154,7 @@ const MyBoard = () => {
 
     const openEditTreatmentModal = () => {
         setIsTreatmentModalOpen(false);
+        // Set the edit treatment state variable and open the edit treatment modal
         setEditTreatment({
             treatmentID: treatment.treatmentID,
             description: treatment.description,
@@ -175,10 +185,12 @@ const MyBoard = () => {
     const handleEditHistory = async (e) => {
         e.preventDefault();
         try {
+            // Send the edited patient data to the server
             const finalPatientData = {
                 ...editPatient,
                 description: description
             };
+            // Send the edited patient data to handleEditHistory function in MyBoardController
             const response = await fetch('/MyBoard/handleEditHistory', {
                 method: 'POST',
                 headers: {
@@ -225,10 +237,13 @@ const MyBoard = () => {
     const handleTreatmentHistory = async (e) => {
         e.preventDefault();
         try {
+            // Send the edited treatment data to the server
             const finalEditTreatment = {
                 ...editTreatment,
                 editDescription: description
             }
+
+            // Send the edited treatment data to handleTreatmentHistory function in MyBoardController
             const response = await fetch('/MyBoard/HandleTreatmentHistory', {
                 method: 'POST',
                 headers: {
@@ -238,11 +253,13 @@ const MyBoard = () => {
                 credentials: 'include'
             });
 
+            // Throw an error if the response is not ok
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(`Failed to edit treatment: ${errorText}`);
             }
 
+            // Reset the form and close the modal
             setEditTreatment({
                 treatmentID: '',
                 description: '',
@@ -261,6 +278,7 @@ const MyBoard = () => {
     const openHistoryModal = async (patient) => {
         setSelectedPatient(patient);
         try {
+            // Fetch the change history for the selected patient
             const response = await fetch(`/MyBoard/GetChangeHistory?patientID=${patient.ID}`, {
                 credentials: 'include'
             });
@@ -269,6 +287,7 @@ const MyBoard = () => {
                 throw new Error('Failed to fetch Change History');
             }
 
+            // Set the selected patient history and open the history modal
             const data = await response.json();
             setSelectedPatientHistory(data);
             console.log(data);
@@ -304,6 +323,7 @@ const MyBoard = () => {
 
     // Sorting functions
     const handleSort = (key) => {
+        // Set the sort key and direction
         let direction = 'asc';
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
             direction = 'desc';
@@ -313,8 +333,10 @@ const MyBoard = () => {
 
     // Get sorted patients
     const getSortedPatients = (patientsToSort) => {
+        // Return the patients if no key is set
         if (!sortConfig.key) return patientsToSort;
 
+        // Sort the patients based on the key and direction
         return [...patientsToSort].sort((a, b) => {
             let aValue = a[sortConfig.key];
             let bValue = b[sortConfig.key];

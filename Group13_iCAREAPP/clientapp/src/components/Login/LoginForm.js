@@ -20,6 +20,7 @@ export default function LoginForm({ setIsAuthenticated }) {
         setError('');
 
         try {
+            // Send login request to ValidateLogin function in AccountController
             const response = await fetch('/Account/ValidateLogin', {
                 method: 'POST',
                 headers: {
@@ -29,19 +30,22 @@ export default function LoginForm({ setIsAuthenticated }) {
                 credentials: 'include'
             });
 
+            // If login successful, set authentication status and redirect to home or admin page
             const data = await response.json();
-
             if (data.success) {
                 setIsAuthenticated(true, data.user.roles);
+                // Redirect to admin page if user is an admin, otherwise redirect to home page
                 if (data.user.roles.includes('Admin')) {
                     navigate('/admin');
                 } else {
                     navigate('/home');
                 }
+            // If login failed, display error message and set authentication status to false
             } else {
                 setError(data.error || 'Invalid username or password');
                 setIsAuthenticated(false);
             }
+        // If an error occurred, display error message and set authentication status to false
         } catch (err) {
             setError('An error occurred. Please try again.');
             setIsAuthenticated(false);
@@ -52,6 +56,7 @@ export default function LoginForm({ setIsAuthenticated }) {
 
     // Function to that changes the state of the form data when the input changes
     const handleInputChange = (e) => {
+        // Extract name, value, type, and checked from the target element
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({
             ...prev,
