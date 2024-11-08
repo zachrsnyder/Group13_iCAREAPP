@@ -19,5 +19,6 @@ Next, right click on the clinetapp folder in the Solution Explorer window and op
 - Run "npm start"
   
 Refresh the database connection in the Server Explorer window
+
 Then build the project and run it.
 
