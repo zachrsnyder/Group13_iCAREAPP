@@ -94,6 +94,7 @@ const ICareBoard = () => {
             .map(patient => patient.ID);
 
         try {
+            // Send selected patient IDs to the AssignPatients function in the controller
             const response = await fetch('/ICareBoard/AssignPatients', {
                 method: 'POST',
                 headers: {
@@ -102,8 +103,10 @@ const ICareBoard = () => {
                 body: JSON.stringify({ selectedIDs })
             });
 
+            // If the response is not ok, throw an error
             if (!response.ok) throw new Error('Failed to assign patients');
 
+            // Display the response message in the notification modal
             const result = await response.json();
             setNotificationData({
                 message: result.message,
@@ -112,11 +115,13 @@ const ICareBoard = () => {
             });
             setShowNotification(true);
 
+            // Refresh the patient list
             const updatedResponse = await fetch('/ICareBoard/HospitalPatients', {
                 credentials: 'include'
             });
             if (!updatedResponse.ok) throw new Error('Failed to refresh patient list');
 
+            // Update the patient list with the new data
             const updatedData = await updatedResponse.json();
             setSelectedPatients(updatedData);
             setSelectAll(false);
@@ -146,7 +151,9 @@ const ICareBoard = () => {
 
     // Patient sorting
     const handleSort = (key) => {
+        // If the key is the same (changed by user pressing arrow), reverse the direction
         let direction = 'asc';
+        // If the key is different, set the direction to ascending
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
             direction = 'desc';
         }
@@ -157,6 +164,7 @@ const ICareBoard = () => {
     const getSortedPatients = (patientsToSort) => {
         if (!sortConfig.key) return patientsToSort;
 
+        // Sort the patients based on the key and direction
         return [...patientsToSort].sort((a, b) => {
             let aValue = a[sortConfig.key];
             let bValue = b[sortConfig.key];
@@ -170,7 +178,7 @@ const ICareBoard = () => {
         });
     };
 
-    // Sort icon
+    // Sort icon for ascending and descending order
     const SortIcon = ({ column }) => {
         if (sortConfig.key !== column) {
             return (
@@ -195,6 +203,7 @@ const ICareBoard = () => {
 
     // Get sorted patients
     const sortedAndFilteredPatients = getSortedPatients(filteredPatients);
+
     return (
         <>
             <div className="flex-1 flex flex-col">
