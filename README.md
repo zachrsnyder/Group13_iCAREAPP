@@ -14,6 +14,7 @@ Navigate to the exported zip file and then open "Group13_iCAREAPP.sln"
 - NOTE - You MUST have Node.js runtime installed
   
 Next, right click on the clinetapp folder in the Solution Explorer window and open a terminal there
+![ClientApp](https://github.com/user-attachments/assets/6810e2e8-63dc-4611-a349-3fb8037e3dcf)
 - Run these two commands in this order
 - Run "npm install"
 - Run "npm start"
