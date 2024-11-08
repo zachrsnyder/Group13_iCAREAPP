@@ -24,7 +24,7 @@ To run the program, first open SQL Server Management Studio
 ### Next, right click on the clinetapp folder in the Solution Explorer window and open a terminal there
   ![ClientApp](https://github.com/user-attachments/assets/6810e2e8-63dc-4611-a349-3fb8037e3dcf)
 - Run these two commands in this order
-- MAKE sure that NOTHING is running on poert 3000 already
+- MAKE sure that NOTHING is running on port 3000 already
 - Run "npm install"
 - Run "npm start"
 - This is somewhat what the terminal should look like
