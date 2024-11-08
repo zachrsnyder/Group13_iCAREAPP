@@ -4,10 +4,15 @@ First, export the file to desktop.
 
 To run the program, first open SQL Server Management Studio
 - Connect to "(LocalDB)\MSSQLLocalDB" using windows authentication
+
+  ![image](https://github.com/user-attachments/assets/3699371f-473d-4f76-a758-c102c2b0e71a)
 - Right-click on "Databases" in Object Explorer
 - Select "Import Data-tier Application..."
+
+  ![image](https://github.com/user-attachments/assets/067cc1c1-fe2d-4aa0-8f0e-6eb7f57e15d2)
 - Browse to the group13db.bacpac file (located in the db folder of our main repo or inside of the zipfile in the db folder)
 
+![image](https://github.com/user-attachments/assets/8a2a9968-5ebf-464a-bd0f-32108629c1fe)
 After this, open Visual Studio 2022 and select "Open a project or solution"
   ![VisualStudioSelect](https://github.com/user-attachments/assets/cc7fe230-8c92-49df-86cd-bbaf4434dfc8)
 
