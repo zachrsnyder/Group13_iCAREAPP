@@ -1,13 +1,22 @@
-﻿// Contains the "Hard coded" drug facts.
+﻿// drugData.js
+// This file serves as a placholder for a medication database for the prescription system
+// Contains structured information about medications, their categories, dosages, and prescription options
+
 export const drugData = {
+    // Main categories of medications, organized by therapeutic class
     "categories": [
         {
+            // Pain Management Category
             "category": "Pain Medications",
             "drugs": [
                 {
+                    // Over-the-counter pain reliever and fever reducer
                     "name": "Acetaminophen (Tylenol)",
+                    // Available dosage strengths, typically in milligrams
                     "dosages": ["325mg", "500mg", "650mg", "1000mg"],
+                    // Primary medical uses
                     "commonIndications": ["Pain relief", "Fever reduction"],
+                    // Medical conditions that prevent safe use
                     "contraindications": ["Liver disease", "Alcohol use"]
                 },
                 {
@@ -60,7 +69,10 @@ export const drugData = {
             ]
         }
     ],
+    // Standard prescription parameters used across all medications
     "prescriptionOptions": {
+        // Available dosing schedules
+        // Includes both fixed schedules and conditional timing
         "frequencies": [
             "Once daily",
             "Twice daily",
@@ -75,6 +87,8 @@ export const drugData = {
             "After meals",
             "At bedtime"
         ],
+        // Standard treatment durations in days
+        // Ranges from short-term to long-term therapy
         "durations": [
             "3 days",
             "5 days",
@@ -87,6 +101,8 @@ export const drugData = {
             "60 days",
             "90 days"
         ],
+        // Standard dispensing quantities
+        // Typically aligned with common treatment durations
         "quantities": [
             "14 tablets",
             "20 tablets",

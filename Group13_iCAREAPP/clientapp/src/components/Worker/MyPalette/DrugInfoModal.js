@@ -2,13 +2,12 @@
 import { X, Search, ChevronLeft } from 'lucide-react';
 import { drugData } from './drugData';
 
-
-
 /// <summary>
 /// Modal that appears when the user clicks to view drug information.
-/// Facilitates the search of drugs, the selection of a drug from the tables, and allows the user to set dosage, frequency, duration, and quantity for a perscription
+/// Facilitates the search of drugs, the selection of a drug from the tables, and allows the user to set dosage, frequency, duration, and quantity for a prescription
 /// </summary>
 const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
+    // State management for search, drug selection, and prescription options
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedDrug, setSelectedDrug] = useState(null);
     const [selectedOptions, setSelectedOptions] = useState({
@@ -18,7 +17,8 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
         quantity: ''
     });
 
-    
+    // Filter drugs based on search term
+    // Returns categories with matching drugs, excluding empty categories
     const filteredDrugs = searchTerm
         ? drugData.categories.map(category => ({
             ...category,
@@ -28,6 +28,7 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
         })).filter(category => category.drugs.length > 0)
         : drugData.categories;
 
+    // Helper function to find and return detailed information for a specific drug
     const getDrugDetails = (drugName) => {
         for (const category of drugData.categories) {
             const drug = category.drugs.find(d => d.name === drugName);
@@ -36,6 +37,7 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
         return null;
     };
 
+    // Update selected options (dosage, frequency, duration, quantity)
     const handleOptionSelect = (category, value) => {
         setSelectedOptions(prev => ({
             ...prev,
@@ -43,6 +45,8 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
         }));
     };
 
+    // Handler for adding a new prescription
+    // Combines drug details with selected options and passes to parent component
     const handleAddPrescription = () => {
         const drugDetails = getDrugDetails(selectedDrug);
         const prescriptionData = {
@@ -56,6 +60,7 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
         };
 
         onDrugSelect(prescriptionData);
+        // Reset form state after submission
         setSelectedDrug(null);
         setSelectedOptions({
             dosage: '',
@@ -65,6 +70,7 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
         });
     };
 
+    // Check if all required prescription options are selected
     const isAllSelected = () => {
         return selectedOptions.dosage &&
             selectedOptions.frequency &&
@@ -72,12 +78,15 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
             selectedOptions.quantity;
     };
 
+    // Don't render anything if modal is closed
     if (!isOpen) return null;
 
     return (
         <div className="fixed top-[5vh] left-[74%] h-[90vh] w-90 bg-white rounded-lg shadow-xl z-50 flex flex-col">
+            {/* Modal Header */}
             <div className="flex-none px-6 py-4 border-b">
                 <div className="flex items-center">
+                    {/* Back button - only shown when a drug is selected */}
                     {selectedDrug && (
                         <button
                             onClick={() => setSelectedDrug(null)}
@@ -90,6 +99,7 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
                         {selectedDrug ? selectedDrug : 'Drug Information'}
                     </h2>
                 </div>
+                {/* Close modal button */}
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 p-2 text-gray-600 hover:text-gray-800 transition-colors"
@@ -99,8 +109,11 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
                 </button>
             </div>
 
+            {/* Conditional rendering based on whether a drug is selected */}
             {!selectedDrug ? (
+                // Drug Search and Selection View
                 <>
+                    {/* Search Input */}
                     <div className="flex-none p-4 border-b">
                         <div className="relative">
                             <input
@@ -114,6 +127,7 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
                         </div>
                     </div>
 
+                    {/* Drug Categories and List */}
                     <div className="flex-1 overflow-y-auto">
                         <div className="p-6 space-y-6">
                             {filteredDrugs.map((category, index) => (
@@ -136,14 +150,16 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
                     </div>
                 </>
             ) : (
+                // Drug Details and Prescription Options View
                 <div className="flex-1 overflow-y-auto">
                     <div className="p-6 space-y-6">
                         <div className="space-y-4">
-                            {/* Drug Details Section */}
+                            {/* Drug Details Section - Uses IIFE for cleaner rendering of drug details */}
                             {(() => {
                                 const drugDetails = getDrugDetails(selectedDrug);
                                 return (
                                     <>
+                                        {/* Common Indications */}
                                         <div className="mb-6">
                                             <h3 className="font-medium text-gray-900 mb-2">Common Indications</h3>
                                             <ul className="list-disc pl-5 text-gray-600">
@@ -152,6 +168,7 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
                                                 ))}
                                             </ul>
                                         </div>
+                                        {/* Contraindications */}
                                         <div className="mb-6">
                                             <h3 className="font-medium text-gray-900 mb-2">Contraindications</h3>
                                             <ul className="list-disc pl-5 text-gray-600">
@@ -164,7 +181,8 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
                                 );
                             })()}
 
-                            {/* Prescription Options */}
+                            {/* Prescription Options - Radio button groups for each option */}
+                            {/* Dosage Options */}
                             <div>
                                 <h3 className="font-medium text-gray-900 mb-3">Dosage</h3>
                                 <div className="space-y-2">
@@ -184,6 +202,7 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
                                 </div>
                             </div>
 
+                            {/* Frequency Options */}
                             <div>
                                 <h3 className="font-medium text-gray-900 mb-3">Frequency</h3>
                                 <div className="space-y-2">
@@ -203,6 +222,7 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
                                 </div>
                             </div>
 
+                            {/* Duration Options */}
                             <div>
                                 <h3 className="font-medium text-gray-900 mb-3">Duration</h3>
                                 <div className="space-y-2">
@@ -222,6 +242,7 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
                                 </div>
                             </div>
 
+                            {/* Quantity Options */}
                             <div>
                                 <h3 className="font-medium text-gray-900 mb-3">Quantity</h3>
                                 <div className="space-y-2">
@@ -242,13 +263,14 @@ const DrugInfoModal = ({ isOpen, onClose, onDrugSelect }) => {
                             </div>
                         </div>
 
+                        {/* Add Prescription Button - Disabled until all options are selected */}
                         <div className="border-t pt-4">
                             <button
                                 onClick={handleAddPrescription}
                                 disabled={!isAllSelected()}
                                 className={`w-full px-4 py-2 text-white rounded-md transition-colors ${isAllSelected()
-                                        ? 'bg-blue-600 hover:bg-blue-700'
-                                        : 'bg-gray-400 cursor-not-allowed'
+                                    ? 'bg-blue-600 hover:bg-blue-700'
+                                    : 'bg-gray-400 cursor-not-allowed'
                                     }`}
                             >
                                 Add Prescription
