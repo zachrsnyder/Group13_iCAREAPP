@@ -77,7 +77,7 @@ namespace Group13_iCAREAPP.Controllers
         }
 
 
-
+        // template class to structure the payload of the form data sent by the frontend.
         public class DocumentUploadModel
         {
             public string Name { get; set; }
@@ -89,54 +89,8 @@ namespace Group13_iCAREAPP.Controllers
         }
 
         
-/* 
-        //TODO: Fix. Add route.
-        //Complication of embedding files into the CKEditor.
-        //Since images are embedded into the doc using a path, it is necessary
-        //to have a designated path in the backend to blobify that embedded image.
-        [HttpPost]
-        [Route("AddImage")]
-        public ActionResult ImageUpload(HttpPostedFileBase upload)
-        {
-            if (upload != null && upload.ContentLength > 0)
-            {
-                try
-                {
-                    // Use Guid to generate a unique filename for the file, so they don't get mixed around in the final blobbing.
-                    var fileName = Path.GetFileName(upload.FileName);
-                    var uniqueFileName = $"{Guid.NewGuid()}_{fileName}";
 
-                    // Temp path for embedded image
-                    var uploadDir = Server.MapPath("~/Uploads/Images");
-
-                    // Ensure the directory exists
-                    if (!Directory.Exists(uploadDir))
-                    {
-                        Directory.CreateDirectory(uploadDir);
-                    }
-
-                    // Full path to save the file
-                    var uploadPath = Path.Combine(uploadDir, uniqueFileName);
-
-                    // Save the file
-                    upload.SaveAs(uploadPath);
-
-                    // Generate the URL to the saved file
-                    var imageUrl = Url.Content($"~/Uploads/Images/{uniqueFileName}");
-
-                    // Return JSON response with the uploaded image's URL.
-                    return Json(new { uploaded = true, url = imageUrl });
-                }
-                catch (Exception ex)
-                {
-                    return Json(new { uploaded = false, error = new { message = ex.Message } });
-                }
-            }
-
-            return Json(new { uploaded = false, error = new { message = "No file was uploaded." } });
-        }
-*/
-
+        // takes html content and translates it into a pdf, so it can then be blobified.
         public byte[] GeneratePdf(string htmlContent)
         {
 
@@ -162,7 +116,7 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
-
+        //takes a file base and text or image and turns it into a pdf.
         public byte[] Pdfafy(string name, HttpPostedFileBase file){
             using (var memoryStream = new MemoryStream())
             {
@@ -260,6 +214,7 @@ namespace Group13_iCAREAPP.Controllers
         }
 
 
+        // Extracts the raw html from the pdf blob.
         public string ExtractTextFromPdfBytes(byte[] pdfBytes)
         {
             using (var reader = new PdfReader(pdfBytes))
@@ -279,6 +234,7 @@ namespace Group13_iCAREAPP.Controllers
 
 
 
+        // handles get requests for text document html.
         [HttpGet]
         [Route("Document/html/{id}")]
         public ActionResult GetHtml(string id){
@@ -299,6 +255,8 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
+
+        // handles get requests for all doc types, checks for _Image tag at the end of the name string and handles images and docs accordingly.
         // GET: Document
         [HttpGet]
         [Route("Document/{name}/{id}")]
@@ -332,12 +290,15 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
+        // edit payload for form data when editing an image.
         public class EditedPayloadImage{
              public string Title {get; set;}
              public string DocumentId {get; set;}
         }
 
 
+
+        // Handles post request to modify an image in the db, takes the EditedPayloadImage object sent by the user.
         [HttpPost]
         [Route("Document/Edit/Image")]
         public ActionResult Edit(EditedPayloadImage payload){
@@ -368,6 +329,8 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
+
+        // Form data format for tect editting
         public class EditedPayloadText{
             public string Title {get; set;}
             
@@ -376,6 +339,8 @@ namespace Group13_iCAREAPP.Controllers
             public HttpPostedFileBase file { get; set; }
         }
 
+
+        // Takes the EditedPayloadText with a file base so that the text within the docunment can also be edited.
         [HttpPost]
         [Route("Document/Edit/Html")]
         public ActionResult Edit(EditedPayloadText payload){
@@ -418,6 +383,7 @@ namespace Group13_iCAREAPP.Controllers
             }
         }
 
+
         // POST: DocumentMetadatas/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -452,10 +418,13 @@ namespace Group13_iCAREAPP.Controllers
         }
 
 
+        // only need the id of the document to delete it from the db.
         public class DeletePayload{
             public string Id {get; set;}
         }
         
+
+        // takes the id of a document and deletes its document metadata, this will cascade to doc storage and delete that as well.
         [HttpPost]
         [Route("Document/Delete")]
         public ActionResult DeleteConfirmed(DeletePayload payload)

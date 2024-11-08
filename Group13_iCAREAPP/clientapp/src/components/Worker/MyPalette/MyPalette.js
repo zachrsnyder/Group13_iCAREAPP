@@ -5,6 +5,14 @@ import DocumentViewModal from './DocumentViewModal';
 import AddImageModal from './AddImageModal';
 import { FileText, Image, Search } from 'lucide-react';
 
+/// <summary>
+///  Palette UC shall provide a graphical user interface GUI to help simplify the
+//choosing of documents among large number of potential documents.It's one tablet
+//screen in size so the user can see all choices in one view which consists of a series of
+//buttons for the user to tap on.The Palette shall be able to manage larger number of
+//document choices than can fit on one screen.
+/// </summary >
+
 const MyPalette = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [documents, setDocuments] = useState([]);
@@ -19,10 +27,14 @@ const MyPalette = () => {
         setModal(false);
     };
 
+
+    // bool to decide whether to displkay the add image modal. Supposed to be a toggle but it only removes the modal so. Sort of silly.
     const updateAddImageModal = (newState) => {
         setRenderImageModal(false);
     };
 
+
+    // async function to fetch all document metadata rows to display them on the main mypalette page. When it is completed successfully, loading is set to false so the docs can be displayed.
     const fetchDocs = async () => {
         const response = await fetch('DocumentMetadatas', {
             credentials: 'include'
@@ -39,10 +51,12 @@ const MyPalette = () => {
         }
     };
 
+    //Happens upon component mount or when after a doc is viewed, or whenever a modal is rendered or un rendered.
     useEffect(() => {
         fetchDocs();
     }, [showDoc, renderModal, renderImageModal]);
 
+    // Filters documents using the search criteria. Searchs for search term in the doc name patient name and worker name.
     const filteredDocuments = documents.filter(doc =>
         doc.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         doc.patientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||

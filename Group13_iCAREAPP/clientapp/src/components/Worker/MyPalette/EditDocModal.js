@@ -3,7 +3,9 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { X, Save, Loader2 } from 'lucide-react';
 
-//TODO: Add drug facts to this page if editing a text document.
+//<summary>
+//part of manage document UC, allows the user to edit the edittable fields of a document via a modal that appears in the center of the screen.
+//</summary>
 
 const EditDocModal = ({ doc, isText, setShowAll, setShowEditor, setShowDoc }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -14,6 +16,7 @@ const EditDocModal = ({ doc, isText, setShowAll, setShowEditor, setShowDoc }) =>
     const [startingHtml, setStartingHtml] = useState('');
     const [error, setError] = useState('');
 
+    // if they are editing an image we need to fetch the image, and turn it from a blob to a url.
     const fetchImage = async () => {
         try {
             const url = `Document/${doc.documentTitle}/${doc.documentID}`;
@@ -30,6 +33,7 @@ const EditDocModal = ({ doc, isText, setShowAll, setShowEditor, setShowDoc }) =>
         }
     };
 
+    // if they are editiing a text document, the html is pulled from the blob on the backend then is sent over to the front end viaa json object.
     const fetchDocHtml = async (ID) => {
         try {
             const url = `Document/html/${ID}`;
@@ -45,6 +49,7 @@ const EditDocModal = ({ doc, isText, setShowAll, setShowEditor, setShowDoc }) =>
         }
     };
 
+    // opccurs upon mount. Initiates the fetching of a text or image document based on the precense of a _Image tag at the end of the title string.
     useEffect(() => {
         const loadDocument = async () => {
             setShowDoc(false);
@@ -72,10 +77,12 @@ const EditDocModal = ({ doc, isText, setShowAll, setShowEditor, setShowDoc }) =>
         };
     }, []);
 
+    //handles change in cke editor.
     const handleEditorChange = (event, editor) => {
         editorContent.current = editor.getData();
     };
 
+    // saves the doc as a pdf and sends it back to the db.
     const saveAsPDF = async () => {
         setIsSaving(true);
         try {
